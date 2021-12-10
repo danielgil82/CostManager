@@ -1,4 +1,4 @@
-package com.company;
+package il.ac.hit;
 
 public class Main
 {
