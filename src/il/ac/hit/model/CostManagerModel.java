@@ -1,6 +1,7 @@
 package il.ac.hit.model;
 
 import il.ac.hit.Expense;
+import il.ac.hit.auxiliary.IErrorAndExceptionsHandlingStrings;
 import il.ac.hit.exceptions.CostManagerException;
 
 import java.sql.*;
@@ -9,10 +10,10 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CostManagerModel implements IModel
+public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStrings
 {
-    private String driverFullQualifiedName = "com.mysql.jdbc.Driver";
-    private String connectionStringToDB = "jdbc:mysql://localhost:3306/costmanagerproj";
+    private final String driverFullQualifiedName = "com.mysql.jdbc.Driver";
+    private final String connectionStringToDB = "jdbc:mysql://localhost:3306/costmanagerproj";
     private Connection connection = null;
     private Statement statement = null;
     private ResultSet resultSet = null;
@@ -33,7 +34,7 @@ public class CostManagerModel implements IModel
     @Override
     public void addNewCategory(String category) throws CostManagerException
     {
-        throw new CostManagerException("Bad");
+
     }
 
     @Override

@@ -2,7 +2,8 @@ package il.ac.hit;
 
 import java.sql.Date;
 
-public class Expense {
+public class Expense
+{
     private int id;
     private int costSum;
     private String category;
@@ -10,7 +11,8 @@ public class Expense {
     private String descriptionOfExpense;
     private Date purchaseDate;
 
-    public Expense(String category, int costSum, String currency, String descriptionOfExpense, Date purchaseDate) {
+    public Expense(String category, int costSum, String currency, String descriptionOfExpense, Date purchaseDate)
+    {
         this.category = category;
         this.costSum = costSum;
         this.currency = currency;
@@ -18,7 +20,8 @@ public class Expense {
         this.purchaseDate = purchaseDate;
     }
 
-    public Expense(int id, String category, int costSum, String currency, String descriptionOfExpense, Date purchaseDate) {
+    public Expense(int id, String category, int costSum, String currency, String descriptionOfExpense, Date purchaseDate)
+    {
         this.id = id;
         this.category = category;
         this.costSum = costSum;
@@ -27,28 +30,64 @@ public class Expense {
         this.purchaseDate = purchaseDate;
     }
 
-    public int getId() {
+    public int getId()
+    {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(int id)
+    {
         this.id = id;
     }
 
-    public String getCategory() {
+    public String getCategory()
+    {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(String category)
+    {
         this.category = category;
     }
 
-    public int getCost_sum() {
+    public int getCost_sum()
+    {
         return costSum;
     }
 
-    public void setCost_sum(int cost_sum) {
+    public void setCostSum(int cost_sum)
+    {
         this.costSum = cost_sum;
+    }
+
+    public String getCurrency()
+    {
+        return currency;
+    }
+
+    public void setCurrency(String currency)
+    {
+        this.currency = currency;
+    }
+
+    public String getDescriptionOfExpense()
+    {
+        return descriptionOfExpense;
+    }
+
+    public void setDescriptionOfExpense(String descriptionOfExpense)
+    {
+        this.descriptionOfExpense = descriptionOfExpense;
+    }
+
+    public Date getPurchaseDate()
+    {
+        return purchaseDate;
+    }
+
+    public void setPurchaseDate(Date purchaseDate)
+    {
+        this.purchaseDate = purchaseDate;
     }
 
     @Override
@@ -62,29 +101,5 @@ public class Expense {
                 ", descriptionOfExpense='" + descriptionOfExpense + '\'' +
                 ", purchaseDate=" + purchaseDate +
                 '}';
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
-    public String getDescriptionOfExpense() {
-        return descriptionOfExpense;
-    }
-
-    public void setDescriptionOfExpense(String descriptionOfExpense) {
-        this.descriptionOfExpense = descriptionOfExpense;
-    }
-
-    public Date getPurchaseDate() {
-        return purchaseDate;
-    }
-
-    public void setPurchaseDate(Date purchaseDate) {
-        this.purchaseDate = purchaseDate;
     }
 }
