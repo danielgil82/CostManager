@@ -113,7 +113,7 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
     }
 
     @Override
-    public int addNewExpense(Expense cost) throws CostManagerException
+    public int addNewExpense(Expense expense) throws CostManagerException
     {
         String addNewExpenseQuery = "insert into costs (category, sum_cost, currency, description, date)"
                 + "value(?, ?, ?, ?, ?)";
@@ -121,11 +121,11 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
              PreparedStatement addNewExpense = connection.prepareStatement(addNewExpenseQuery))
         {
             connection.setAutoCommit(false);
-            addNewExpense.setString(1, cost.getCategory());
-            addNewExpense.setInt(2, cost.getCost_sum());
-            addNewExpense.setString(3, cost.getCurrency());
-            addNewExpense.setString(4, cost.getDescriptionOfExpense());
-            addNewExpense.setDate(5, cost.getPurchaseDate());
+            addNewExpense.setString(1, expense.getCategory());
+            addNewExpense.setInt(2, expense.getCost_sum());
+            addNewExpense.setString(3, expense.getCurrency());
+            addNewExpense.setString(4, expense.getDescriptionOfExpense());
+            addNewExpense.setDate(5, expense.getPurchaseDate());
             int numberOfRowsAffected = addNewExpense.executeUpdate();
             connection.commit();
 //
