@@ -9,14 +9,14 @@ import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
-public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStrings
+public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStrings
 {
+
     private final String driverFullQualifiedName = "com.mysql.jdbc.Driver";
     private final String connectionStringToDB = "jdbc:mysql://localhost:3306/costmanagerproj";
     private Connection connection = null;
     private Statement statement = null;
     private ResultSet resultSet = null;
-
 
     public CostManagerModel() throws CostManagerException
     {
@@ -34,23 +34,20 @@ public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStr
     public int addNewCategory(Category category) throws CostManagerException
     {
         String addNewCategoryQuery = "insert into categories (category_name, monthly_budget)"
-                                                    + "value(?,?)";
+                + "value(?,?)";
         //Creating a connection string
         try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-            PreparedStatement addNewCategory = connection.prepareStatement(addNewCategoryQuery))
+             PreparedStatement addNewCategory = connection.prepareStatement(addNewCategoryQuery))
         {
             connection.setAutoCommit(false);
             addNewCategory.setString(1, category.getCategoryName());
             addNewCategory.setInt(2, category.getMonthlyBudget());
-
             int numberOfRowsAffected = addNewCategory.executeUpdate();
             connection.commit();
-//
             if (numberOfRowsAffected != 1)
             {
                 throw new CostManagerException("Something went wrong.");
             }
-
             return numberOfRowsAffected;
         }
         catch (SQLException exception)
@@ -62,11 +59,9 @@ public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStr
             else if (connection != null)
             {
                 System.err.print("Transaction is being rolled back");
-
                 try
                 {
                     connection.rollback();
-
                     return 0;
                 }
                 catch (SQLException ex)
@@ -82,9 +77,42 @@ public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStr
     }
 
     @Override
-    public void removeExistingCategory(int id) throws CostManagerException
+    public int removeExistingCategory(String categoryToDelete) throws CostManagerException
     {
-        throw new CostManagerException("Bad");
+        String removeExistingCategoryQuery = "delete from categories where category_name = ?";
+        //Creating a connection string
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+             PreparedStatement prepareStatement = connection.prepareStatement(removeExistingCategoryQuery))
+        {
+            connection.setAutoCommit(false);
+            prepareStatement.setString(1, categoryToDelete);
+
+            int numberOfRowsAffected = prepareStatement.executeUpdate();
+            connection.commit();
+
+            return numberOfRowsAffected;
+        }
+        catch (SQLException exception)
+        {
+            if (connection != null)
+            {
+                System.err.print("Transaction is being rolled back");
+                try
+                {
+                    connection.rollback();
+
+                    return -1;
+                }
+                catch (SQLException ex)
+                {
+                    throw new CostManagerException("problem with rolling back.", ex);
+                }
+            }
+            else
+            {
+                throw new CostManagerException("problem with removing an existing category.", exception);
+            }
+        }
     }
 
     @Override
@@ -92,7 +120,6 @@ public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStr
     {
         String addNewExpenseQuery = "insert into costs (category, sum_cost, currency, description, date)"
                 + "value(?, ?, ?, ?, ?)";
-
         try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
              PreparedStatement addNewExpense = connection.prepareStatement(addNewExpenseQuery))
         {
@@ -102,7 +129,6 @@ public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStr
             addNewExpense.setString(3, cost.getCurrency());
             addNewExpense.setString(4, cost.getDescriptionOfExpense());
             addNewExpense.setDate(5, cost.getPurchaseDate());
-
             int numberOfRowsAffected = addNewExpense.executeUpdate();
             connection.commit();
 //
@@ -110,7 +136,6 @@ public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStr
             {
                 throw new CostManagerException("Something went wrong.");
             }
-
             return numberOfRowsAffected;
         }
         catch (SQLException exception)
@@ -122,11 +147,9 @@ public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStr
             else if (connection != null)
             {
                 System.err.print("Transaction is being rolled back");
-
                 try
                 {
                     connection.rollback();
-
                     return 0;
                 }
                 catch (SQLException ex)
@@ -142,9 +165,43 @@ public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStr
     }
 
     @Override
-    public void removeExistingExpense(int id) throws CostManagerException
+    public int removeExistingExpense(int expenseID) throws CostManagerException
     {
-        throw new CostManagerException("Bad");
+        String removeExistingExpenseQuery = "delete from costs where id = ?";
+
+        //Creating a connection string
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+             PreparedStatement prepareStatement = connection.prepareStatement(removeExistingExpenseQuery))
+        {
+            connection.setAutoCommit(false);
+            prepareStatement.setInt(1, expenseID);
+
+            int numberOfRowsAffected = prepareStatement.executeUpdate();
+            connection.commit();
+
+            return numberOfRowsAffected;
+        }
+        catch (SQLException exception)
+        {
+            if (connection != null)
+            {
+                System.err.print("Transaction is being rolled back");
+                try
+                {
+                    connection.rollback();
+
+                    return -1;
+                }
+                catch (SQLException ex)
+                {
+                    throw new CostManagerException("problem with rolling back.", ex);
+                }
+            }
+            else
+            {
+                throw new CostManagerException("problem with removing an existing expense.", exception);
+            }
+        }
     }
 
     @Override
@@ -160,26 +217,21 @@ public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStr
         {
             //Creating a connection string
             connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-
             //Getting a statement object
             statement = connection.createStatement();
-
             //performing simple query
             resultSet = statement.executeQuery("SELECT * FROM costs");
-
             List<Expense> costExpensesList = new LinkedList<>();
-
             while (resultSet.next())
             {
                 costExpensesList.add(new Expense
-                                (resultSet.getInt("id"),
+                        (resultSet.getInt("id"),
                                 resultSet.getString("category"),
                                 resultSet.getInt("sum_cost"),
                                 resultSet.getString("currency"),
                                 resultSet.getString("description"),
                                 resultSet.getDate("date")));
             }
-
             return costExpensesList;
         }
         catch (SQLException ex)
@@ -210,7 +262,6 @@ public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStr
                     throw new CostManagerException("problem with statement", ex);
                 }
             }
-
             if (connection != null)
             {
                 try
