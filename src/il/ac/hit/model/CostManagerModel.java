@@ -32,9 +32,53 @@ public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStr
     }
 
     @Override
-    public void addNewCategory(String category) throws CostManagerException
+    public int addNewCategory(String category, int monthlyBudget) throws CostManagerException
     {
+        String addNewCategoryQuery = "insert into categories (category_name, monthly_budget)"
+                                                    + "value(?,?)";
+        //Creating a connection string
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+            PreparedStatement addNewCategory = connection.prepareStatement(addNewCategoryQuery))
+        {
+            connection.setAutoCommit(false);
+            addNewCategory.setString(1, category);
+            addNewCategory.setInt(2, monthlyBudget);
+            int numberOfRowsAffected = addNewCategory.executeUpdate();
+            connection.commit();
+//
+            if (numberOfRowsAffected != 1)
+            {
+                throw new CostManagerException("Something went wrong.");
+            }
 
+            return numberOfRowsAffected;
+        }
+        catch (SQLException exception)
+        {
+            if (exception instanceof SQLIntegrityConstraintViolationException)
+            {
+                throw new CostManagerException("Oops seems like this category exists already, try another one", exception);
+            }
+            else if (connection != null)
+            {
+                System.err.print("Transaction is being rolled back");
+
+                try
+                {
+                    connection.rollback();
+
+                    return 0;
+                }
+                catch (SQLException ex)
+                {
+                    throw new CostManagerException("problem with rolling back.", ex);
+                }
+            }
+            else
+            {
+                throw new CostManagerException("problem with adding new category.", exception);
+            }
+        }
     }
 
     @Override

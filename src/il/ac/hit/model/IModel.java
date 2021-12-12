@@ -8,7 +8,7 @@ import java.util.Date;
 
 public interface IModel
 {
-    public void addNewCategory(String category) throws CostManagerException;
+    public int addNewCategory(String category, int monthlyBudget) throws CostManagerException;
     public void removeExistingCategory(int id) throws CostManagerException;
     public void addNewCost(Expense cost) throws CostManagerException;
     public void removeExistingCost(int id) throws CostManagerException;

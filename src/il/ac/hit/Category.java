@@ -11,15 +11,6 @@ public class Category
         this.monthlyBudget = monthlyBudget;
     }
 
-    @Override
-    public String toString()
-    {
-        return "Category{" +
-                "categoryName='" + categoryName + '\'' +
-                ", monthlyBudget=" + monthlyBudget +
-                '}';
-    }
-
     public String getCategoryName()
     {
         return categoryName;
@@ -39,4 +30,14 @@ public class Category
     {
         this.monthlyBudget = monthlyBudget;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Category{" +
+                "categoryName='" + categoryName + '\'' +
+                ", monthlyBudget=" + monthlyBudget +
+                '}';
+    }
+
 }

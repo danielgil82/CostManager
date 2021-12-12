@@ -22,6 +22,9 @@ public class SimpleProgramForModel
                 System.out.println(expense);
                 System.out.println();
             }
+
+            int numberOfRowsThatAffected = model.addNewCategory("clothes", 1500);
+
         }
         catch (CostManagerException ex)
         {
