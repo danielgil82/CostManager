@@ -24,10 +24,12 @@ public class SimpleProgramForModel
                 System.out.println(expense);
                 System.out.println();
             }
+
             int numberOfRowsThatAffected;
-            numberOfRowsThatAffected = model.addNewCategory(new Category("leisure", 2500));
-            System.out.println(numberOfRowsThatAffected);
-            numberOfRowsThatAffected = model.addNewExpense(new Expense("food", 200, "nis", "pizza", new Date(2021, 12, 12)));
+//            numberOfRowsThatAffected = model.addNewCategory(new Category("leisure", 2500));
+//            System.out.println(numberOfRowsThatAffected);
+
+            numberOfRowsThatAffected = model.addNewExpense(new Expense("clothes", 180, "nis", "pizza",  new Date(new java.util.Date().getTime())));
             System.out.println(numberOfRowsThatAffected);
         }
         catch (CostManagerException ex)
