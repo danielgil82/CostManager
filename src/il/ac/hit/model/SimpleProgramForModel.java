@@ -24,7 +24,7 @@ public class SimpleProgramForModel
             }
 
             int numberOfRowsThatAffected = model.addNewCategory("clothes", 1500);
-
+            System.out.println(numberOfRowsThatAffected);
         }
         catch (CostManagerException ex)
         {

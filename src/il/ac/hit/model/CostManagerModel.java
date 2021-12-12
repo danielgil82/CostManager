@@ -43,6 +43,7 @@ public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStr
             connection.setAutoCommit(false);
             addNewCategory.setString(1, category);
             addNewCategory.setInt(2, monthlyBudget);
+
             int numberOfRowsAffected = addNewCategory.executeUpdate();
             connection.commit();
 //
