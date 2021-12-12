@@ -4,8 +4,11 @@ import il.ac.hit.Category;
 import il.ac.hit.Expense;
 import il.ac.hit.exceptions.CostManagerException;
 
-import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public class SimpleProgramForModel
@@ -17,14 +20,14 @@ public class SimpleProgramForModel
     {
         try
         {
+//            model = new CostManagerModel();
+//            Collection<Expense> expenseList = model.getAllExpenses();
+//            for (Expense expense : expenseList)
+//            {
+//                System.out.println(expense);
+//                System.out.println();
+//            }
             model = new CostManagerModel();
-            Collection<Expense> expenseList = model.getAllExpenses();
-            for (Expense expense : expenseList)
-            {
-                System.out.println(expense);
-                System.out.println();
-            }
-
             int numberOfRowsThatAffected;
 //            numberOfRowsThatAffected = model.addNewCategory(new Category("leisure", 2500));
 //            System.out.println(numberOfRowsThatAffected);
@@ -52,7 +55,30 @@ public class SimpleProgramForModel
                 System.out.println("1 row was deleted successfully");
             }
 
+            String startDate = "2021-12-10";
+            String endDate = "2021-12-12";
 
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            try
+            {
+                Date firstDate = dateFormat.parse(startDate);
+                Date secondDate = dateFormat.parse(endDate);
+
+                Collection<Expense> expenseListByDates = model.getReportByDates
+                        (new java.sql.Date(firstDate.getTime())
+                        , new java.sql.Date(secondDate.getTime()));
+
+                for (Expense expense : expenseListByDates)
+                {
+                    System.out.println(expense);
+                    System.out.println();
+                }
+            }
+            catch (ParseException e)
+            {
+                e.printStackTrace();
+            }
         }
         catch (CostManagerException ex)
         {

@@ -6,8 +6,8 @@ import il.ac.hit.auxiliary.IErrorAndExceptionsHandlingStrings;
 import il.ac.hit.exceptions.CostManagerException;
 
 import java.sql.*;
+import java.sql.Date;
 import java.util.*;
-import java.util.Date;
 
 public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStrings
 {
@@ -86,10 +86,8 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
         {
             connection.setAutoCommit(false);
             prepareStatement.setString(1, categoryToDelete);
-
             int numberOfRowsAffected = prepareStatement.executeUpdate();
             connection.commit();
-
             return numberOfRowsAffected;
         }
         catch (SQLException exception)
@@ -100,7 +98,6 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
                 try
                 {
                     connection.rollback();
-
                     return -1;
                 }
                 catch (SQLException ex)
@@ -168,17 +165,14 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
     public int removeExistingExpense(int expenseID) throws CostManagerException
     {
         String removeExistingExpenseQuery = "delete from costs where id = ?";
-
         //Creating a connection string
         try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
              PreparedStatement prepareStatement = connection.prepareStatement(removeExistingExpenseQuery))
         {
             connection.setAutoCommit(false);
             prepareStatement.setInt(1, expenseID);
-
             int numberOfRowsAffected = prepareStatement.executeUpdate();
             connection.commit();
-
             return numberOfRowsAffected;
         }
         catch (SQLException exception)
@@ -189,7 +183,6 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
                 try
                 {
                     connection.rollback();
-
                     return -1;
                 }
                 catch (SQLException ex)
@@ -207,7 +200,33 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
     @Override
     public Collection<Expense> getReportByDates(Date startDate, Date endDate) throws CostManagerException
     {
-        throw new CostManagerException("Bad");
+        String getReportByDatesQuery = "select * from costs WHERE date BETWEEN ? AND ? ";
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+             PreparedStatement prepareStatement = connection.prepareStatement(getReportByDatesQuery))
+        {
+            prepareStatement.setDate(1, startDate);
+            prepareStatement.setDate(2, endDate);
+            resultSet = prepareStatement.executeQuery();
+
+            List<Expense> costExpensesList = new LinkedList<>();
+
+            while (resultSet.next())
+            {
+                costExpensesList.add(new Expense
+                        (resultSet.getInt("id"),
+                                resultSet.getString("category"),
+                                resultSet.getInt("sum_cost"),
+                                resultSet.getString("currency"),
+                                resultSet.getString("description"),
+                                resultSet.getDate("date")));
+            }
+
+            return costExpensesList;
+        }
+        catch (SQLException exception)
+        {
+            throw new CostManagerException("Couldn't find any expenses between these two dates", exception);
+        }
     }
 
     @Override

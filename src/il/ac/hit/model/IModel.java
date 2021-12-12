@@ -13,6 +13,6 @@ public interface IModel
     public int removeExistingCategory(String categoryToDelete) throws CostManagerException;
     public int addNewExpense(Expense cost) throws CostManagerException;
     public int removeExistingExpense(int id) throws CostManagerException;
-    public Collection<Expense> getReportByDates(Date startDate, Date endDate) throws CostManagerException;
+    public Collection<Expense> getReportByDates(java.sql.Date startDate, java.sql.Date endDate) throws CostManagerException;
     public Collection<Expense> getAllExpenses() throws CostManagerException;
 }
