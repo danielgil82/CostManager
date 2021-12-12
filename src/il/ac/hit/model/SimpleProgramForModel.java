@@ -1,13 +1,16 @@
 package il.ac.hit.model;
 
+import il.ac.hit.Category;
 import il.ac.hit.Expense;
 import il.ac.hit.exceptions.CostManagerException;
 
+import java.sql.Date;
 import java.util.Collection;
 import java.util.List;
 
 public class SimpleProgramForModel
 {
+
     private static IModel model;
 
     public static void main(String args[])
@@ -16,14 +19,15 @@ public class SimpleProgramForModel
         {
             model = new CostManagerModel();
             Collection<Expense> expenseList = model.getAllExpenses();
-
-            for (Expense expense: expenseList)
+            for (Expense expense : expenseList)
             {
                 System.out.println(expense);
                 System.out.println();
             }
-
-            int numberOfRowsThatAffected = model.addNewCategory("clothes", 1500);
+            int numberOfRowsThatAffected;
+            numberOfRowsThatAffected = model.addNewCategory(new Category("leisure", 2500));
+            System.out.println(numberOfRowsThatAffected);
+            numberOfRowsThatAffected = model.addNewExpense(new Expense("food", 200, "nis", "pizza", new Date(2021, 12, 12)));
             System.out.println(numberOfRowsThatAffected);
         }
         catch (CostManagerException ex)
@@ -31,5 +35,4 @@ public class SimpleProgramForModel
             System.out.println(ex.getMessage() + '\n' + ex.getCause());
         }
     }
-
 }

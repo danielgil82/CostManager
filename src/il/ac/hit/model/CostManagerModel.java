@@ -1,14 +1,13 @@
 package il.ac.hit.model;
 
+import il.ac.hit.Category;
 import il.ac.hit.Expense;
 import il.ac.hit.auxiliary.IErrorAndExceptionsHandlingStrings;
 import il.ac.hit.exceptions.CostManagerException;
 
 import java.sql.*;
-import java.util.Collection;
+import java.util.*;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
 public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStrings
 {
@@ -32,7 +31,7 @@ public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStr
     }
 
     @Override
-    public int addNewCategory(String category, int monthlyBudget) throws CostManagerException
+    public int addNewCategory(Category category) throws CostManagerException
     {
         String addNewCategoryQuery = "insert into categories (category_name, monthly_budget)"
                                                     + "value(?,?)";
@@ -41,8 +40,8 @@ public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStr
             PreparedStatement addNewCategory = connection.prepareStatement(addNewCategoryQuery))
         {
             connection.setAutoCommit(false);
-            addNewCategory.setString(1, category);
-            addNewCategory.setInt(2, monthlyBudget);
+            addNewCategory.setString(1, category.getCategoryName());
+            addNewCategory.setInt(2, category.getMonthlyBudget());
 
             int numberOfRowsAffected = addNewCategory.executeUpdate();
             connection.commit();
@@ -58,7 +57,7 @@ public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStr
         {
             if (exception instanceof SQLIntegrityConstraintViolationException)
             {
-                throw new CostManagerException("Oops seems like this category exists already, try another one", exception);
+                throw new CostManagerException("Oops seems like this category already exists, try another one", exception);
             }
             else if (connection != null)
             {
@@ -89,13 +88,61 @@ public class CostManagerModel implements IModel , IErrorAndExceptionsHandlingStr
     }
 
     @Override
-    public void addNewCost(Expense cost) throws CostManagerException
+    public int addNewExpense(Expense cost) throws CostManagerException
     {
-        throw new CostManagerException("Bad");
+        String addNewExpenseQuery = "insert into costs (category, sum_cost, currency, description, date)"
+                + "value(?, ?, ?, ?, ?)";
+
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+             PreparedStatement addNewExpense = connection.prepareStatement(addNewExpenseQuery))
+        {
+            connection.setAutoCommit(false);
+            addNewExpense.setString(1, cost.getCategory());
+            addNewExpense.setInt(2, cost.getCost_sum());
+            addNewExpense.setString(3, cost.getCurrency());
+            addNewExpense.setString(4, cost.getDescriptionOfExpense());
+            addNewExpense.setDate(5, cost.getPurchaseDate());
+
+            int numberOfRowsAffected = addNewExpense.executeUpdate();
+            connection.commit();
+//
+            if (numberOfRowsAffected != 1)
+            {
+                throw new CostManagerException("Something went wrong.");
+            }
+
+            return numberOfRowsAffected;
+        }
+        catch (SQLException exception)
+        {
+            if (exception instanceof SQLIntegrityConstraintViolationException)
+            {
+                throw new CostManagerException("Oops seems like this expense already exists, try another one", exception);
+            }
+            else if (connection != null)
+            {
+                System.err.print("Transaction is being rolled back");
+
+                try
+                {
+                    connection.rollback();
+
+                    return 0;
+                }
+                catch (SQLException ex)
+                {
+                    throw new CostManagerException("problem with rolling back.", ex);
+                }
+            }
+            else
+            {
+                throw new CostManagerException("problem with adding new expense.", exception);
+            }
+        }
     }
 
     @Override
-    public void removeExistingCost(int id) throws CostManagerException
+    public void removeExistingExpense(int id) throws CostManagerException
     {
         throw new CostManagerException("Bad");
     }
