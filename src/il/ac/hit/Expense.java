@@ -4,40 +4,48 @@ import java.sql.Date;
 
 public class Expense
 {
-    private int id;
+    private int expenseID;
     private int costSum;
     private String category;
     private String currency;
-    private String descriptionOfExpense;
+    private String expenseDescription;
     private Date purchaseDate;
+    private int userID;
 
-    public Expense(String category, int costSum, String currency, String descriptionOfExpense, Date purchaseDate)
+    public Expense(String category, int costSum, String currency, String descriptionOfExpense, Date purchaseDate, int userID)
     {
-        this.category = category;
-        this.costSum = costSum;
-        this.currency = currency;
-        this.descriptionOfExpense = descriptionOfExpense;
-        this.purchaseDate = purchaseDate;
+        setCategory(category);
+        setCostSum(costSum);
+        setCurrency(currency);
+        setExpenseDescription(descriptionOfExpense);
+        setPurchaseDate(purchaseDate);
+        setUserID(userID);
     }
 
-    public Expense(int id, String category, int costSum, String currency, String descriptionOfExpense, Date purchaseDate)
+    public Expense(int expenseID, String category, int costSum, String currency, String descriptionOfExpense, Date purchaseDate, int userID)
     {
-        this.id = id;
-        this.category = category;
-        this.costSum = costSum;
-        this.currency = currency;
-        this.descriptionOfExpense = descriptionOfExpense;
-        this.purchaseDate = purchaseDate;
+        this(category, costSum, currency, descriptionOfExpense, purchaseDate, userID);
+        setExpenseID(expenseID);
+//        setCategory(category);
+//        setCostSum(costSum);
+//        setCurrency(currency);
+//        setExpenseDescription(descriptionOfExpense);
+//        setPurchaseDate(purchaseDate);
     }
 
-    public int getId()
+    public int getUserID()
     {
-        return id;
+        return userID;
     }
 
-    public void setId(int id)
+    public void setUserID(int userID)
     {
-        this.id = id;
+        this.userID = userID;
+    }
+
+    public int getExpenseID()
+    {
+        return expenseID;
     }
 
     public String getCategory()
@@ -45,19 +53,9 @@ public class Expense
         return category;
     }
 
-    public void setCategory(String category)
-    {
-        this.category = category;
-    }
-
-    public int getCost_sum()
+    public int getCostSum()
     {
         return costSum;
-    }
-
-    public void setCostSum(int cost_sum)
-    {
-        this.costSum = cost_sum;
     }
 
     public String getCurrency()
@@ -65,24 +63,39 @@ public class Expense
         return currency;
     }
 
-    public void setCurrency(String currency)
+    public String getExpenseDescription()
     {
-        this.currency = currency;
-    }
-
-    public String getDescriptionOfExpense()
-    {
-        return descriptionOfExpense;
-    }
-
-    public void setDescriptionOfExpense(String descriptionOfExpense)
-    {
-        this.descriptionOfExpense = descriptionOfExpense;
+        return expenseDescription;
     }
 
     public Date getPurchaseDate()
     {
         return purchaseDate;
+    }
+
+    public void setExpenseID(int expenseID)
+    {
+        this.expenseID = expenseID;
+    }
+
+    public void setCategory(String category)
+    {
+        this.category = category;
+    }
+
+    public void setCostSum(int cost_sum)
+    {
+        this.costSum = cost_sum;
+    }
+
+    public void setCurrency(String currency)
+    {
+        this.currency = currency;
+    }
+
+    public void setExpenseDescription(String expenseDescription)
+    {
+        this.expenseDescription = expenseDescription;
     }
 
     public void setPurchaseDate(Date purchaseDate)
@@ -94,11 +107,11 @@ public class Expense
     public String toString()
     {
         return "Expense{" +
-                "id=" + id +
+                "id=" + expenseID +
                 ", costSum=" + costSum +
                 ", category='" + category + '\'' +
                 ", currency='" + currency + '\'' +
-                ", descriptionOfExpense='" + descriptionOfExpense + '\'' +
+                ", descriptionOfExpense='" + expenseDescription + '\'' +
                 ", purchaseDate=" + purchaseDate +
                 '}';
     }

@@ -3,12 +3,12 @@ package il.ac.hit;
 public class Category
 {
     private String categoryName;
-    private int monthlyBudget;
+    private int userID;
 
-    public Category(String categoryName, int monthlyBudget)
+    public Category(String categoryName, int userID)
     {
-        this.categoryName = categoryName;
-        this.monthlyBudget = monthlyBudget;
+        setCategoryName(categoryName);
+        setUserID(userID);
     }
 
     public String getCategoryName()
@@ -16,19 +16,19 @@ public class Category
         return categoryName;
     }
 
+    public int getUserID()
+    {
+        return userID;
+    }
+
     public void setCategoryName(String categoryName)
     {
         this.categoryName = categoryName;
     }
 
-    public int getMonthlyBudget()
+    public void setUserID(int userID)
     {
-        return monthlyBudget;
-    }
-
-    public void setMonthlyBudget(int monthlyBudget)
-    {
-        this.monthlyBudget = monthlyBudget;
+        this.userID = userID;
     }
 
     @Override
@@ -36,8 +36,7 @@ public class Category
     {
         return "Category{" +
                 "categoryName='" + categoryName + '\'' +
-                ", monthlyBudget=" + monthlyBudget +
+                ", UserID= " + userID +
                 '}';
     }
-
 }

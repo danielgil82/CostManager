@@ -2,31 +2,31 @@ package il.ac.hit;
 
 public class User
 {
-    private int id;
+    private int userID;
     private String fullName;
     private String usersPassword;
 
-    public User(int id, String fullName, String usersPassword)
+    public User(int userID, String fullName, String usersPassword)
     {
-      id = id;
-      fullName = fullName;
-      usersPassword = usersPassword;
+      setID(userID);
+      setFullName(fullName);
+      setUsersPassword(usersPassword);
     }
 
     public User(String fullName, String usersPassword)
     {
-        fullName = fullName;
-        usersPassword = usersPassword;
+        setFullName(fullName);
+        setUsersPassword(usersPassword);
     }
 
-    public int getId()
+    public int getUserID()
     {
-        return id;
+        return userID;
     }
 
-    public void setId(int id)
+    public String getUsersPassword()
     {
-        this.id = id;
+        return usersPassword;
     }
 
     public String getFullName()
@@ -34,14 +34,14 @@ public class User
         return fullName;
     }
 
+    public void setID(int id)
+    {
+        this.userID = id;
+    }
+
     public void setFullName(String fullName)
     {
         this.fullName = fullName;
-    }
-
-    public String getUsersPassword()
-    {
-        return usersPassword;
     }
 
     public void setUsersPassword(String usersPassword)
@@ -53,7 +53,7 @@ public class User
     public String toString()
     {
         return "User{" +
-                "id=" + id +
+                "id=" + userID +
                 ", fullName='" + fullName + '\'' +
                 ", usersPassword='" + usersPassword + '\'' +
                 '}';

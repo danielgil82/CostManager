@@ -9,10 +9,10 @@ import java.util.Date;
 
 public interface IModel
 {
-    public int addNewCategory(Category newCategoryToAdd) throws CostManagerException;
-    public int removeExistingCategory(String categoryToDelete) throws CostManagerException;
-    public int addNewExpense(Expense cost) throws CostManagerException;
-    public int removeExistingExpense(int id) throws CostManagerException;
-    public Collection<Expense> getReportByDates(java.sql.Date startDate, java.sql.Date endDate) throws CostManagerException;
-    public Collection<Expense> getAllExpenses() throws CostManagerException;
+     int addNewCategory(Category newCategoryToAdd) throws CostManagerException;
+     int removeExistingCategory(Category categoryToDelete) throws CostManagerException;
+     int addNewExpense(Expense cost) throws CostManagerException;
+     int removeExistingExpense(int id) throws CostManagerException;
+     Collection<Expense> getReportByDates(int userID, java.sql.Date startDate, java.sql.Date endDate) throws CostManagerException;
+     Collection<Expense> getAllExpenses(int userID) throws CostManagerException;
 }
