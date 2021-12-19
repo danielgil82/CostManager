@@ -95,12 +95,13 @@ public class CostManagerView implements IView
         @Override
         public void start()
         {
+
             panelNorthLoginFrame.setBackground(Color.PINK);
             panelNorthLoginFrame.add(labelCostManagerTitle);
 
-            panelWestLoginFrame.setLayout(new BoxLayout(panelWestLoginFrame, BoxLayout.Y_AXIS));
+            panelWestLoginFrame.setLayout(new BoxLayout(panelWestLoginFrame, BoxLayout.PAGE_AXIS));
             panelWestLoginFrame.add(loginButton);
-            panelWestLoginFrame.add(Box.createVerticalStrut(50));
+            panelWestLoginFrame.add(Box.createRigidArea(new Dimension(0, 20)));
             panelWestLoginFrame.add(signUpButton);
 
             panelSouthLoginFrame.add(labelInvalidLoginDescription);
@@ -112,8 +113,27 @@ public class CostManagerView implements IView
             loginFrame.add(panelCenterLoginFrame, BorderLayout.CENTER);
             loginFrame.add(panelWestLoginFrame, BorderLayout.WEST);
             loginFrame.add(panelSouthLoginFrame, BorderLayout.SOUTH);
-            loginFrame.setSize(250, 250);
+            loginFrame.setSize(600, 400);
+           // setButtonSize();
+
             loginFrame.setVisible(true);
+        }
+
+        public void setButtonSize()
+        {
+            setButtonAttributes(loginButton,
+                    //new Font("Narkisim", Font.BOLD, 30),
+                    new Dimension(40, 40));
+
+            setButtonAttributes(signUpButton,
+                   // new Font("Narkisim", Font.BOLD, 30),
+                    new Dimension(40, 40));
+        }
+
+        public void setButtonAttributes(Component component,  Dimension dimensions)
+        {
+           // component.setFont(font);
+            component.setPreferredSize(dimensions);
         }
 
         @Override
