@@ -2,10 +2,10 @@ package il.ac.hit.model;
 
 import il.ac.hit.Category;
 import il.ac.hit.Expense;
+import il.ac.hit.User;
 import il.ac.hit.auxiliary.IErrorAndExceptionsHandlingStrings;
 import il.ac.hit.exceptions.CostManagerException;
 
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
@@ -15,7 +15,7 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
 
     private final String driverFullQualifiedName = "com.mysql.jdbc.Driver";
     private final String connectionStringToDB = "jdbc:mysql://localhost:3306/costmanagerproj";
-    private Connection connection = null;
+    //   private Connection connection = null;
 //    private Statement statement = null;
 //    private ResultSet resultSet = null;
 
@@ -36,22 +36,21 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
     {
         String addNewCategoryQuery = "insert into categories (category, user_id)"
                 + "value(?,?)";
-
-        //Creating a connection string
-        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-             PreparedStatement addNewCategory = connection.prepareStatement(addNewCategoryQuery))
+        Connection connection = null;
+        PreparedStatement addNewCategory = null;
+        try
         {
+            connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+            addNewCategory = connection.prepareStatement(addNewCategoryQuery);
             connection.setAutoCommit(false);
             addNewCategory.setString(1, category.getCategoryName());
             addNewCategory.setInt(2, category.getUserID());
             int numberOfRowsAffected = addNewCategory.executeUpdate();
             connection.commit();
-
             if (numberOfRowsAffected != 1)
             {
                 throw new CostManagerException("Something went wrong.");
             }
-
             return numberOfRowsAffected;
         }
         catch (SQLException exception)
@@ -66,7 +65,6 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
                 try
                 {
                     connection.rollback();
-
                     return 0;
                 }
                 catch (SQLException ex)
@@ -79,6 +77,17 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
                 throw new CostManagerException("problem with adding new category.", exception);
             }
         }
+        finally
+        {
+            try
+            {
+                connection.close();
+            }
+            catch (SQLException e)
+            {
+                throw new CostManagerException("problem with closing the connection");
+            }
+        }
     }
 
     @Override
@@ -86,11 +95,13 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
     {
         String removeExistingCategoryQuery = "delete from categories where category = ? AND " +
                 "user_id = ?";
-
+        Connection connection = null;
+        PreparedStatement prepareStatement = null;
         //Creating a connection string
-        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-             PreparedStatement prepareStatement = connection.prepareStatement(removeExistingCategoryQuery))
+        try
         {
+            connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+            prepareStatement = connection.prepareStatement(removeExistingCategoryQuery);
             connection.setAutoCommit(false);
             prepareStatement.setString(1, categoryToDelete.getCategoryName());
             prepareStatement.setInt(2, categoryToDelete.getUserID());
@@ -122,16 +133,30 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
                 throw new CostManagerException("problem with removing an existing category.", exception);
             }
         }
+        finally
+        {
+            try
+            {
+                connection.close();
+            }
+            catch (SQLException ex)
+            {
+                throw new CostManagerException("problem with closing the connection");
+            }
+        }
     }
 
     private int removeCostsBySpecificCategoryAndBySpecificUser(Category expensesToDeleteByCategory) throws CostManagerException
     {
         String removeExpensesQuery = "delete from costs where category = ? AND " + "user_id = ?";
+        Connection connection = null;
+        PreparedStatement prepareStatement = null;
 
         //Creating a connection string
-        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-             PreparedStatement prepareStatement = connection.prepareStatement(removeExpensesQuery))
+        try
         {
+            connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+            prepareStatement = connection.prepareStatement(removeExpensesQuery);
             connection.setAutoCommit(false);
             prepareStatement.setString(1, expensesToDeleteByCategory.getCategoryName());
             prepareStatement.setInt(2, expensesToDeleteByCategory.getUserID());
@@ -163,6 +188,17 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
                 throw new CostManagerException("problem with removing expenses by specific category.", exception);
             }
         }
+        finally
+        {
+            try
+            {
+                connection.close();
+            }
+            catch (SQLException ex)
+            {
+                throw new CostManagerException("problem with closing the connection");
+            }
+        }
     }
 
     @Override
@@ -171,9 +207,14 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
         String addNewExpenseQuery = "insert into costs (category, sum_cost, currency, description, date, user_id)"
                 + "value(?, ?, ?, ?, ?, ?)";
 
-        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-             PreparedStatement addNewExpense = connection.prepareStatement(addNewExpenseQuery))
+        Connection connection = null;
+        PreparedStatement addNewExpense = null;
+
+        try
         {
+            connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+            addNewExpense = connection.prepareStatement(addNewExpenseQuery);
+
             connection.setAutoCommit(false);
             addNewExpense.setString(1, expense.getCategory());
             addNewExpense.setInt(2, expense.getCostSum());
@@ -217,17 +258,31 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
                 throw new CostManagerException("problem with adding new expense.", exception);
             }
         }
+        finally
+        {
+            try
+            {
+                connection.close();
+            }
+            catch (SQLException ex)
+            {
+                throw new CostManagerException("problem with closing the connection");
+            }
+        }
     }
 
     @Override
     public int removeExistingExpense(int expenseID) throws CostManagerException
     {
         String removeExistingExpenseQuery = "delete from costs where cost_id = ?";
+        Connection connection = null;
+        PreparedStatement prepareStatement = null;
 
-        //Creating a connection string
-        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-             PreparedStatement prepareStatement = connection.prepareStatement(removeExistingExpenseQuery))
+        try
         {
+            //Creating a connection string
+            connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+            prepareStatement = connection.prepareStatement(removeExistingExpenseQuery);
             connection.setAutoCommit(false);
             prepareStatement.setInt(1, expenseID);
 
@@ -257,6 +312,17 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
                 throw new CostManagerException("problem with removing an existing expense.", exception);
             }
         }
+        finally
+        {
+            try
+            {
+                connection.close();
+            }
+            catch (SQLException ex)
+            {
+                throw new CostManagerException("problem with closing the connection");
+            }
+        }
     }
 
     @Override
@@ -270,15 +336,13 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
             prepareStatement.setInt(1, userID);
             prepareStatement.setDate(2, startDate);
             prepareStatement.setDate(3, endDate);
-
             ResultSet resultSet = prepareStatement.executeQuery();
-
             List<Expense> costExpensesList = new LinkedList<>();
 
             while (resultSet.next())
             {
                 costExpensesList.add(new Expense
-                               (resultSet.getInt("cost_id"),
+                        (resultSet.getInt("cost_id"),
                                 resultSet.getString("category"),
                                 resultSet.getInt("sum_cost"),
                                 resultSet.getString("currency"),
@@ -286,24 +350,112 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
                                 resultSet.getDate("date"),
                                 resultSet.getInt("user_id")));
             }
-
             return costExpensesList;
         }
         catch (SQLException exception)
         {
             throw new CostManagerException("Couldn't find any expenses between these two dates", exception);
         }
+        finally
+        {
+
+        }
+    }
+
+    @Override
+    public User getUser(String userFullName, String userPassword) throws CostManagerException
+    {
+        Connection connection = null;
+        PreparedStatement prepareStatement = null;
+        ResultSet resultSet = null;
+        User wantedUser = null;
+
+        String getUserQuery = "select * from users WHERE full_name = ? AND" +
+                " password = ?";
+
+        try
+        {
+            connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+            prepareStatement = connection.prepareStatement(getUserQuery);
+
+            prepareStatement.setString(1, userFullName);
+            prepareStatement.setString(2, userPassword);
+
+            resultSet = prepareStatement.executeQuery();
+
+            if (resultSet != null)
+            {
+                wantedUser = new User(
+                        resultSet.getInt("user_id"),
+                        resultSet.getString("full_name"),
+                        resultSet.getString("password")
+                );
+            }
+
+            return wantedUser;
+        }
+
+        catch (SQLException exception)
+        {
+            throw new CostManagerException(USER_DOES_NOT_EXISTS, exception);
+        }
+
+        finally
+        {
+            if (resultSet != null)
+            {
+                try
+                {
+                    resultSet.close();
+                }
+                catch (SQLException ex)
+                {
+                    throw new CostManagerException(PROBLEM_WITH_THE_RESULT_SET, ex);
+                }
+            }
+            if (prepareStatement != null)
+            {
+                try
+                {
+                    prepareStatement.close();
+                }
+                catch (SQLException ex)
+                {
+                    throw new CostManagerException(PROBLEM_WITH_THE_STATEMENT, ex);
+                }
+            }
+            if (connection != null)
+            {
+                try
+                {
+                    connection.close();
+                }
+                catch (SQLException ex)
+                {
+                    throw new CostManagerException(PROBLEM_WITH_THE_CONNECTION, ex);
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public int addNewUser(User user)
+    {
+        return 0;
     }
 
     @Override
     public Collection<Expense> getAllExpenses(int userID) throws CostManagerException
     {
+        Connection connection = null;
         PreparedStatement prepareStatement = null;
         ResultSet resultSet = null;
+
         try
         {
             //Creating a connection string
-             Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+            connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
 
             //performing simple query
             String querySql = "SELECT * FROM costs " +
