@@ -1,11 +1,10 @@
-package il.ac.hit.viewModel;
+package il.ac.hit.viewmodel;
 
-import il.ac.hit.User;
+import il.ac.hit.model.User;
 import il.ac.hit.auxiliary.Message;
-import il.ac.hit.exceptions.CostManagerException;
-import il.ac.hit.model.CostManagerModel;
+import il.ac.hit.model.CostManagerException;
 import il.ac.hit.model.IModel;
-import il.ac.hit.view.CostManagerView;
+import il.ac.hit.view.ViewManager;
 import il.ac.hit.view.IView;
 
 import javax.swing.*;
@@ -35,7 +34,7 @@ public class CostManagerViewModel implements IViewModel
                 try
                 {
                     User user = model.getUser(fullName, password);
-                    ((CostManagerView)view).setLoggedInUser(user);
+                    ((ViewManager) view).setUser(user);
                 }
                 catch (CostManagerException ex)
                 {
@@ -51,15 +50,50 @@ public class CostManagerViewModel implements IViewModel
             }
         });
     }
-        @Override
-        public void setView (IView view)
-        {
-            this.view = view;
-        }
 
-        @Override
-        public void setModel (IModel model)
+    @Override
+    public void addNewUser(User user)
+    {
+        service.submit(new Runnable()
         {
-            this.model = model;
-        }
+            @Override
+            public void run()
+            {
+                try
+                {
+                    int x = model.addNewUser(user);
+
+
+
+
+
+                    //((ViewManager) view).setUser(user);
+                }
+
+                catch (CostManagerException ex)
+                {
+                    SwingUtilities.invokeLater(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            view.displayMessage(new Message(ex.getMessage()));
+                        }
+                    });
+                }
+            }
+        });
     }
+
+    @Override
+    public void setView(IView view)
+    {
+        this.view = view;
+    }
+
+    @Override
+    public void setModel(IModel model)
+    {
+        this.model = model;
+    }
+}
