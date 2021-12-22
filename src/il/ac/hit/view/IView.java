@@ -10,5 +10,5 @@ public interface IView
     void displayMessage(Message message);
     void init();
     void start();
-
+    void changeFrameFromLoginViewToAppView();
 }

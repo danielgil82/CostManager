@@ -1,9 +1,11 @@
 package il.ac.hit.viewmodel;
 
+import il.ac.hit.auxiliary.IErrorAndExceptionsHandlingStrings;
 import il.ac.hit.model.User;
 import il.ac.hit.auxiliary.Message;
 import il.ac.hit.model.CostManagerException;
 import il.ac.hit.model.IModel;
+import il.ac.hit.view.CostManagerLoginView;
 import il.ac.hit.view.ViewManager;
 import il.ac.hit.view.IView;
 
@@ -11,7 +13,7 @@ import javax.swing.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class CostManagerViewModel implements IViewModel
+public class CostManagerViewModel implements IViewModel , IErrorAndExceptionsHandlingStrings
 {
 
     private IView view;
@@ -36,7 +38,16 @@ public class CostManagerViewModel implements IViewModel
                 try
                 {
                     user = model.getUser(fullName, password);
-                    ((ViewManager) view).setUser(user);
+
+                    if (user != null)
+                    {
+                        view.changeFrameFromLoginViewToAppView();
+                    }
+
+                    else
+                    {
+                        throw new CostManagerException(USER_DOES_NOT_EXISTS);
+                    }
                 }
                 catch (CostManagerException ex)
                 {
@@ -45,7 +56,7 @@ public class CostManagerViewModel implements IViewModel
                         @Override
                         public void run()
                         {
-                            view.displayMessage(new Message(ex.getMessage()));
+                            ((ViewManager)view).getLoginView().getLabelInvalidDescription().setText(ex.getMessage());
                         }
                     });
                 }

@@ -10,7 +10,7 @@ public class ViewManager implements IView
 {
 
     private IViewModel viewModel;
-    private User user;
+
 
     private CostManagerLoginView loginView;
     private CostManagerAppView appView;
@@ -43,13 +43,14 @@ public class ViewManager implements IView
     @Override
     public void displayMessage(Message message)
     {
-        JOptionPane.showMessageDialog(null, message.getText());
+       // JOptionPane.showMessageDialog(null, message.getText());
     }
 
+    @Override
     public void changeFrameFromLoginViewToAppView()
     {
         loginView.setVisible(false);
-        appView = new CostManagerAppView(user);
+        appView = new CostManagerAppView();
         appView.setVisible(true);
     }
 
@@ -58,14 +59,9 @@ public class ViewManager implements IView
         return viewModel;
     }
 
-    public User getUser()
-    {
-        return user;
-    }
 
-    public void setUser(User user)
+    public CostManagerLoginView getLoginView()
     {
-        this.user = user;
+        return loginView;
     }
-
 }

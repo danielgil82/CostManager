@@ -28,6 +28,10 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
     private JLayeredPane layeredPaneCenter;
     private GridLayout gridLayoutWestPanel;
 
+    public JLabel getLabelInvalidDescription()
+    {
+        return labelInvalidDescription;
+    }
 
     public CostManagerLoginView(IView viewManager)
     {
@@ -310,14 +314,14 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
                         if (validateUsersFullName(textFieldFullNameLoginPanel.getText()))
                         {
                             ((ViewManager) viewManager).getViewModel().getUser(textFieldFullNameLoginPanel.getText(), textFieldPasswordLoginPanel.getText());
-                            if (((ViewManager) viewManager).getUser() != null)
-                            {
-                                ((ViewManager) viewManager).changeFrameFromLoginViewToAppView();
-                            }
-                            else
-                            {
-                                labelInvalidDescription.setText(USER_DOES_NOT_EXISTS);
-                            }
+//                            if (((ViewManager) viewManager).getUser() != null)
+//                            {
+//                                ((ViewManager) viewManager).changeFrameFromLoginViewToAppView();
+//                            }
+//                            else
+//                            {
+//                                labelInvalidDescription.setText(USER_DOES_NOT_EXISTS);
+//                            }
                         }
                         else
                         {
@@ -447,14 +451,14 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
                             if (confirmPasswords(password, confirmPassword, (firstPassword, secondPassword) -> firstPassword.equals(secondPassword)))
                             {
                                 ((ViewManager) viewManager).getViewModel().addNewUser(new User(fullName, password));
-                                if (((ViewManager) viewManager).getUser() != null)
-                                {
-                                    ((ViewManager) viewManager).changeFrameFromLoginViewToAppView();
-                                }
-                                else
-                                {
-                                    labelInvalidDescription.setText(USER_DOES_NOT_EXISTS);
-                                }
+//                                if (((ViewManager) viewManager).getUser() != null)
+//                                {
+//                                    ((ViewManager) viewManager).changeFrameFromLoginViewToAppView();
+//                                }
+//                                else
+//                                {
+//                                    labelInvalidDescription.setText(USER_DOES_NOT_EXISTS);
+//                                }
                             }
                             else
                             {

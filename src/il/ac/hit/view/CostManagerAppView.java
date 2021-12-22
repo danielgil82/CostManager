@@ -6,20 +6,12 @@ import javax.swing.*;
 
 public class CostManagerAppView extends JFrame
 {
-    private User loggedInUser;
 
-    public CostManagerAppView(User user)
+
+    public CostManagerAppView()
     {
-        setLoggedInUser(user);
+
     }
 
-    public User getLoggedInUser()
-    {
-        return loggedInUser;
-    }
 
-    public void setLoggedInUser(User loggedInUser)
-    {
-        this.loggedInUser = loggedInUser;
-    }
 }
