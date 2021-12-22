@@ -1,4 +1,4 @@
-package il.ac.hit.exceptions;
+package il.ac.hit.model;
 
 public class CostManagerException extends Exception
 {
@@ -6,7 +6,7 @@ public class CostManagerException extends Exception
     {
         super(message);
     }
-
+ 
     public CostManagerException(String message, Throwable cause)
     {
         super(message, cause);

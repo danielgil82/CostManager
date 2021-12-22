@@ -1,12 +1,6 @@
 package il.ac.hit.model;
 
-import il.ac.hit.Category;
-import il.ac.hit.Expense;
-import il.ac.hit.User;
-import il.ac.hit.exceptions.CostManagerException;
-
 import java.util.Collection;
-import java.util.Date;
 
 public interface IModel
 {

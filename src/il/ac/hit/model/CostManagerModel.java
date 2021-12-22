@@ -1,10 +1,6 @@
 package il.ac.hit.model;
 
-import il.ac.hit.Category;
-import il.ac.hit.Expense;
-import il.ac.hit.User;
 import il.ac.hit.auxiliary.IErrorAndExceptionsHandlingStrings;
-import il.ac.hit.exceptions.CostManagerException;
 
 import java.sql.*;
 import java.sql.Date;
@@ -15,6 +11,7 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
 
     private final String driverFullQualifiedName = "com.mysql.jdbc.Driver";
     private final String connectionStringToDB = "jdbc:mysql://localhost:3306/costmanagerproj";
+    private final List<User> listOfUsers = null;
     //   private Connection connection = null;
 //    private Statement statement = null;
 //    private ResultSet resultSet = null;
@@ -24,10 +21,33 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
         try
         {
             Class.forName(driverFullQualifiedName);
+            setUsers();
         }
         catch (ClassNotFoundException ex)
         {
             throw new CostManagerException("Problem with registering driver to the driver manager", ex);
+        }
+    }
+
+    private void setUsers() throws CostManagerException
+    {
+        String getAllUsersQuery = "SELECT * from users";
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+             Statement statement = connection.createStatement())
+        {
+            ResultSet resultSet = statement.executeQuery(getAllUsersQuery);
+
+
+            while (resultSet.next())
+            {
+                listOfUsers.add(new User(resultSet.getInt("user_id"),
+                                        resultSet.getString("full_name"),
+                                        resultSet.getString("password")));
+            }
+        }
+        catch (SQLException exception)
+        {
+            throw new CostManagerException(PROBLEM_WITH_GETTING_THE_USERS);
         }
     }
 
@@ -105,11 +125,8 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
             connection.setAutoCommit(false);
             prepareStatement.setString(1, categoryToDelete.getCategoryName());
             prepareStatement.setInt(2, categoryToDelete.getUserID());
-
             int numberOfRowsAffected = prepareStatement.executeUpdate();
-
             connection.commit();
-
             return numberOfRowsAffected;
         }
         catch (SQLException exception)
@@ -120,7 +137,6 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
                 try
                 {
                     connection.rollback();
-
                     return -1;
                 }
                 catch (SQLException ex)
@@ -151,7 +167,6 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
         String removeExpensesQuery = "delete from costs where category = ? AND " + "user_id = ?";
         Connection connection = null;
         PreparedStatement prepareStatement = null;
-
         //Creating a connection string
         try
         {
@@ -160,11 +175,8 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
             connection.setAutoCommit(false);
             prepareStatement.setString(1, expensesToDeleteByCategory.getCategoryName());
             prepareStatement.setInt(2, expensesToDeleteByCategory.getUserID());
-
             int numberOfRowsAffected = prepareStatement.executeUpdate();
-
             connection.commit();
-
             return numberOfRowsAffected;
         }
         catch (SQLException exception)
@@ -175,7 +187,6 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
                 try
                 {
                     connection.rollback();
-
                     return -1;
                 }
                 catch (SQLException ex)
@@ -206,15 +217,12 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
     {
         String addNewExpenseQuery = "insert into costs (category, sum_cost, currency, description, date, user_id)"
                 + "value(?, ?, ?, ?, ?, ?)";
-
         Connection connection = null;
         PreparedStatement addNewExpense = null;
-
         try
         {
             connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
             addNewExpense = connection.prepareStatement(addNewExpenseQuery);
-
             connection.setAutoCommit(false);
             addNewExpense.setString(1, expense.getCategory());
             addNewExpense.setInt(2, expense.getCostSum());
@@ -222,15 +230,12 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
             addNewExpense.setString(4, expense.getExpenseDescription());
             addNewExpense.setDate(5, expense.getPurchaseDate());
             addNewExpense.setInt(6, expense.getUserID());
-
             int numberOfRowsAffected = addNewExpense.executeUpdate();
             connection.commit();
-
             if (numberOfRowsAffected != 1)
             {
                 throw new CostManagerException("Something went wrong.");
             }
-
             return numberOfRowsAffected;
         }
         catch (SQLException exception)
@@ -245,7 +250,6 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
                 try
                 {
                     connection.rollback();
-
                     return 0;
                 }
                 catch (SQLException ex)
@@ -277,7 +281,6 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
         String removeExistingExpenseQuery = "delete from costs where cost_id = ?";
         Connection connection = null;
         PreparedStatement prepareStatement = null;
-
         try
         {
             //Creating a connection string
@@ -285,10 +288,8 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
             prepareStatement = connection.prepareStatement(removeExistingExpenseQuery);
             connection.setAutoCommit(false);
             prepareStatement.setInt(1, expenseID);
-
             int numberOfRowsAffected = prepareStatement.executeUpdate();
             connection.commit();
-
             return numberOfRowsAffected;
         }
         catch (SQLException exception)
@@ -299,7 +300,6 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
                 try
                 {
                     connection.rollback();
-
                     return -1;
                 }
                 catch (SQLException ex)
@@ -338,7 +338,6 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
             prepareStatement.setDate(3, endDate);
             ResultSet resultSet = prepareStatement.executeQuery();
             List<Expense> costExpensesList = new LinkedList<>();
-
             while (resultSet.next())
             {
                 costExpensesList.add(new Expense
@@ -358,7 +357,6 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
         }
         finally
         {
-
         }
     }
 
@@ -369,20 +367,15 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
         PreparedStatement prepareStatement = null;
         ResultSet resultSet = null;
         User wantedUser = null;
-
         String getUserQuery = "select * from users WHERE full_name = ? AND" +
                 " password = ?";
-
         try
         {
             connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
             prepareStatement = connection.prepareStatement(getUserQuery);
-
             prepareStatement.setString(1, userFullName);
             prepareStatement.setString(2, userPassword);
-
             resultSet = prepareStatement.executeQuery();
-
             if (resultSet != null)
             {
                 wantedUser = new User(
@@ -394,12 +387,10 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
 
             return wantedUser;
         }
-
         catch (SQLException exception)
         {
             throw new CostManagerException(USER_DOES_NOT_EXISTS, exception);
         }
-
         finally
         {
             if (resultSet != null)
@@ -436,13 +427,53 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
                 }
             }
         }
+    }
 
+    private boolean checkIfTheUserExists(User user)
+    {
+        for(User currentUser: listOfUsers)
+        {
+            if(currentUser.getFullName().equals(user.getFullName()) &&
+                    currentUser.getUsersPassword().equals(user.getUsersPassword()))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
-    public int addNewUser(User user)
+    public int addNewUser(User newUser) throws CostManagerException
     {
-        return 0;
+        if(checkIfTheUserExists(newUser))
+        {
+            return 0;
+        }
+
+        String addNewUserQuery = "insert into users (full_name, password)"
+                + "value(?, ?)";
+
+        try(Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+            PreparedStatement preparedStatement = connection.prepareStatement(addNewUserQuery))
+        {
+
+            preparedStatement.setString(1,newUser.getFullName());
+            preparedStatement.setString(2, newUser.getUsersPassword());
+
+            int numberOfRowsAffected = preparedStatement.executeUpdate();
+
+            if (numberOfRowsAffected != 1)
+            {
+                throw new CostManagerException(SOMETHING_WENT_WRONG);
+            }
+
+            return numberOfRowsAffected;
+        }
+        catch (SQLException exception)
+        {
+            throw new CostManagerException(PROBLEM_WITH_ADDING_NEW_USER, exception);
+        }
     }
 
     @Override
@@ -451,25 +482,17 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
         Connection connection = null;
         PreparedStatement prepareStatement = null;
         ResultSet resultSet = null;
-
         try
         {
             //Creating a connection string
             connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-
             //performing simple query
             String querySql = "SELECT * FROM costs " +
-                            "where user_id = ?";
-
+                    "where user_id = ?";
             prepareStatement = connection.prepareStatement(querySql);
-
             prepareStatement.setInt(1, userID);
-
-             resultSet = prepareStatement.executeQuery();
-
-
+            resultSet = prepareStatement.executeQuery();
             List<Expense> costExpensesList = new LinkedList<>();
-
             while (resultSet.next())
             {
                 costExpensesList.add(new Expense
@@ -481,7 +504,6 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
                                 resultSet.getDate("date"),
                                 resultSet.getInt("user_id")));
             }
-
             return costExpensesList;
         }
         catch (SQLException ex)

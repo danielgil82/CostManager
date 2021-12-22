@@ -1,8 +1,8 @@
 //package il.ac.hit.model.tests;
 //
-//import il.ac.hit.Category;
-//import il.ac.hit.Expense;
-//import il.ac.hit.exceptions.CostManagerException;
+//import il.ac.hit.model.Category;
+//import il.ac.hit.model.Expense;
+//import il.ac.hit.model.CostManagerException;
 //import il.ac.hit.model.CostManagerModel;
 //import org.junit.After;
 //import org.junit.Before;

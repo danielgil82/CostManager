@@ -1,18 +1,14 @@
 package il.ac.hit;
 
-import il.ac.hit.exceptions.CostManagerException;
+import il.ac.hit.model.CostManagerException;
 import il.ac.hit.model.CostManagerModel;
 import il.ac.hit.model.IModel;
-import il.ac.hit.view.CostManagerView;
+import il.ac.hit.view.ViewManager;
 import il.ac.hit.view.IView;
-import il.ac.hit.viewModel.CostManagerViewModel;
-import il.ac.hit.viewModel.IViewModel;
+import il.ac.hit.viewmodel.CostManagerViewModel;
+import il.ac.hit.viewmodel.IViewModel;
 
 import javax.swing.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 public class Main
 {
@@ -43,7 +39,7 @@ public class Main
 
         IModel model = new CostManagerModel();
         IViewModel viewModel = new CostManagerViewModel();
-        IView view = new CostManagerView();
+        IView view = new ViewManager();
 
         SwingUtilities.invokeLater(new Runnable()
         {
