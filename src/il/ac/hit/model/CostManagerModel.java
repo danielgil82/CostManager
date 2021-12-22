@@ -384,6 +384,7 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
                         resultSet.getString("password")
                 );
             }
+
             return wantedUser;
         }
         catch (SQLException exception)

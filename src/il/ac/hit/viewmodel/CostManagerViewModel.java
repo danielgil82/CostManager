@@ -17,6 +17,8 @@ public class CostManagerViewModel implements IViewModel
     private IView view;
     private IModel model;
     private ExecutorService service;
+    private User user;
+
 
     public CostManagerViewModel()
     {
@@ -33,7 +35,7 @@ public class CostManagerViewModel implements IViewModel
             {
                 try
                 {
-                    User user = model.getUser(fullName, password);
+                    user = model.getUser(fullName, password);
                     ((ViewManager) view).setUser(user);
                 }
                 catch (CostManagerException ex)

@@ -19,7 +19,7 @@ public class ViewManager implements IView
     {
         loginView = new CostManagerLoginView(this);
         loginView.setVisible(true);
-      //  AppView = new CostManagerAppView(user);
+      //AppView = new CostManagerAppView(user);
     }
 
     @Override
@@ -45,12 +45,11 @@ public class ViewManager implements IView
         JOptionPane.showMessageDialog(null, message.getText());
     }
 
-    void changeFrameFromLoginViewToAppView()
+    public void changeFrameFromLoginViewToAppView()
     {
         loginView.setVisible(false);
         appView = new CostManagerAppView(user);
         appView.setVisible(true);
-
     }
 
     public IViewModel getViewModel()
