@@ -57,7 +57,7 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
         loginPanelPartOfTheLayeredPanel = new JPanel();
         signUPPanelPartOfTheLayeredPanel = new JPanel();
         panelNorthLoginFrame = new JPanel();
-   //     panelCenterLoginFrame = new JPanel();
+
         panelWestLoginFrame = new JPanel();
         panelSouthLoginFrame = new JPanel();
         labelCostManagerTitle = new JLabel("Cost Manager");
@@ -376,7 +376,6 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
 
     private class SignUpPanel extends JPanel
     {
-
         private JLabel labelSignUpTitle;
         private JLabel labelFullNameSignUp;
         private JLabel labelPasswordSignUp;
@@ -443,6 +442,7 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
                     String fullName = textFieldFullNameSignUp.getText();
                     String password = textFieldPasswordSignUp.getText();
                     String confirmPassword = textFieldConfirmPasswordSignUp.getText();
+
                     if (fullName != null && password != null && confirmPassword != null)
                     {
                         if (validateUsersFullName(fullName))
@@ -450,15 +450,8 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
                             // Using BiPredicate Functional Interface inorder to check if the passwords match each other
                             if (confirmPasswords(password, confirmPassword, (firstPassword, secondPassword) -> firstPassword.equals(secondPassword)))
                             {
+                                //Here going to add a new user to the users table.
                                 ((ViewManager) viewManager).getViewModel().addNewUser(new User(fullName, password));
-//                                if (((ViewManager) viewManager).getUser() != null)
-//                                {
-//                                    ((ViewManager) viewManager).changeFrameFromLoginViewToAppView();
-//                                }
-//                                else
-//                                {
-//                                    labelInvalidDescription.setText(USER_DOES_NOT_EXISTS);
-//                                }
                             }
                             else
                             {

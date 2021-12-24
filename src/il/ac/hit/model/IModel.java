@@ -5,7 +5,7 @@ import java.util.Collection;
 public interface IModel
 {
      User getUser(String userFullName, String userPassword) throws CostManagerException;
-     int addNewUser(User user) throws CostManagerException;
+     int addNewUserToDB(User user) throws CostManagerException;
      int addNewCategory(Category newCategoryToAdd) throws CostManagerException;
      int removeExistingCategory(Category categoryToDelete) throws CostManagerException;
      int addNewExpense(Expense cost) throws CostManagerException;

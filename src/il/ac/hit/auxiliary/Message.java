@@ -9,7 +9,7 @@ public class Message
         this.content = content;
     }
 
-    public String getText()
+    public String getMessage()
     {
         return content;
     }

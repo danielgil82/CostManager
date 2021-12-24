@@ -5,8 +5,6 @@ import il.ac.hit.model.User;
 import il.ac.hit.auxiliary.Message;
 import il.ac.hit.model.CostManagerException;
 import il.ac.hit.model.IModel;
-import il.ac.hit.view.CostManagerLoginView;
-import il.ac.hit.view.ViewManager;
 import il.ac.hit.view.IView;
 
 import javax.swing.*;
@@ -56,7 +54,7 @@ public class CostManagerViewModel implements IViewModel , IErrorAndExceptionsHan
                         @Override
                         public void run()
                         {
-                            ((ViewManager)view).getLoginView().getLabelInvalidDescription().setText(ex.getMessage());
+                            view.displayMessage(new Message(ex.getMessage()));
                         }
                     });
                 }
@@ -74,13 +72,23 @@ public class CostManagerViewModel implements IViewModel , IErrorAndExceptionsHan
             {
                 try
                 {
-                    int x = model.addNewUser(user);
+                    int affectedRows = model.addNewUserToDB(user);
 
-
-
-
-
-                    //((ViewManager) view).setUser(user);
+                    if (affectedRows == 0)
+                    {
+                        throw new CostManagerException(USER_ALREADY_EXISTS);
+                    }
+                    else if (affectedRows == 1)
+                    {
+                        SwingUtilities.invokeLater(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                view.displayMessage(new Message(SIGNED_UP_SUCCESSFULLY));
+                            }
+                        });
+                    }
                 }
 
                 catch (CostManagerException ex)
