@@ -34,8 +34,7 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
         String getAllUsersQuery = "SELECT * from users";
 
         try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-             Statement statement = connection.createStatement()
-        )
+             Statement statement = connection.createStatement())
         {
             ResultSet resultSet = statement.executeQuery(getAllUsersQuery);
 
@@ -365,70 +364,80 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
     @Override
     public User getUser(String userFullName, String userPassword) throws CostManagerException
     {
-        Connection connection = null;
-        PreparedStatement prepareStatement = null;
-        ResultSet resultSet = null;
-        User wantedUser = null;
-        String getUserQuery = "select * from users WHERE full_name = ? AND" +
-                " password = ?";
-        try
-        {
-            connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-            prepareStatement = connection.prepareStatement(getUserQuery);
-            prepareStatement.setString(1, userFullName);
-            prepareStatement.setString(2, userPassword);
-            resultSet = prepareStatement.executeQuery();
-            if (resultSet != null)
-            {
-                wantedUser = new User(
-                        resultSet.getInt("user_id"),
-                        resultSet.getString("full_name"),
-                        resultSet.getString("password")
-                );
-            }
 
-            return wantedUser;
-        }
-        catch (SQLException exception)
+        for (User user : listOfUsers)
         {
-            throw new CostManagerException(USER_DOES_NOT_EXISTS, exception);
-        }
-        finally
-        {
-            if (resultSet != null)
+            if(user.getFullName().equals(userFullName) && user.getUsersPassword().equals(userPassword))
             {
-                try
-                {
-                    resultSet.close();
-                }
-                catch (SQLException ex)
-                {
-                    throw new CostManagerException(PROBLEM_WITH_THE_RESULT_SET, ex);
-                }
-            }
-            if (prepareStatement != null)
-            {
-                try
-                {
-                    prepareStatement.close();
-                }
-                catch (SQLException ex)
-                {
-                    throw new CostManagerException(PROBLEM_WITH_THE_STATEMENT, ex);
-                }
-            }
-            if (connection != null)
-            {
-                try
-                {
-                    connection.close();
-                }
-                catch (SQLException ex)
-                {
-                    throw new CostManagerException(PROBLEM_WITH_THE_CONNECTION, ex);
-                }
+                return user;
             }
         }
+
+        throw new CostManagerException(USER_DOES_NOT_EXISTS);
+//        Connection connection = null;
+//        PreparedStatement prepareStatement = null;
+//        ResultSet resultSet = null;
+//        User wantedUser = null;
+//        String getUserQuery = "select * from users WHERE full_name = ? AND" +
+//                " password = ?";
+//        try
+//        {
+//            connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+//            prepareStatement = connection.prepareStatement(getUserQuery);
+//            prepareStatement.setString(1, userFullName);
+//            prepareStatement.setString(2, userPassword);
+//            resultSet = prepareStatement.executeQuery();
+//            if (resultSet != null)
+//            {
+//                wantedUser = new User(
+//                        resultSet.getInt("user_id"),
+//                        resultSet.getString("full_name"),
+//                        resultSet.getString("password")
+//                );
+//            }
+//
+//            return wantedUser;
+//        }
+//        catch (SQLException exception)
+//        {
+//            throw new CostManagerException(USER_DOES_NOT_EXISTS, exception);
+//        }
+//        finally
+//        {
+//            if (resultSet != null)
+//            {
+//                try
+//                {
+//                    resultSet.close();
+//                }
+//                catch (SQLException ex)
+//                {
+//                    throw new CostManagerException(PROBLEM_WITH_THE_RESULT_SET, ex);
+//                }
+//            }
+//            if (prepareStatement != null)
+//            {
+//                try
+//                {
+//                    prepareStatement.close();
+//                }
+//                catch (SQLException ex)
+//                {
+//                    throw new CostManagerException(PROBLEM_WITH_THE_STATEMENT, ex);
+//                }
+//            }
+//            if (connection != null)
+//            {
+//                try
+//                {
+//                    connection.close();
+//                }
+//                catch (SQLException ex)
+//                {
+//                    throw new CostManagerException(PROBLEM_WITH_THE_CONNECTION, ex);
+//                }
+//            }
+//        }
     }
 
     private boolean checkIfTheUserExists(User user)

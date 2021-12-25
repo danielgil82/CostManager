@@ -36,8 +36,8 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
     public CostManagerLoginView(IView viewManager)
     {
         setViewManager(viewManager);
-        init();
-        start();
+        initLoginView();
+        startLoginView();
     }
 
     public IView getViewManager()
@@ -50,7 +50,7 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
         this.viewManager = viewManager;
     }
 
-    public void init()
+    public void initLoginView()
     {
         gridLayoutWestPanel = new GridLayout(2, 1, 0, 5);
         layeredPaneCenter = new JLayeredPane();
@@ -68,19 +68,19 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
         signUpPanel = new SignUpPanel();
     }
 
-    public void start()
+    public void startLoginView()
     {
         //North Panel
         panelNorthLoginFrame.setBackground(Color.PINK);
         panelNorthLoginFrame.add(labelCostManagerTitle);
-        setComponentsAttributes(labelCostManagerTitle, new Font("Narkisim", Font.BOLD, 40), new Dimension(700, 70));
+        ComponentAttributes.setComponentsAttributes(labelCostManagerTitle, new Font("Narkisim", Font.BOLD, 40), new Dimension(700, 70));
         //West Panel
         panelWestLoginFrame.setLayout(gridLayoutWestPanel);
         panelWestLoginFrame.add(loginButton);
         panelWestLoginFrame.add(signUpButton);
         panelWestLoginFrame.setBackground(Color.red);
         //South Panel
-        setComponentsAttributes(labelInvalidDescription, new Font("Narkisim", Font.BOLD, 20), new Dimension(700, 50));
+        ComponentAttributes.setComponentsAttributes(labelInvalidDescription, new Font("Narkisim", Font.BOLD, 20), new Dimension(700, 50));
         panelSouthLoginFrame.add(labelInvalidDescription);
         panelSouthLoginFrame.setBackground(Color.cyan);
         //Center Panel
@@ -155,15 +155,15 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
 
     public void setButtonSize()
     {
-        setButtonAttributes(loginButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(80, 10));
-        setButtonAttributes(signUpButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(80, 10));
+        ComponentAttributes.setComponentsAttributes(loginButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(80, 10));
+        ComponentAttributes.setComponentsAttributes(signUpButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(80, 10));
     }
 
-    public void setButtonAttributes(Component component, Font font, Dimension dimensions)
-    {
-        component.setFont(font);
-        component.setPreferredSize(dimensions);
-    }
+//    private void setButtonAttributes(Component component, Font font, Dimension dimensions)
+//    {
+//        component.setFont(font);
+//        component.setPreferredSize(dimensions);
+//    }
 
     /**
      * Buttons ActionListeners
@@ -176,12 +176,6 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
             layeredPaneCenter.removeAll();
             layeredPaneCenter.add(loginPanelPartOfTheLayeredPanel);
             layeredPaneCenter.revalidate();
-
-//            if (signUpPanel.isVisible())
-//            {
-//                signUpPanel.setVisible(false);
-//            }
-//            loginPanel.setVisible(true);
         });
 
         //SignUp button
@@ -190,12 +184,6 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
             layeredPaneCenter.removeAll();
             layeredPaneCenter.add(signUPPanelPartOfTheLayeredPanel);
             layeredPaneCenter.revalidate();
-
-//            if (loginPanel.isVisible())
-//            {
-//                loginPanel.setVisible(false);
-//            }
-//            signUpPanel.setVisible(true);
         });
     }
 
@@ -225,16 +213,16 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
      * @param font       indicates the font style of the component.
      * @param dimensions indicates the dimensions of the component.
      */
-    private void setComponentsAttributes(JComponent component, Font font, Dimension dimensions)
-    {
-        if (component instanceof JLabel)
-        {
-            ((JLabel) component).setHorizontalAlignment(SwingConstants.CENTER);
-        }
-
-        component.setFont(font);
-        component.setPreferredSize(dimensions);
-    }
+//    private void setComponentsAttributes(Component component, Font font, Dimension dimensions)
+//    {
+//        if (component instanceof JLabel)
+//        {
+//            ((JLabel) component).setHorizontalAlignment(SwingConstants.CENTER);
+//        }
+//
+//        component.setFont(font);
+//        component.setPreferredSize(dimensions);
+//    }
 
 
     /**
@@ -295,7 +283,7 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
             panelLoginCenterLoginPanel.add(textFieldPasswordLoginPanel);
             this.add(panelLoginCenterLoginPanel, BorderLayout.CENTER);
             //LoginPanelSouth
-            setButtonAttributes(buttonOkLoginPanel, new Font("Narkisim", Font.BOLD, 20), new Dimension(70, 30));
+            ComponentAttributes.setComponentsAttributes(buttonOkLoginPanel, new Font("Narkisim", Font.BOLD, 20), new Dimension(70, 30));
             panelLoginSouthLoginPanel.add(buttonOkLoginPanel);
             this.add(panelLoginSouthLoginPanel, BorderLayout.SOUTH);
 
@@ -314,14 +302,6 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
                         if (validateUsersFullName(textFieldFullNameLoginPanel.getText()))
                         {
                             ((ViewManager) viewManager).getViewModel().getUser(textFieldFullNameLoginPanel.getText(), textFieldPasswordLoginPanel.getText());
-//                            if (((ViewManager) viewManager).getUser() != null)
-//                            {
-//                                ((ViewManager) viewManager).changeFrameFromLoginViewToAppView();
-//                            }
-//                            else
-//                            {
-//                                labelInvalidDescription.setText(USER_DOES_NOT_EXISTS);
-//                            }
                         }
                         else
                         {
@@ -343,7 +323,7 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
             Font font = new Font("Narkisim", Font.BOLD, 20);
             Dimension dimension = new Dimension(new Dimension(0, 0));
 
-            setComponentsAttributes(labelLoginTitle, new Font("Narkisim", Font.BOLD, 40), new Dimension(150, 70));
+            ComponentAttributes.setComponentsAttributes(labelLoginTitle, new Font("Narkisim", Font.BOLD, 40), new Dimension(150, 70));
 
             componentsList.add(labelFullNameLoginPanel);
             componentsList.add(labelPasswordLoginPanel);
@@ -352,7 +332,7 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
 
             for (JComponent component : componentsList)
             {
-                setComponentsAttributes(component, font, dimension);
+                ComponentAttributes.setComponentsAttributes(component, font, dimension);
             }
 //            setComponentsAttributes(labelFullNameLoginPanel,
 //                    new Font("Narkisim", Font.BOLD, 30),
@@ -430,7 +410,7 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
             panelCenterSignUp.add((labelConfirmPasswordSignUp));
             panelCenterSignUp.add(textFieldConfirmPasswordSignUp);
             this.add(panelCenterSignUp, BorderLayout.CENTER);
-            setButtonAttributes(buttonSubmitSignUp, new Font("Narkisim", Font.BOLD, 20), new Dimension(110, 30));
+            ComponentAttributes.setComponentsAttributes(buttonSubmitSignUp, new Font("Narkisim", Font.BOLD, 20), new Dimension(110, 30));
             panelSouthSignUp.add(buttonSubmitSignUp);
             this.add(panelSouthSignUp, BorderLayout.SOUTH);
 
@@ -443,7 +423,7 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
                     String password = textFieldPasswordSignUp.getText();
                     String confirmPassword = textFieldConfirmPasswordSignUp.getText();
 
-                    if (fullName != null && password != null && confirmPassword != null)
+                    if (!fullName.equals("") && !password.equals("") && !confirmPassword.equals(""))
                     {
                         if (validateUsersFullName(fullName))
                         {
@@ -483,7 +463,7 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
             Font font = new Font("Narkisim", Font.BOLD, 20);
             Dimension dimension = new Dimension(new Dimension(250, 50));
 
-            setComponentsAttributes(labelSignUpTitle, new Font("Narkisim", Font.BOLD, 35), new Dimension(200, 70));
+            ComponentAttributes.setComponentsAttributes(labelSignUpTitle, new Font("Narkisim", Font.BOLD, 35), new Dimension(200, 70));
 
             componentsList.add(labelFullNameSignUp);
             componentsList.add(labelPasswordSignUp);
@@ -493,7 +473,7 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
             componentsList.add(textFieldConfirmPasswordSignUp);
             for (JComponent component : componentsList)
             {
-                setComponentsAttributes(component, font, dimension);
+                ComponentAttributes.setComponentsAttributes(component, font, dimension);
             }
         }
     }

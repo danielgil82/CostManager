@@ -38,14 +38,14 @@ public class ViewManager implements IView
     @Override
     public void displayMessage(Message message)
     {
-       loginView.getLabelInvalidDescription().setText(message.getMessage());
+        loginView.getLabelInvalidDescription().setText(message.getMessage());
     }
 
     @Override
     public void changeFrameFromLoginViewToAppView()
     {
         loginView.setVisible(false);
-        appView = new CostManagerAppView();
+        appView = new CostManagerAppView(this);
         appView.setVisible(true);
     }
 
@@ -53,7 +53,6 @@ public class ViewManager implements IView
     {
         return viewModel;
     }
-
 
     public CostManagerLoginView getLoginView()
     {
