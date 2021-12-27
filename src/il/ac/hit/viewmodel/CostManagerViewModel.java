@@ -117,4 +117,9 @@ public class CostManagerViewModel implements IViewModel , IErrorAndExceptionsHan
     {
         this.model = model;
     }
+
+    public void resetUser()
+    {
+        user = null;
+    }
 }

@@ -102,7 +102,7 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
 //
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         centreWindowAndDefineItsDimensions(this);
-        setButtonSize();
+        setButtonAttributes();
         setButtonsActionListeners();
         this.setVisible(true);
     }
@@ -153,7 +153,7 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
     }
 
 
-    public void setButtonSize()
+    public void setButtonAttributes()
     {
         ComponentAttributes.setComponentsAttributes(loginButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(80, 10));
         ComponentAttributes.setComponentsAttributes(signUpButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(80, 10));

@@ -1,7 +1,10 @@
 package il.ac.hit.view;
 
 import il.ac.hit.auxiliary.Message;
+import il.ac.hit.viewmodel.CostManagerViewModel;
 import il.ac.hit.viewmodel.IViewModel;
+
+import javax.swing.*;
 
 public class ViewManager implements IView
 {
@@ -39,6 +42,18 @@ public class ViewManager implements IView
     public void displayMessage(Message message)
     {
         loginView.getLabelInvalidDescription().setText(message.getMessage());
+    }
+
+    @Override
+    public void changeFrameFromAppViewToLoginView()
+    {
+        appView.dispose();
+        loginView.setVisible(true);
+    }
+
+    public void resetUser()
+    {
+        ((CostManagerViewModel)viewModel).resetUser();
     }
 
     @Override

@@ -3,6 +3,8 @@ package il.ac.hit.view;
 import il.ac.hit.auxiliary.Message;
 import il.ac.hit.viewmodel.IViewModel;
 
+import javax.swing.*;
+
 public interface IView
 {
 
@@ -11,4 +13,5 @@ public interface IView
     void init();
     void start();
     void changeFrameFromLoginViewToAppView();
+    void changeFrameFromAppViewToLoginView();
 }
