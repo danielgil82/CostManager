@@ -33,12 +33,11 @@ public class CostManagerAppView extends JFrame
 //    private ReportPanel reportPanel;
 
 
-
     public CostManagerAppView(IView viewManager)
     {
-      setViewManager(viewManager);
-      initAppView();
-      startAppView();
+        setViewManager(viewManager);
+        initAppView();
+        startAppView();
     }
 
     public void setViewManager(IView viewManager)
@@ -73,9 +72,6 @@ public class CostManagerAppView extends JFrame
     {
 
     }
-
-
-
 
 
 }
