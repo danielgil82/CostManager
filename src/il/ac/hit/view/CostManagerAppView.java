@@ -1,11 +1,11 @@
 package il.ac.hit.view;
 
 import javax.swing.*;
-import javax.swing.text.View;
 import java.awt.*;
 
 public class CostManagerAppView extends JFrame
 {
+
     IView viewManager;
     /**
      * Swing components
@@ -14,7 +14,8 @@ public class CostManagerAppView extends JFrame
     private JButton operationsButton;
     private JButton reportButton;
     private JButton logOutButton;
-    private JLabel costManagerTitle;
+    private JLabel labelCostManagerTitle;
+    private JLabel labelFeedbackMessage;
     private JPanel panelAppContent;
     private JPanel panelNorth;
     private JPanel panelAllExpenses;
@@ -31,7 +32,6 @@ public class CostManagerAppView extends JFrame
 //    private OperationsPanel operationsPanel;
 //    private ReportPanel reportPanel;
 
-
     public CostManagerAppView(IView viewManager)
     {
         setViewManager(viewManager);
@@ -44,14 +44,14 @@ public class CostManagerAppView extends JFrame
         this.viewManager = viewManager;
     }
 
-
     private void initAppView()
     {
-        allExpensesButton = new JButton();
-        operationsButton = new JButton();
-        reportButton = new JButton();
-        logOutButton = new JButton();
-        costManagerTitle = new JLabel("Cost Manager");
+        allExpensesButton = new JButton("Expenses");
+        operationsButton = new JButton("Operations");
+        reportButton = new JButton("Report");
+        logOutButton = new JButton("LogOut");
+        labelCostManagerTitle = new JLabel("Cost Manager");
+        labelFeedbackMessage = new JLabel();
         panelAppContent = new JPanel();
         panelNorth = new JPanel();
         panelAllExpenses = new JPanel();
@@ -64,13 +64,32 @@ public class CostManagerAppView extends JFrame
         tableData = new JTable();
         panelNorthFlowLayout = new FlowLayout(0, 25, 0);
         borderLayoutPanelContent = new BorderLayout();
-
     }
 
     private void startAppView()
     {
         setApplicationFrame();
+        setNorthPanelComponentAttributes();
+        setButtonsActionListeners();
         setNorthPanel();
+        setSouthPanel();
+    }
+
+    /**
+     * setting the south panel of the application , this part suppose to .
+     */
+    private void setSouthPanel()
+    {
+        panelSouth.setBackground(new Color(190, 190, 230, 155));
+        panelSouth.setBounds(0, 0, 1200, 200);
+
+        ComponentAttributes.setComponentsAttributes(labelFeedbackMessage,
+                new Font("Narkisim", Font.BOLD, 30),
+                new Dimension(1000,100));
+
+        panelSouth.add(labelFeedbackMessage);
+
+        panelAppContent.add(panelSouth, BorderLayout.SOUTH);
     }
 
     /**
@@ -79,15 +98,14 @@ public class CostManagerAppView extends JFrame
     private void setNorthPanel()
     {
         panelNorth.setLayout(panelNorthFlowLayout);
-        panelNorth.setBackground(new Color(190,190,230,155));
-        panelNorth.setBounds(0,0,1200, 200);
+        panelNorth.setBackground(new Color(190, 190, 230, 155));
+        panelNorth.setBounds(0, 0, 1200, 200);
         panelNorth.add(allExpensesButton);
         panelNorth.add(operationsButton);
         panelNorth.add(reportButton);
-        panelNorth.add(costManagerTitle);
+        panelNorth.add(labelCostManagerTitle);
         panelNorth.add(logOutButton);
-        setNorthPanelComponentAttributes();
-        setButtonsActionListeners();
+
         panelAppContent.add(panelNorth, BorderLayout.NORTH);
     }
 
@@ -118,54 +136,31 @@ public class CostManagerAppView extends JFrame
         });
 
         logOutButton.addActionListener(e ->
-                {
-                    ((ViewManager)viewManager).resetUser();
-                    viewManager.changeFrameFromAppViewToLoginView();
-                });
-
+        {
+            ((ViewManager) viewManager).resetUser();
+            viewManager.changeFrameFromAppViewToLoginView();
+        });
     }
 
     /**
-     *  set each of the buttons attributes
+     * set each of the north's panel components attributes
      */
     private void setNorthPanelComponentAttributes()
     {
         Component[] components = panelNorth.getComponents();
-
         for (Component component : components)
         {
             if (component instanceof JButton)
             {
                 ComponentAttributes.setComponentsAttributes(component,
                         new Font("Narkisim", Font.BOLD, 30),
-                        new Dimension(200,100));
+                        new Dimension(200, 100));
             }
         }
-//        ComponentAttributes.setComponentsAttributes(allExpensesButton,
-//                new Font("Narkisim", Font.BOLD, 30),
-//                new Dimension(200,100));
-//
-//        ComponentAttributes.setComponentsAttributes(operationsButton,
-//                new Font("Narkisim", Font.BOLD, 30),
-//                new Dimension(200,100));
-//
-//        ComponentAttributes.setComponentsAttributes(reportButton,
-//                new Font("Narkisim", Font.BOLD, 30),
-//                new Dimension(200,100));
-//
-//
-//        ComponentAttributes.setComponentsAttributes(allExpensesButton,
-//                new Font("Narkisim", Font.BOLD, 30),
-//                new Dimension(200,100));
-//
-//
-//        ComponentAttributes.setComponentsAttributes(logOutButton,
-//                new Font("Narkisim", Font.BOLD, 30),
-//                new Dimension(200,100));
 
-        costManagerTitle.setFont(new Font("Narkisim", Font.BOLD, 40));
-        costManagerTitle.setBounds(1000, 0, 200, 100);
-        costManagerTitle.setForeground(Color.red);
+        labelCostManagerTitle.setFont(new Font("Narkisim", Font.BOLD, 40));
+        labelCostManagerTitle.setBounds(1000, 0, 200, 100);
+        labelCostManagerTitle.setForeground(Color.red);
     }
 
     /**
@@ -174,7 +169,7 @@ public class CostManagerAppView extends JFrame
     private void setApplicationFrame()
     {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(0,0,1300,1000);
+        setBounds(0, 0, 1300, 1000);
         panelAppContent.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
         this.add(panelAppContent);
     }

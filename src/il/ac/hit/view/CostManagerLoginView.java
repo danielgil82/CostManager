@@ -17,8 +17,8 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
     private JPanel panelNorthLoginFrame;
     private JPanel panelWestLoginFrame;
     private JPanel panelSouthLoginFrame;
-    private JPanel loginPanelPartOfTheLayeredPanel;
-    private JPanel signUPPanelPartOfTheLayeredPanel;
+    private JPanel loginPanelPartOfTheLayeredPane;
+    private JPanel signUPPanelPartOfTheLayeredPane;
     private JLabel labelCostManagerTitle;
     private Button loginButton;
     private Button signUpButton;
@@ -54,8 +54,8 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
     {
         gridLayoutWestPanel = new GridLayout(2, 1, 0, 5);
         layeredPaneCenter = new JLayeredPane();
-        loginPanelPartOfTheLayeredPanel = new JPanel();
-        signUPPanelPartOfTheLayeredPanel = new JPanel();
+        loginPanelPartOfTheLayeredPane = new JPanel();
+        signUPPanelPartOfTheLayeredPane = new JPanel();
         panelNorthLoginFrame = new JPanel();
 
         panelWestLoginFrame = new JPanel();
@@ -127,8 +127,8 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
 //
 //        loginPanelPartOfTheLayeredPanel.setBounds(xPos, yPos, this.getWidth() , panelSouthLoginFrame.getHeight()  - 5);
 ////        loginPanelPartOfTheLayeredPanel.setBackground(Color.BLUE);
-        loginPanelPartOfTheLayeredPanel.add(loginPanel);
-        layeredPaneCenter.add(loginPanelPartOfTheLayeredPanel);
+        loginPanelPartOfTheLayeredPane.add(loginPanel);
+        layeredPaneCenter.add(loginPanelPartOfTheLayeredPane);
     }
 
     private void setSignUpPanelPartOfTheLayeredPane()
@@ -137,8 +137,8 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
 //        int yPos = loginButton.getLocation().y;
 //
 //        signUPPanelPartOfTheLayeredPanel.setBounds(xPos, yPos, this.getWidth() - 100, panelSouthLoginFrame.getHeight()  - 5);
-        signUPPanelPartOfTheLayeredPanel.add(signUpPanel);
-        layeredPaneCenter.add(signUPPanelPartOfTheLayeredPanel);
+        signUPPanelPartOfTheLayeredPane.add(signUpPanel);
+        layeredPaneCenter.add(signUPPanelPartOfTheLayeredPane);
     }
 
 
@@ -159,12 +159,6 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
         ComponentAttributes.setComponentsAttributes(signUpButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(80, 10));
     }
 
-//    private void setButtonAttributes(Component component, Font font, Dimension dimensions)
-//    {
-//        component.setFont(font);
-//        component.setPreferredSize(dimensions);
-//    }
-
     /**
      * Buttons ActionListeners
      */
@@ -174,7 +168,7 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
         loginButton.addActionListener(e ->
         {
             layeredPaneCenter.removeAll();
-            layeredPaneCenter.add(loginPanelPartOfTheLayeredPanel);
+            layeredPaneCenter.add(loginPanelPartOfTheLayeredPane);
             layeredPaneCenter.revalidate();
         });
 
@@ -182,7 +176,7 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
         signUpButton.addActionListener(e ->
         {
             layeredPaneCenter.removeAll();
-            layeredPaneCenter.add(signUPPanelPartOfTheLayeredPanel);
+            layeredPaneCenter.add(signUPPanelPartOfTheLayeredPane);
             layeredPaneCenter.revalidate();
         });
     }
@@ -207,41 +201,19 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
     }
 
     /**
-     * @param component  is a type of JComponent because it gives the basis for polymorphism and
-     *                   thus, it gives you the reuse if needed in the future.
-     *                   For Example maybe in the future we'd like to set The Attributes for a JTextField.
-     * @param font       indicates the font style of the component.
-     * @param dimensions indicates the dimensions of the component.
-     */
-//    private void setComponentsAttributes(Component component, Font font, Dimension dimensions)
-//    {
-//        if (component instanceof JLabel)
-//        {
-//            ((JLabel) component).setHorizontalAlignment(SwingConstants.CENTER);
-//        }
-//
-//        component.setFont(font);
-//        component.setPreferredSize(dimensions);
-//    }
-
-
-    /**
-     *
-     *
      * LoginPanel class which displays the login part
      */
     private class LoginPanel extends JPanel
     {
-
         private JLabel labelLoginTitle;
         private JLabel labelFullNameLoginPanel;
         private JLabel labelPasswordLoginPanel;
         private JTextField textFieldFullNameLoginPanel;
         private JTextField textFieldPasswordLoginPanel;
         private JButton buttonOkLoginPanel;
-        private JPanel panelLoginNorthLoginPanel;
-        private JPanel panelLoginCenterLoginPanel;
-        private JPanel panelLoginSouthLoginPanel;
+        private JPanel panelLoginNorth;
+        private JPanel panelLoginCenter;
+        private JPanel panelLoginSouth;
 
         public LoginPanel()
         {
@@ -257,9 +229,9 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
             textFieldFullNameLoginPanel = new JTextField();
             textFieldPasswordLoginPanel = new JTextField();
             buttonOkLoginPanel = new JButton("Ok");
-            panelLoginNorthLoginPanel = new JPanel();
-            panelLoginCenterLoginPanel = new JPanel();
-            panelLoginSouthLoginPanel = new JPanel();
+            panelLoginNorth = new JPanel();
+            panelLoginCenter = new JPanel();
+            panelLoginSouth = new JPanel();
         }
 
 
@@ -271,21 +243,21 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
             borderLayout.setVgap(30);
             this.setLayout(borderLayout);
             //LoginPanelNorth
-            panelLoginNorthLoginPanel.add(labelLoginTitle);
-            this.add(panelLoginNorthLoginPanel, BorderLayout.NORTH);
+            panelLoginNorth.add(labelLoginTitle);
+            this.add(panelLoginNorth, BorderLayout.NORTH);
             //LoginPanelCenter
             GridLayout gridLayout = new GridLayout(2, 2, 20, 10);
             gridLayout.setVgap(25);
-            panelLoginCenterLoginPanel.setLayout(gridLayout);
-            panelLoginCenterLoginPanel.add((labelFullNameLoginPanel));
-            panelLoginCenterLoginPanel.add(textFieldFullNameLoginPanel);
-            panelLoginCenterLoginPanel.add((labelPasswordLoginPanel));
-            panelLoginCenterLoginPanel.add(textFieldPasswordLoginPanel);
-            this.add(panelLoginCenterLoginPanel, BorderLayout.CENTER);
+            panelLoginCenter.setLayout(gridLayout);
+            panelLoginCenter.add((labelFullNameLoginPanel));
+            panelLoginCenter.add(textFieldFullNameLoginPanel);
+            panelLoginCenter.add((labelPasswordLoginPanel));
+            panelLoginCenter.add(textFieldPasswordLoginPanel);
+            this.add(panelLoginCenter, BorderLayout.CENTER);
             //LoginPanelSouth
             ComponentAttributes.setComponentsAttributes(buttonOkLoginPanel, new Font("Narkisim", Font.BOLD, 20), new Dimension(70, 30));
-            panelLoginSouthLoginPanel.add(buttonOkLoginPanel);
-            this.add(panelLoginSouthLoginPanel, BorderLayout.SOUTH);
+            panelLoginSouth.add(buttonOkLoginPanel);
+            this.add(panelLoginSouth, BorderLayout.SOUTH);
 
 
             /**

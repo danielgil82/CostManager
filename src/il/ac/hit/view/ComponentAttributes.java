@@ -12,6 +12,13 @@ import java.awt.*;
 
 class ComponentAttributes
 {
+    /**
+     * @param component  is a type of JComponent because it gives the basis for polymorphism and
+     *                   thus, it gives you the reuse if needed in the future.
+     *                   For Example maybe in the future we'd like to set The Attributes for a JTextField.
+     * @param font       indicates the font style of the component.
+     * @param dimensions indicates the dimensions of the component.
+     */
     public static void setComponentsAttributes(Component component, Font font, Dimension dimensions)
     {
         if (component instanceof JLabel)
