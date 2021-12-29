@@ -5,6 +5,7 @@ import il.ac.hit.viewmodel.CostManagerViewModel;
 import il.ac.hit.viewmodel.IViewModel;
 
 import javax.swing.*;
+import java.util.Collection;
 
 public class ViewManager implements IView
 {
@@ -12,6 +13,16 @@ public class ViewManager implements IView
     private IViewModel viewModel;
     private CostManagerLoginView loginView;
     private CostManagerAppView appView;
+
+    public IViewModel getViewModel()
+    {
+        return viewModel;
+    }
+
+    public CostManagerLoginView getLoginView()
+    {
+        return loginView;
+    }
 
 
     public ViewManager()
@@ -64,13 +75,13 @@ public class ViewManager implements IView
         appView.setVisible(true);
     }
 
-    public IViewModel getViewModel()
+    @Override
+    public void setSpecificUsersCategories(Collection<String> listOfCategories)
     {
-        return viewModel;
-    }
-
-    public CostManagerLoginView getLoginView()
-    {
-        return loginView;
+        for (String category : listOfCategories)
+        {
+            appView.getListOfCategories().add(category);
+        }
+        appView.getExpensesPanel().getPanelCategorySelector().auxiliaryAddCategoriesIntoComboBox(listOfCategories);
     }
 }

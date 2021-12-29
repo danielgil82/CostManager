@@ -502,10 +502,12 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
             //performing simple query
             String querySql = "SELECT * FROM costs " +
                     "where user_id = ?";
+
             prepareStatement = connection.prepareStatement(querySql);
             prepareStatement.setInt(1, userID);
             resultSet = prepareStatement.executeQuery();
             List<Expense> costExpensesList = new LinkedList<>();
+
             while (resultSet.next())
             {
                 costExpensesList.add(new Expense
@@ -589,6 +591,38 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
         catch (SQLException exception)
         {
             throw new CostManagerException(PROBLEM_WITH_GETTING_THE_USERS);
+        }
+    }
+
+    /**
+     * @param userId -> identifies the user, thus we can get the categories according to that user
+     * @return all categories of a specific user
+     * @throws CostManagerException
+     */
+    @Override
+    public Collection<String> getCategoriesBySpecificUser(int userId) throws CostManagerException
+    {
+        String getCategoriesByUserQuery = "SELECT category FROM categories where user_id = ?";
+
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+             PreparedStatement preparedStatement = connection.prepareStatement(getCategoriesByUserQuery))
+        {
+
+            preparedStatement.setInt(1,userId);
+            ArrayList<String> listOfCategories = new ArrayList<>();
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next())
+            {
+                listOfCategories.add(resultSet.getString("category"));
+            }
+
+            return listOfCategories;
+
+        }
+        catch (SQLException exception)
+        {
+            throw new CostManagerException(COULD_NOT_GET_THE_CATEGORIES);
         }
     }
 }

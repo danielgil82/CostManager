@@ -2,11 +2,13 @@ package il.ac.hit.view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
-public class CostManagerAppView extends JFrame
+public class CostManagerAppView extends JFrame implements ICentralizeWindow
 {
-
-    IView viewManager;
+    private final Collection<String> listOfCategories = new ArrayList<>();
+    private IView viewManager;
     /**
      * Swing components
      */
@@ -28,7 +30,7 @@ public class CostManagerAppView extends JFrame
     private JTable tableData;
     private FlowLayout panelNorthFlowLayout;
     private BorderLayout borderLayoutPanelContent;
-//    private AllExpensesPanel allExpenses;
+    private ExpensesPanel expensesPanel;
 //    private OperationsPanel operationsPanel;
 //    private ReportPanel reportPanel;
 
@@ -39,6 +41,17 @@ public class CostManagerAppView extends JFrame
         startAppView();
     }
 
+
+    public Collection<String> getListOfCategories()
+    {
+        return listOfCategories;
+    }
+
+    public ExpensesPanel getExpensesPanel()
+    {
+        return expensesPanel;
+    }
+
     public void setViewManager(IView viewManager)
     {
         this.viewManager = viewManager;
@@ -46,6 +59,7 @@ public class CostManagerAppView extends JFrame
 
     private void initAppView()
     {
+        expensesPanel = new ExpensesPanel(viewManager);
         allExpensesButton = new JButton("Expenses");
         operationsButton = new JButton("Operations");
         reportButton = new JButton("Report");
@@ -69,9 +83,9 @@ public class CostManagerAppView extends JFrame
     private void startAppView()
     {
         setApplicationFrame();
+        setNorthPanel();
         setNorthPanelComponentAttributes();
         setButtonsActionListeners();
-        setNorthPanel();
         setSouthPanel();
     }
 
@@ -81,14 +95,13 @@ public class CostManagerAppView extends JFrame
     private void setSouthPanel()
     {
         panelSouth.setBackground(new Color(190, 190, 230, 155));
-        panelSouth.setBounds(0, 0, 1200, 200);
+        panelSouth.setBounds(0, 900, 1300, 100);
 
         ComponentAttributes.setComponentsAttributes(labelFeedbackMessage,
                 new Font("Narkisim", Font.BOLD, 30),
-                new Dimension(1000,100));
+                new Dimension(1240,50));
 
         panelSouth.add(labelFeedbackMessage);
-
         panelAppContent.add(panelSouth, BorderLayout.SOUTH);
     }
 
@@ -99,13 +112,12 @@ public class CostManagerAppView extends JFrame
     {
         panelNorth.setLayout(panelNorthFlowLayout);
         panelNorth.setBackground(new Color(190, 190, 230, 155));
-        panelNorth.setBounds(0, 0, 1200, 200);
+        panelNorth.setBounds(0, 0, 1300, 200);
         panelNorth.add(allExpensesButton);
         panelNorth.add(operationsButton);
         panelNorth.add(reportButton);
         panelNorth.add(labelCostManagerTitle);
         panelNorth.add(logOutButton);
-
         panelAppContent.add(panelNorth, BorderLayout.NORTH);
     }
 
@@ -154,11 +166,11 @@ public class CostManagerAppView extends JFrame
             {
                 ComponentAttributes.setComponentsAttributes(component,
                         new Font("Narkisim", Font.BOLD, 30),
-                        new Dimension(200, 100));
+                        new Dimension(200, 70));
             }
         }
 
-        labelCostManagerTitle.setFont(new Font("Narkisim", Font.BOLD, 40));
+        labelCostManagerTitle.setFont(new Font("Narkisim", Font.BOLD, 50));
         labelCostManagerTitle.setBounds(1000, 0, 200, 100);
         labelCostManagerTitle.setForeground(Color.red);
     }
@@ -168,9 +180,11 @@ public class CostManagerAppView extends JFrame
      */
     private void setApplicationFrame()
     {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(0, 0, 1300, 1000);
-        panelAppContent.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setSize(1300, 1000);
+        centralizeWindow(this);
+        //panelAppContent.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
         this.add(panelAppContent);
+
     }
 }

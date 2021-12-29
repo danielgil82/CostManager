@@ -12,4 +12,5 @@ public interface IModel
      int removeExistingExpense(int id) throws CostManagerException;
      Collection<Expense> getReportByDates(int userID, java.sql.Date startDate, java.sql.Date endDate) throws CostManagerException;
      Collection<Expense> getAllExpenses(int userID) throws CostManagerException;
+     Collection<String> getCategoriesBySpecificUser(int userId) throws CostManagerException;
 }

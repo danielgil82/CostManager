@@ -4,6 +4,7 @@ import il.ac.hit.auxiliary.Message;
 import il.ac.hit.viewmodel.IViewModel;
 
 import javax.swing.*;
+import java.util.Collection;
 
 public interface IView
 {
@@ -14,4 +15,5 @@ public interface IView
     void start();
     void changeFrameFromLoginViewToAppView();
     void changeFrameFromAppViewToLoginView();
+    void setSpecificUsersCategories(Collection<String> listOfCategories);
 }

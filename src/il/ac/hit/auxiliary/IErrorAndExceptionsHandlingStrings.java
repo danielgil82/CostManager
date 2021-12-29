@@ -6,6 +6,8 @@ public interface IErrorAndExceptionsHandlingStrings
    final static String USER_DOES_NOT_EXISTS = "User doesn't exist, try again or sign up";
    final static String USER_ALREADY_EXISTS = "User already exists, sign up with different details";
    final static String SIGNED_UP_SUCCESSFULLY = "You signed up successfully";
+   final static String COULD_NOT_GET_THE_CATEGORIES = "Couldn't get the categories";
+
    final static String PROBLEM_WITH_THE_CONNECTION = "problems with the connection";
    final static String PROBLEM_WITH_THE_RESULT_SET = "problems with the result set";
    final static String PROBLEM_WITH_THE_STATEMENT = "problems with the statement";

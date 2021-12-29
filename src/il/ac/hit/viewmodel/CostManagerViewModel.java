@@ -8,6 +8,8 @@ import il.ac.hit.model.IModel;
 import il.ac.hit.view.IView;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -89,6 +91,38 @@ public class CostManagerViewModel implements IViewModel , IErrorAndExceptionsHan
                             }
                         });
                     }
+                }
+
+                catch (CostManagerException ex)
+                {
+                    SwingUtilities.invokeLater(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            view.displayMessage(new Message(ex.getMessage()));
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    @Override
+    public void getCategoriesBySpecificUser()
+    {
+        service.submit(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    Collection<String> categoryCollection = new ArrayList<>();
+
+                    categoryCollection = model.getCategoriesBySpecificUser(user.getUserID());
+
+                    view.setSpecificUsersCategories(categoryCollection);
                 }
 
                 catch (CostManagerException ex)

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
 
-public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsHandlingStrings
+public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsHandlingStrings, ICentralizeWindow
 {
     private IView viewManager;
     private JPanel panelNorthLoginFrame;
@@ -101,7 +101,9 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
         this.add(panelSouthLoginFrame, BorderLayout.SOUTH);
 //
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        centreWindowAndDefineItsDimensions(this);
+        this.setSize(800, 600);
+        centralizeWindow(this);
+        //centreWindowAndDefineItsDimensions(this);
         setButtonAttributes();
         setButtonsActionListeners();
         this.setVisible(true);
@@ -119,48 +121,58 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
         this.add(layeredPaneCenter, BorderLayout.CENTER);
     }
 
+    /**
+     *
+     * adding the loginPanel object into the layeredPane.
+     */
     private void setLoginPanelPartOfTheLayeredPane()
     {
-//        int xPos = loginButton.getLocation().x + loginButton.getWidth() + 5;
-//        int yPos = loginButton.getLocation().y;
-//
-//
-//        loginPanelPartOfTheLayeredPanel.setBounds(xPos, yPos, this.getWidth() , panelSouthLoginFrame.getHeight()  - 5);
-////        loginPanelPartOfTheLayeredPanel.setBackground(Color.BLUE);
         loginPanelPartOfTheLayeredPane.add(loginPanel);
         layeredPaneCenter.add(loginPanelPartOfTheLayeredPane);
     }
 
+    /**
+     *
+     * adding the signUpPanel object into the layeredPane.
+     */
     private void setSignUpPanelPartOfTheLayeredPane()
     {
-//        int xPos = loginButton.getLocation().x + loginButton.getWidth() + 5;
-//        int yPos = loginButton.getLocation().y;
-//
-//        signUPPanelPartOfTheLayeredPanel.setBounds(xPos, yPos, this.getWidth() - 100, panelSouthLoginFrame.getHeight()  - 5);
         signUPPanelPartOfTheLayeredPane.add(signUpPanel);
         layeredPaneCenter.add(signUPPanelPartOfTheLayeredPane);
     }
 
 
-    private void centreWindowAndDefineItsDimensions(Window frame)
-    {
-        frame.setSize(800, 600);
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
-        int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
+//    private void centreWindowAndDefineItsDimensions(Window frame)
+//    {
+//        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+//        int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
+//        int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
+//        frame.setLocation(x, y);
+//    }
 
-        frame.setLocation(x, y);
-    }
-
-
+    /**
+     *
+     * adding attributes to each of the buttons in the west panel of the login frame.
+     */
     public void setButtonAttributes()
     {
-        ComponentAttributes.setComponentsAttributes(loginButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(80, 10));
+//        Component[] components = panelWestLoginFrame.getComponents();
+//        for (Component component : components)
+//        {
+//            if (component instanceof JButton)
+//            {
+//                ComponentAttributes.setComponentsAttributes(component,
+//                        new Font("Narkisim", Font.BOLD, 30),
+//                        new Dimension(80, 10));
+//
+//            }
+//        }
         ComponentAttributes.setComponentsAttributes(signUpButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(80, 10));
+        ComponentAttributes.setComponentsAttributes(loginButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(80, 10));
     }
 
     /**
-     * Buttons ActionListeners
+     * adding buttons actionListeners
      */
     private void setButtonsActionListeners()
     {

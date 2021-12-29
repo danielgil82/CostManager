@@ -10,5 +10,5 @@ public interface IViewModel
     public void setModel(IModel model);
     public void getUser(String fullName, String password);
     public void addNewUser(User user);
-
+    public void getCategoriesBySpecificUser();
 }
