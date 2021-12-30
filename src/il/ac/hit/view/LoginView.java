@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
 
-public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsHandlingStrings, ICentralizeWindow
+public class LoginView extends JFrame implements IErrorAndExceptionsHandlingStrings, ICentralizeWindow
 {
     private IView viewManager;
     private JPanel panelNorthLoginFrame;
@@ -33,7 +33,7 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
         return labelInvalidDescription;
     }
 
-    public CostManagerLoginView(IView viewManager)
+    public LoginView(IView viewManager)
     {
         setViewManager(viewManager);
         initLoginView();

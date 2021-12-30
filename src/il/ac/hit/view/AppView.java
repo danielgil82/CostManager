@@ -5,7 +5,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class CostManagerAppView extends JFrame implements ICentralizeWindow
+public class AppView extends JFrame implements ICentralizeWindow
 {
     private final Collection<String> listOfCategories = new ArrayList<>();
     private IView viewManager;
@@ -34,7 +34,7 @@ public class CostManagerAppView extends JFrame implements ICentralizeWindow
 //    private OperationsPanel operationsPanel;
 //    private ReportPanel reportPanel;
 
-    public CostManagerAppView(IView viewManager)
+    public AppView(IView viewManager)
     {
         setViewManager(viewManager);
         initAppView();

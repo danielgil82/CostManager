@@ -4,22 +4,21 @@ import il.ac.hit.auxiliary.Message;
 import il.ac.hit.viewmodel.CostManagerViewModel;
 import il.ac.hit.viewmodel.IViewModel;
 
-import javax.swing.*;
 import java.util.Collection;
 
 public class ViewManager implements IView
 {
 
     private IViewModel viewModel;
-    private CostManagerLoginView loginView;
-    private CostManagerAppView appView;
+    private LoginView loginView;
+    private AppView appView;
 
     public IViewModel getViewModel()
     {
         return viewModel;
     }
 
-    public CostManagerLoginView getLoginView()
+    public LoginView getLoginView()
     {
         return loginView;
     }
@@ -27,7 +26,7 @@ public class ViewManager implements IView
 
     public ViewManager()
     {
-        loginView = new CostManagerLoginView(this);
+        loginView = new LoginView(this);
         loginView.setVisible(true);
         //AppView = new CostManagerAppView(user);
     }
@@ -71,7 +70,7 @@ public class ViewManager implements IView
     public void changeFrameFromLoginViewToAppView()
     {
         loginView.setVisible(false);
-        appView = new CostManagerAppView(this);
+        appView = new AppView(this);
         appView.setVisible(true);
     }
 

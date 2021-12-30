@@ -12,9 +12,9 @@ public class CostManagerModel implements IModel, IErrorAndExceptionsHandlingStri
     private final String driverFullQualifiedName = "com.mysql.jdbc.Driver";
     private final String connectionStringToDB = "jdbc:mysql://localhost:3306/costmanagerproj";
     private final List<User> listOfUsers = new ArrayList<User>();
-    //   private Connection connection = null;
-//    private Statement statement = null;
-//    private ResultSet resultSet = null;
+    // private Connection connection = null;
+    // private Statement statement = null;
+    // private ResultSet resultSet = null;
 
     public CostManagerModel() throws CostManagerException
     {
