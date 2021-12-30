@@ -20,12 +20,12 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
     private JPanel loginPanelPartOfTheLayeredPane;
     private JPanel signUPPanelPartOfTheLayeredPane;
     private JLabel labelCostManagerTitle;
-    private Button loginButton;
-    private Button signUpButton;
+    private JLayeredPane layeredPaneCenter;
+    private JButton loginButton;
+    private JButton signUpButton;
     private JLabel labelInvalidDescription;
     private LoginPanel loginPanel;
     private SignUpPanel signUpPanel;
-    private JLayeredPane layeredPaneCenter;
     private GridLayout gridLayoutWestPanel;
 
     public JLabel getLabelInvalidDescription()
@@ -61,8 +61,8 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
         panelWestLoginFrame = new JPanel();
         panelSouthLoginFrame = new JPanel();
         labelCostManagerTitle = new JLabel("Cost Manager");
-        loginButton = new Button("Login");
-        signUpButton = new Button("Sign Up");
+        loginButton = new JButton("Login");
+        signUpButton = new JButton("Sign Up");
         labelInvalidDescription = new JLabel();
         loginPanel = new LoginPanel();
         signUpPanel = new SignUpPanel();
@@ -227,7 +227,7 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
         private JPanel panelLoginCenter;
         private JPanel panelLoginSouth;
 
-        public LoginPanel()
+        private LoginPanel()
         {
             LoginPanelInit();
             LoginPanelStart();
@@ -352,7 +352,7 @@ public class CostManagerLoginView extends JFrame implements IErrorAndExceptionsH
         private JPanel panelCenterSignUp;
         private JPanel panelSouthSignUp;
 
-        public SignUpPanel()
+        private SignUpPanel()
         {
             SignUpInit();
             SignUpStart();

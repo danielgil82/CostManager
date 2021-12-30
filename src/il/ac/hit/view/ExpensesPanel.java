@@ -75,7 +75,6 @@ public class ExpensesPanel extends JPanel
         private void startCategorySelectorPanel()
         {
             setComboBoxCategories();
-
         }
 
         /**
@@ -98,7 +97,6 @@ public class ExpensesPanel extends JPanel
         }
 
         /**
-         *
          * Auxiliary public method for calling a private one here in the class because
          * we don't want this logic to be exposed to other classes outside.
          * @param listOfCategories the categories that are being put into the combo box

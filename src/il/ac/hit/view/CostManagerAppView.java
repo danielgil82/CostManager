@@ -80,6 +80,10 @@ public class CostManagerAppView extends JFrame implements ICentralizeWindow
         borderLayoutPanelContent = new BorderLayout();
     }
 
+    /**
+     *
+     * Setting panels , buttons and their attributes and listeners
+     */
     private void startAppView()
     {
         setApplicationFrame();
