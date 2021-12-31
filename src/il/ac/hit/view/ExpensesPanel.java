@@ -1,23 +1,19 @@
 package il.ac.hit.view;
 
-import il.ac.hit.model.Category;
-
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class ExpensesPanel extends JPanel
 {
     private CategorySelectorPanel panelCategorySelector;
    // private TableExpensesPanel panelTableExpenses;
     private GridLayout gridLayout;
-    private IView viewManager;
+    private View viewManager;
 
 
 
-    public ExpensesPanel(IView viewManager)
+    public ExpensesPanel(View viewManager)
     {
         setViewManager(viewManager);
         panelCategorySelector = new CategorySelectorPanel();
@@ -29,12 +25,12 @@ public class ExpensesPanel extends JPanel
         return panelCategorySelector;
     }
 
-    public IView getViewManager()
+    public View getViewManager()
     {
         return viewManager;
     }
 
-    public void setViewManager(IView viewManager)
+    public void setViewManager(View viewManager)
     {
         this.viewManager = viewManager;
     }

@@ -10,8 +10,11 @@ import java.awt.*;
  *
  */
 
-class ComponentAttributes
+final class ComponentUtils
 {
+
+    private ComponentUtils() {}
+
     /**
      * @param component  is a type of JComponent because it gives the basis for polymorphism and
      *                   thus, it gives you the reuse if needed in the future.
@@ -19,8 +22,8 @@ class ComponentAttributes
      * @param font       indicates the font style of the component.
      * @param dimensions indicates the dimensions of the component.
      */
-    public static void setComponentsAttributes(Component component, Font font, Dimension dimensions)
-    {
+
+    public static void setComponentsAttributes(Component component, Font font, Dimension dimensions) {
         if (component instanceof JLabel)
         {
             ((JLabel) component).setHorizontalAlignment(SwingConstants.CENTER);
@@ -28,5 +31,15 @@ class ComponentAttributes
 
         component.setFont(font);
         component.setPreferredSize(dimensions);
+    }
+
+    /**
+     * this method should center a window.
+     */
+    public static void centralizeWindow(Window frame) {
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
+        int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
+        frame.setLocation(x, y);
     }
 }

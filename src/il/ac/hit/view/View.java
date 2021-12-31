@@ -1,15 +1,14 @@
 package il.ac.hit.view;
 
 import il.ac.hit.auxiliary.Message;
-import il.ac.hit.viewmodel.IViewModel;
+import il.ac.hit.viewmodel.ViewModel;
 
-import javax.swing.*;
 import java.util.Collection;
 
-public interface IView
+public interface View
 {
 
-    void setIViewModel(IViewModel vm);
+    void setIViewModel(ViewModel vm);
     void displayMessage(Message message);
     void init();
     void start();

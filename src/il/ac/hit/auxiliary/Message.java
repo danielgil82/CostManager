@@ -1,16 +1,14 @@
 package il.ac.hit.auxiliary;
 
-public class Message
-{
+public class Message {
+
     private String content;
 
-    public Message(String content)
-    {
+    public Message(String content) {
         this.content = content;
     }
 
-    public String getMessage()
-    {
+    public String getMessage() {
         return content;
     }
 }

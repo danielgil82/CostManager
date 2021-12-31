@@ -5,10 +5,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class AppView extends JFrame implements ICentralizeWindow
+public class AppView extends JFrame
 {
     private final Collection<String> listOfCategories = new ArrayList<>();
-    private IView viewManager;
+    private View viewManager;
     /**
      * Swing components
      */
@@ -34,7 +34,7 @@ public class AppView extends JFrame implements ICentralizeWindow
 //    private OperationsPanel operationsPanel;
 //    private ReportPanel reportPanel;
 
-    public AppView(IView viewManager)
+    public AppView(View viewManager)
     {
         setViewManager(viewManager);
         initAppView();
@@ -42,17 +42,17 @@ public class AppView extends JFrame implements ICentralizeWindow
     }
 
 
-    public Collection<String> getListOfCategories()
-    {
+    public Collection<String> getListOfCategories() {
         return listOfCategories;
     }
 
     public ExpensesPanel getExpensesPanel()
     {
+
         return expensesPanel;
     }
 
-    public void setViewManager(IView viewManager)
+    public void setViewManager(View viewManager)
     {
         this.viewManager = viewManager;
     }
@@ -101,7 +101,7 @@ public class AppView extends JFrame implements ICentralizeWindow
         panelSouth.setBackground(new Color(190, 190, 230, 155));
         panelSouth.setBounds(0, 900, 1300, 100);
 
-        ComponentAttributes.setComponentsAttributes(labelFeedbackMessage,
+        ComponentUtils.setComponentsAttributes(labelFeedbackMessage,
                 new Font("Narkisim", Font.BOLD, 30),
                 new Dimension(1240,50));
 
@@ -168,7 +168,7 @@ public class AppView extends JFrame implements ICentralizeWindow
         {
             if (component instanceof JButton)
             {
-                ComponentAttributes.setComponentsAttributes(component,
+                ComponentUtils.setComponentsAttributes(component,
                         new Font("Narkisim", Font.BOLD, 30),
                         new Dimension(200, 70));
             }
@@ -186,7 +186,7 @@ public class AppView extends JFrame implements ICentralizeWindow
     {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1300, 1000);
-        centralizeWindow(this);
+        ComponentUtils.centralizeWindow(this);
         //panelAppContent.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
         this.add(panelAppContent);
 

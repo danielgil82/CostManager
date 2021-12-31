@@ -2,11 +2,11 @@ package il.ac.hit;
 
 import il.ac.hit.model.CostManagerException;
 import il.ac.hit.model.CostManagerModel;
-import il.ac.hit.model.IModel;
+import il.ac.hit.model.Model;
 import il.ac.hit.view.ViewManager;
-import il.ac.hit.view.IView;
+import il.ac.hit.view.View;
 import il.ac.hit.viewmodel.CostManagerViewModel;
-import il.ac.hit.viewmodel.IViewModel;
+import il.ac.hit.viewmodel.ViewModel;
 
 import javax.swing.*;
 
@@ -37,9 +37,9 @@ public class Main
 //        }
 
 
-        IModel model = new CostManagerModel();
-        IViewModel viewModel = new CostManagerViewModel();
-        IView view = new ViewManager();
+        Model model = new CostManagerModel();
+        ViewModel viewModel = new CostManagerViewModel();
+        View view = new ViewManager();
 
         SwingUtilities.invokeLater(new Runnable()
         {

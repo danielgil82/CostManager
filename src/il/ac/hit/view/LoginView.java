@@ -1,6 +1,6 @@
 package il.ac.hit.view;
 
-import il.ac.hit.auxiliary.IErrorAndExceptionsHandlingStrings;
+import il.ac.hit.auxiliary.HandlingMessage;
 import il.ac.hit.model.User;
 
 import javax.swing.*;
@@ -8,12 +8,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
-public class LoginView extends JFrame implements IErrorAndExceptionsHandlingStrings, ICentralizeWindow
-{
-    private IView viewManager;
+public class LoginView extends JFrame {
+    private View viewManager;
     private JPanel panelNorthLoginFrame;
     private JPanel panelWestLoginFrame;
     private JPanel panelSouthLoginFrame;
@@ -28,30 +29,24 @@ public class LoginView extends JFrame implements IErrorAndExceptionsHandlingStri
     private SignUpPanel signUpPanel;
     private GridLayout gridLayoutWestPanel;
 
-    public JLabel getLabelInvalidDescription()
-    {
+    public JLabel getLabelInvalidDescription() {
+
         return labelInvalidDescription;
     }
 
-    public LoginView(IView viewManager)
-    {
+    public LoginView(View viewManager, BiConsumer<String, String> signInHandler) {
         setViewManager(viewManager);
         initLoginView();
         startLoginView();
+        loginPanel.registerUserAndPasswordInvokeListener(signInHandler);
+
     }
 
-    public IView getViewManager()
-    {
-        return viewManager;
-    }
-
-    public void setViewManager(IView viewManager)
-    {
+    public void setViewManager(View viewManager) {
         this.viewManager = viewManager;
     }
 
-    public void initLoginView()
-    {
+    public void initLoginView() {
         gridLayoutWestPanel = new GridLayout(2, 1, 0, 5);
         layeredPaneCenter = new JLayeredPane();
         loginPanelPartOfTheLayeredPane = new JPanel();
@@ -68,25 +63,24 @@ public class LoginView extends JFrame implements IErrorAndExceptionsHandlingStri
         signUpPanel = new SignUpPanel();
     }
 
-    public void startLoginView()
-    {
+    public void startLoginView() {
         //North Panel
         panelNorthLoginFrame.setBackground(Color.PINK);
         panelNorthLoginFrame.add(labelCostManagerTitle);
-        ComponentAttributes.setComponentsAttributes(labelCostManagerTitle, new Font("Narkisim", Font.BOLD, 40), new Dimension(700, 70));
+        ComponentUtils.setComponentsAttributes(labelCostManagerTitle, new Font("Narkisim", Font.BOLD, 40), new Dimension(700, 70));
         //West Panel
         panelWestLoginFrame.setLayout(gridLayoutWestPanel);
         panelWestLoginFrame.add(loginButton);
         panelWestLoginFrame.add(signUpButton);
         panelWestLoginFrame.setBackground(Color.red);
         //South Panel
-        ComponentAttributes.setComponentsAttributes(labelInvalidDescription, new Font("Narkisim", Font.BOLD, 20), new Dimension(700, 50));
+        ComponentUtils.setComponentsAttributes(labelInvalidDescription, new Font("Narkisim", Font.BOLD, 20), new Dimension(700, 50));
         panelSouthLoginFrame.add(labelInvalidDescription);
         panelSouthLoginFrame.setBackground(Color.cyan);
         //Center Panel
         this.setLayout(new BorderLayout());
         setLayeredPanel();
-       //  panelCenterLoginFrame.add(loginPanel);
+        //  panelCenterLoginFrame.add(loginPanel);
         //panelCenterLoginFrame.add(signUpPanel);
 
 
@@ -102,15 +96,14 @@ public class LoginView extends JFrame implements IErrorAndExceptionsHandlingStri
 //
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(800, 600);
-        centralizeWindow(this);
+        ComponentUtils.centralizeWindow(this);
         //centreWindowAndDefineItsDimensions(this);
         setButtonAttributes();
         setButtonsActionListeners();
         this.setVisible(true);
     }
 
-    private void setLayeredPanel()
-    {
+    private void setLayeredPanel() {
         int xPos = loginButton.getLocation().x + loginButton.getWidth();
         int yPos = loginButton.getLocation().y;
 
@@ -122,21 +115,17 @@ public class LoginView extends JFrame implements IErrorAndExceptionsHandlingStri
     }
 
     /**
-     *
      * adding the loginPanel object into the layeredPane.
      */
-    private void setLoginPanelPartOfTheLayeredPane()
-    {
+    private void setLoginPanelPartOfTheLayeredPane() {
         loginPanelPartOfTheLayeredPane.add(loginPanel);
         layeredPaneCenter.add(loginPanelPartOfTheLayeredPane);
     }
 
     /**
-     *
      * adding the signUpPanel object into the layeredPane.
      */
-    private void setSignUpPanelPartOfTheLayeredPane()
-    {
+    private void setSignUpPanelPartOfTheLayeredPane() {
         signUPPanelPartOfTheLayeredPane.add(signUpPanel);
         layeredPaneCenter.add(signUPPanelPartOfTheLayeredPane);
     }
@@ -151,11 +140,9 @@ public class LoginView extends JFrame implements IErrorAndExceptionsHandlingStri
 //    }
 
     /**
-     *
      * adding attributes to each of the buttons in the west panel of the login frame.
      */
-    public void setButtonAttributes()
-    {
+    public void setButtonAttributes() {
 //        Component[] components = panelWestLoginFrame.getComponents();
 //        for (Component component : components)
 //        {
@@ -167,15 +154,14 @@ public class LoginView extends JFrame implements IErrorAndExceptionsHandlingStri
 //
 //            }
 //        }
-        ComponentAttributes.setComponentsAttributes(signUpButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(80, 10));
-        ComponentAttributes.setComponentsAttributes(loginButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(80, 10));
+        ComponentUtils.setComponentsAttributes(signUpButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(80, 10));
+        ComponentUtils.setComponentsAttributes(loginButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(80, 10));
     }
 
     /**
      * adding buttons actionListeners
      */
-    private void setButtonsActionListeners()
-    {
+    private void setButtonsActionListeners() {
         //Login button
         loginButton.addActionListener(e ->
         {
@@ -197,14 +183,11 @@ public class LoginView extends JFrame implements IErrorAndExceptionsHandlingStri
      * @param fullName users input for full name
      * @return checks if the full name consists of letters and spaces.
      */
-    private boolean validateUsersFullName(String fullName)
-    {
+    private boolean validateUsersFullName(String fullName) {
         char[] chars = fullName.toCharArray();
 
-        for (char c : chars)
-        {
-            if (!Character.isLetter(c) && c != ' ')
-            {
+        for (char c : chars) {
+            if (!Character.isLetter(c) && c != ' ') {
                 return false;
             }
         }
@@ -215,8 +198,7 @@ public class LoginView extends JFrame implements IErrorAndExceptionsHandlingStri
     /**
      * LoginPanel class which displays the login part
      */
-    private class LoginPanel extends JPanel
-    {
+    private class LoginPanel extends JPanel {
         private JLabel labelLoginTitle;
         private JLabel labelFullNameLoginPanel;
         private JLabel labelPasswordLoginPanel;
@@ -226,15 +208,22 @@ public class LoginView extends JFrame implements IErrorAndExceptionsHandlingStri
         private JPanel panelLoginNorth;
         private JPanel panelLoginCenter;
         private JPanel panelLoginSouth;
+        private List<BiConsumer<String, String>> userAndPasswordInvokedListeners = new LinkedList<>();
 
-        private LoginPanel()
-        {
+        private LoginPanel() {
             LoginPanelInit();
             LoginPanelStart();
         }
 
-        private void LoginPanelInit()
-        {
+        public void registerUserAndPasswordInvokeListener(BiConsumer<String, String> listener) {
+            userAndPasswordInvokedListeners.add(listener);
+        }
+
+        private void notifyAllListeners(String username, String password) {
+            userAndPasswordInvokedListeners.forEach(listener -> listener.accept(username, password));
+        }
+
+        private void LoginPanelInit() {
             labelLoginTitle = new JLabel("Login");
             labelFullNameLoginPanel = new JLabel("Full Name:");
             labelPasswordLoginPanel = new JLabel("Password:");
@@ -247,8 +236,7 @@ public class LoginView extends JFrame implements IErrorAndExceptionsHandlingStri
         }
 
 
-        private void LoginPanelStart()
-        {
+        private void LoginPanelStart() {
             this.setPreferredSize(new Dimension(500, 300));
             setLoginPanelComponents();
             BorderLayout borderLayout = new BorderLayout();
@@ -267,7 +255,7 @@ public class LoginView extends JFrame implements IErrorAndExceptionsHandlingStri
             panelLoginCenter.add(textFieldPasswordLoginPanel);
             this.add(panelLoginCenter, BorderLayout.CENTER);
             //LoginPanelSouth
-            ComponentAttributes.setComponentsAttributes(buttonOkLoginPanel, new Font("Narkisim", Font.BOLD, 20), new Dimension(70, 30));
+            ComponentUtils.setComponentsAttributes(buttonOkLoginPanel, new Font("Narkisim", Font.BOLD, 20), new Dimension(70, 30));
             panelLoginSouth.add(buttonOkLoginPanel);
             this.add(panelLoginSouth, BorderLayout.SOUTH);
 
@@ -276,70 +264,45 @@ public class LoginView extends JFrame implements IErrorAndExceptionsHandlingStri
              *
              *calling the getUser method of the view model for
              */
-            buttonOkLoginPanel.addActionListener(new ActionListener()
-            {
+            buttonOkLoginPanel.addActionListener(new ActionListener() {
                 @Override
-                public void actionPerformed(ActionEvent e)
-                {
-                    if (textFieldFullNameLoginPanel.getText() != null && textFieldPasswordLoginPanel.getText() != null)
-                    {
-                        if (validateUsersFullName(textFieldFullNameLoginPanel.getText()))
-                        {
-                            ((ViewManager) viewManager).getViewModel().getUser(textFieldFullNameLoginPanel.getText(), textFieldPasswordLoginPanel.getText());
+                public void actionPerformed(ActionEvent e) {
+                    if (textFieldFullNameLoginPanel.getText() != null && textFieldPasswordLoginPanel.getText() != null) {
+
+                        if (validateUsersFullName(textFieldFullNameLoginPanel.getText())) {
+
+                            //((ViewManager) viewManager).getViewModel().validateUserExistence(textFieldFullNameLoginPanel.getText(), textFieldPasswordLoginPanel.getText());
+                            notifyAllListeners(textFieldFullNameLoginPanel.getText(), textFieldPasswordLoginPanel.getText());
+                        } else {
+
+                            labelInvalidDescription.setText(HandlingMessage.INVALID_FULL_NAME.toString());
                         }
-                        else
-                        {
-                            labelInvalidDescription.setText(INVALID_FULL_NAME);
-                        }
-                    }
-                    else
-                    {
-                        labelInvalidDescription.setText(EMPTY_FIELDS);
+                    } else {
+                        labelInvalidDescription.setText(HandlingMessage.EMPTY_FIELDS.toString());
                     }
                 }
             });
         }
 
-        private void setLoginPanelComponents()
-        {
+        private void setLoginPanelComponents() {
             List<JComponent> componentsList = new ArrayList<>();
 
             Font font = new Font("Narkisim", Font.BOLD, 20);
             Dimension dimension = new Dimension(new Dimension(0, 0));
 
-            ComponentAttributes.setComponentsAttributes(labelLoginTitle, new Font("Narkisim", Font.BOLD, 40), new Dimension(150, 70));
+            ComponentUtils.setComponentsAttributes(labelLoginTitle, new Font("Narkisim", Font.BOLD, 40), new Dimension(150, 70));
 
             componentsList.add(labelFullNameLoginPanel);
             componentsList.add(labelPasswordLoginPanel);
             componentsList.add(textFieldFullNameLoginPanel);
             componentsList.add(textFieldPasswordLoginPanel);
 
-            for (JComponent component : componentsList)
-            {
-                ComponentAttributes.setComponentsAttributes(component, font, dimension);
+            for (JComponent component : componentsList) {
+                ComponentUtils.setComponentsAttributes(component, font, dimension);
             }
-//            setComponentsAttributes(labelFullNameLoginPanel,
-//                    new Font("Narkisim", Font.BOLD, 30),
-//                    new Dimension(250, 100));
-//            setComponentsAttributes(labelPasswordLoginPanel,
-//                    new Font("Narkisim", Font.BOLD, 30),
-//                    new Dimension(250, 100));
-//            setComponentsAttributes(textFieldFullNameLoginPanel,
-//                    new Font("Narkisim", Font.BOLD, 30),
-//                    new Dimension(250, 100));
-//            setComponentsAttributes(textFieldPasswordLoginPanel,
-//                    new Font("Narkisim", Font.BOLD, 30),
-//                    new Dimension(250, 100));
-        }
-//            private void setTextFieldDimensions(JComponent component, Font font, Dimension dimensions)
-//            {
-//                component.setFont(font);
-//                component.setPreferredSize(dimensions);
-//            }
     }
 
-    private class SignUpPanel extends JPanel
-    {
+    private class SignUpPanel extends JPanel {
         private JLabel labelSignUpTitle;
         private JLabel labelFullNameSignUp;
         private JLabel labelPasswordSignUp;
@@ -352,14 +315,12 @@ public class LoginView extends JFrame implements IErrorAndExceptionsHandlingStri
         private JPanel panelCenterSignUp;
         private JPanel panelSouthSignUp;
 
-        private SignUpPanel()
-        {
+        private SignUpPanel() {
             SignUpInit();
             SignUpStart();
         }
 
-        private void SignUpInit()
-        {
+        private void SignUpInit() {
             labelSignUpTitle = new JLabel("Sign Up");
             labelFullNameSignUp = new JLabel("Full Name:");
             labelPasswordSignUp = new JLabel("Password:");
@@ -373,8 +334,7 @@ public class LoginView extends JFrame implements IErrorAndExceptionsHandlingStri
             panelSouthSignUp = new JPanel();
         }
 
-        private void SignUpStart()
-        {
+        private void SignUpStart() {
             this.setPreferredSize(new Dimension(500, 400));
 
             setSignsUpPanelComponents();
@@ -394,60 +354,47 @@ public class LoginView extends JFrame implements IErrorAndExceptionsHandlingStri
             panelCenterSignUp.add((labelConfirmPasswordSignUp));
             panelCenterSignUp.add(textFieldConfirmPasswordSignUp);
             this.add(panelCenterSignUp, BorderLayout.CENTER);
-            ComponentAttributes.setComponentsAttributes(buttonSubmitSignUp, new Font("Narkisim", Font.BOLD, 20), new Dimension(110, 30));
+            ComponentUtils.setComponentsAttributes(buttonSubmitSignUp, new Font("Narkisim", Font.BOLD, 20), new Dimension(110, 30));
             panelSouthSignUp.add(buttonSubmitSignUp);
             this.add(panelSouthSignUp, BorderLayout.SOUTH);
 
-            buttonSubmitSignUp.addActionListener(new ActionListener()
-            {
+            buttonSubmitSignUp.addActionListener(new ActionListener() {
                 @Override
-                public void actionPerformed(ActionEvent e)
-                {
+                public void actionPerformed(ActionEvent e) {
                     String fullName = textFieldFullNameSignUp.getText();
                     String password = textFieldPasswordSignUp.getText();
                     String confirmPassword = textFieldConfirmPasswordSignUp.getText();
 
-                    if (!fullName.equals("") && !password.equals("") && !confirmPassword.equals(""))
-                    {
-                        if (validateUsersFullName(fullName))
-                        {
+                    if (!fullName.equals("") && !password.equals("") && !confirmPassword.equals("")) {
+                        if (validateUsersFullName(fullName)) {
                             // Using BiPredicate Functional Interface inorder to check if the passwords match each other
-                            if (confirmPasswords(password, confirmPassword, (firstPassword, secondPassword) -> firstPassword.equals(secondPassword)))
-                            {
+                            if (confirmPasswords(password, confirmPassword, (firstPassword, secondPassword) -> firstPassword.equals(secondPassword))) {
                                 //Here going to add a new user to the users table.
                                 ((ViewManager) viewManager).getViewModel().addNewUser(new User(fullName, password));
+                            } else {
+                                labelInvalidDescription.setText(HandlingMessage.PASSWORDS_DO_NOT_MATCH.toString());
                             }
-                            else
-                            {
-                                labelInvalidDescription.setText(PASSWORDS_DO_NOT_MATCH);
-                            }
+                        } else {
+                            labelInvalidDescription.setText(HandlingMessage.INVALID_FULL_NAME.toString());
                         }
-                        else
-                        {
-                            labelInvalidDescription.setText(INVALID_FULL_NAME);
-                        }
-                    }
-                    else
-                    {
-                        labelInvalidDescription.setText(EMPTY_FIELDS);
+                    } else {
+                        labelInvalidDescription.setText(HandlingMessage.EMPTY_FIELDS.toString());
                     }
                 }
             });
         }
 
-        private boolean confirmPasswords(String firstPassword, String secondPassword, BiPredicate<String, String> passwordsMatchTest)
-        {
+        private boolean confirmPasswords(String firstPassword, String secondPassword, BiPredicate<String, String> passwordsMatchTest) {
             return passwordsMatchTest.test(firstPassword, secondPassword);
         }
 
-        private void setSignsUpPanelComponents()
-        {
+        private void setSignsUpPanelComponents() {
             List<JComponent> componentsList = new ArrayList<>();
 
             Font font = new Font("Narkisim", Font.BOLD, 20);
             Dimension dimension = new Dimension(new Dimension(250, 50));
 
-            ComponentAttributes.setComponentsAttributes(labelSignUpTitle, new Font("Narkisim", Font.BOLD, 35), new Dimension(200, 70));
+            ComponentUtils.setComponentsAttributes(labelSignUpTitle, new Font("Narkisim", Font.BOLD, 35), new Dimension(200, 70));
 
             componentsList.add(labelFullNameSignUp);
             componentsList.add(labelPasswordSignUp);
@@ -455,11 +402,10 @@ public class LoginView extends JFrame implements IErrorAndExceptionsHandlingStri
             componentsList.add(textFieldFullNameSignUp);
             componentsList.add(textFieldPasswordSignUp);
             componentsList.add(textFieldConfirmPasswordSignUp);
-            for (JComponent component : componentsList)
-            {
-                ComponentAttributes.setComponentsAttributes(component, font, dimension);
+            for (JComponent component : componentsList) {
+                ComponentUtils.setComponentsAttributes(component, font, dimension);
             }
         }
     }
 }
-
+}

@@ -2,7 +2,7 @@ package il.ac.hit.model;
 
 import java.util.Collection;
 
-public interface IModel
+public interface Model
 {
      User getUser(String userFullName, String userPassword) throws CostManagerException;
      int addNewUserToDB(User user) throws CostManagerException;
