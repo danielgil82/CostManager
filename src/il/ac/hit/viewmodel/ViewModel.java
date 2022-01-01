@@ -6,9 +6,10 @@ import il.ac.hit.view.View;
 
 public interface ViewModel
 {
-    public void setView(View view);
-    public void setModel(Model model);
-    public void validateUserExistence(String fullName, String password);
-    public void addNewUser(User user);
-    public void getCategoriesBySpecificUser();
+    void setView(View view);
+    void setModel(Model model);
+    void validateUserExistence(String fullName, String password);
+    void addNewUser(User user);
+    void getCategoriesBySpecificUser();
+    void validateUsersFullNameAndPassword(String fullName, String password, String confirmedPassword);
 }

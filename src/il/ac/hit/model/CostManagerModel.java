@@ -268,19 +268,17 @@ public class CostManagerModel implements Model {
     }
 
     /**
-     * optional
-     *
-     * @param userFullName
-     * @param userPassword
-     * @return
+     * Optional gives the opportunity to return an "Optional" user or empty one.
+     * @param userFullName represent the name of the user
+     * @param userPassword represent the password of the user
+     * @return the user if the there is one
      * @throws CostManagerException
      */
     @Override
     public User getUser(String userFullName, String userPassword) throws CostManagerException {
         Optional<User> userOptional = listOfUsers
                 .stream()
-                .filter(user -> user.getFullName().equals(userFullName) &&
-                        user.getUsersPassword().equals(userPassword))
+                .filter(user -> user.getFullName().equals(userFullName) && user.getUsersPassword().equals(userPassword))
                 .findFirst();
 
         if (userOptional.isPresent()) {
@@ -365,22 +363,48 @@ public class CostManagerModel implements Model {
 //        }
     }
 
-    private boolean checkIfTheUserExists(User user) {
-        for (User currentUser : listOfUsers) {
-            if (currentUser.getFullName().equals(user.getFullName()) &&
-                    currentUser.getUsersPassword().equals(user.getUsersPassword())) {
-                return true;
-            }
+    /**
+     * checkIfTheUserExists method checks if the user already exists,
+     * using Optional that gives the opportunity to return true or false according to it.
+     * @param user is -the user we want to check about if he exists or not.
+     * @return true if exists else throws exception that the user already exists.
+     * @throws CostManagerException
+     */
+    public boolean checkIfTheUserExists(User user) throws CostManagerException{
+        Optional<User> checkIfExists = listOfUsers
+                .stream()
+                .filter(currentUser -> currentUser.getFullName().equals(user.getFullName()) &&
+                        currentUser.getUsersPassword().equals(user.getUsersPassword()))
+                .findFirst();
+
+        if (checkIfExists.isPresent()) {
+             throw new CostManagerException(HandlingMessage.USER_ALREADY_EXISTS);
+        } else {
+            return true;
         }
 
-        return false;
+//        for (User currentUser : listOfUsers) {
+//            if (currentUser.getFullName().equals(user.getFullName()) &&
+//                    currentUser.getUsersPassword().equals(user.getUsersPassword())) {
+//                return true;
+//            }
+//        }
+//
+//        return false;
     }
 
+    /**
+     * This function adding new user to the database by
+     * checking the number of rows that were affected.
+     * if the number of rows that affected is not 1,
+     * it means there was a problem with adding this user.
+     * Otherwise, everything gone okay.
+     *
+     * @param userToAdd is the new user we want to add to the database
+     * @throws CostManagerException
+     */
     @Override
-    public int addNewUserToDB(User newUser) throws CostManagerException {
-        if (checkIfTheUserExists(newUser)) {
-            return 0;
-        }
+    public void addNewUserToDBAndUpdateTheListOfUsers(User userToAdd) throws CostManagerException {
 
         String addNewUserQuery = "insert into users (full_name, password)"
                 + "value(?, ?)";
@@ -388,19 +412,20 @@ public class CostManagerModel implements Model {
         try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
              PreparedStatement preparedStatement = connection.prepareStatement(addNewUserQuery)) {
             connection.setAutoCommit(false);
-            preparedStatement.setString(1, newUser.getFullName());
-            preparedStatement.setString(2, newUser.getUsersPassword());
+            preparedStatement.setString(1, userToAdd.getFullName());
+            preparedStatement.setString(2, userToAdd.getUsersPassword());
 
             int numberOfRowsAffected = preparedStatement.executeUpdate();
             connection.commit();
 
             if (numberOfRowsAffected != 1) {
-                throw new CostManagerException(HandlingMessage.SOMETHING_WENT_WRONG);
+                throw new CostManagerException(HandlingMessage.PROBLEM_WITH_ADDING_NEW_USER);
             }
 
-            return numberOfRowsAffected;
+            listOfUsers.add(userToAdd);
+
         } catch (SQLException exception) {
-            throw new CostManagerException(HandlingMessage.PROBLEM_WITH_ADDING_NEW_USER, exception);
+            throw new CostManagerException(HandlingMessage.SOMETHING_WENT_WRONG, exception);
         }
     }
 
@@ -461,31 +486,31 @@ public class CostManagerModel implements Model {
         }
     }
 
-    public void addNewUserToTheListOfUsers(User userToAddToListOfUsers) throws CostManagerException {
-        String getUserIDQuery = "select user_id from users WHERE full_name = ? AND" +
-                " password = ?";
-
-        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-             PreparedStatement preparedStatement = connection.prepareStatement(getUserIDQuery)) {
-
-            preparedStatement.setString(1, userToAddToListOfUsers.getFullName());
-            preparedStatement.setString(2, userToAddToListOfUsers.getUsersPassword());
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-
-            if (resultSet != null) {
-                listOfUsers.add(new User(
-                        resultSet.getInt("user_id"),
-                        userToAddToListOfUsers.getFullName(),
-                        userToAddToListOfUsers.getUsersPassword()
-                ));
-            }
-
-        } catch (SQLException exception) {
-            throw new CostManagerException(HandlingMessage.PROBLEM_WITH_GETTING_THE_USERS);
-        }
-    }
+//    public void addNewUserToTheListOfUsers(User userToAddToListOfUsers) throws CostManagerException {
+//        String getUserIDQuery = "select user_id from users WHERE full_name = ? AND" +
+//                " password = ?";
+//
+//        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+//             PreparedStatement preparedStatement = connection.prepareStatement(getUserIDQuery)) {
+//
+//            preparedStatement.setString(1, userToAddToListOfUsers.getFullName());
+//            preparedStatement.setString(2, userToAddToListOfUsers.getUsersPassword());
+//
+//            ResultSet resultSet = preparedStatement.executeQuery();
+//
+//
+//            if (resultSet != null) {
+//                listOfUsers.add(new User(
+//                        resultSet.getInt("user_id"),
+//                        userToAddToListOfUsers.getFullName(),
+//                        userToAddToListOfUsers.getUsersPassword()
+//                ));
+//            }
+//
+//        } catch (SQLException exception) {
+//            throw new CostManagerException(HandlingMessage.PROBLEM_WITH_GETTING_THE_USERS);
+//        }
+//    }
 
     /**
      * @param userId -> identifies the user, thus we can get the categories according to that user

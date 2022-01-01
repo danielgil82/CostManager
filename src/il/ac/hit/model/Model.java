@@ -5,7 +5,7 @@ import java.util.Collection;
 public interface Model
 {
      User getUser(String userFullName, String userPassword) throws CostManagerException;
-     int addNewUserToDB(User user) throws CostManagerException;
+     void addNewUserToDBAndUpdateTheListOfUsers(User user) throws CostManagerException;
      int addNewCategory(Category newCategoryToAdd) throws CostManagerException;
      int removeExistingCategory(Category categoryToDelete) throws CostManagerException;
      int addNewExpense(Expense cost) throws CostManagerException;
@@ -13,4 +13,5 @@ public interface Model
      Collection<Expense> getReportByDates(int userID, java.sql.Date startDate, java.sql.Date endDate) throws CostManagerException;
      Collection<Expense> getAllExpenses(int userID) throws CostManagerException;
      Collection<String> getCategoriesBySpecificUser(int userId) throws CostManagerException;
+     boolean checkIfTheUserExists(User user) throws CostManagerException;
 }

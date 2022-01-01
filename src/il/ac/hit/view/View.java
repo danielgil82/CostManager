@@ -7,7 +7,6 @@ import java.util.Collection;
 
 public interface View
 {
-
     void setIViewModel(ViewModel vm);
     void displayMessage(Message message);
     void init();

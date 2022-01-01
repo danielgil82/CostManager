@@ -8,13 +8,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
 public class LoginView extends JFrame {
-    private View viewManager;
+
     private JPanel panelNorthLoginFrame;
     private JPanel panelWestLoginFrame;
     private JPanel panelSouthLoginFrame;
@@ -28,22 +26,25 @@ public class LoginView extends JFrame {
     private LoginPanel loginPanel;
     private SignUpPanel signUpPanel;
     private GridLayout gridLayoutWestPanel;
+    private LoginUtils loginUtils;
+
+//    public LoginView(Consumer<User> signUpHandler, BiConsumer<String, String> loginHandler) {
+//        initLoginView();
+//        startLoginView();
+//        loginPanel.registerUserAndPasswordInvokeListener(loginHandler);
+//        signUpPanel.registerUserInvokeListener(signUpHandler);
+//    }
+
+
+    public LoginView(LoginUtils loginUtils) {
+        this.loginUtils = loginUtils;
+        initLoginView();
+        startLoginView();
+    }
 
     public JLabel getLabelInvalidDescription() {
 
         return labelInvalidDescription;
-    }
-
-    public LoginView(View viewManager, BiConsumer<String, String> signInHandler) {
-        setViewManager(viewManager);
-        initLoginView();
-        startLoginView();
-        loginPanel.registerUserAndPasswordInvokeListener(signInHandler);
-
-    }
-
-    public void setViewManager(View viewManager) {
-        this.viewManager = viewManager;
     }
 
     public void initLoginView() {
@@ -195,7 +196,7 @@ public class LoginView extends JFrame {
         return true;
     }
 
-    /**
+    /** Implemented Observer Design Pattern, where LoginPanel is the notifier and ViewManager is the listener
      * LoginPanel class which displays the login part
      */
     private class LoginPanel extends JPanel {
@@ -208,20 +209,13 @@ public class LoginView extends JFrame {
         private JPanel panelLoginNorth;
         private JPanel panelLoginCenter;
         private JPanel panelLoginSouth;
-        private List<BiConsumer<String, String>> userAndPasswordInvokedListeners = new LinkedList<>();
 
         private LoginPanel() {
             LoginPanelInit();
             LoginPanelStart();
         }
 
-        public void registerUserAndPasswordInvokeListener(BiConsumer<String, String> listener) {
-            userAndPasswordInvokedListeners.add(listener);
-        }
 
-        private void notifyAllListeners(String username, String password) {
-            userAndPasswordInvokedListeners.forEach(listener -> listener.accept(username, password));
-        }
 
         private void LoginPanelInit() {
             labelLoginTitle = new JLabel("Login");
@@ -271,10 +265,8 @@ public class LoginView extends JFrame {
 
                         if (validateUsersFullName(textFieldFullNameLoginPanel.getText())) {
 
-                            //((ViewManager) viewManager).getViewModel().validateUserExistence(textFieldFullNameLoginPanel.getText(), textFieldPasswordLoginPanel.getText());
-                            notifyAllListeners(textFieldFullNameLoginPanel.getText(), textFieldPasswordLoginPanel.getText());
+                            loginUtils.validateUserExistence(textFieldFullNameLoginPanel.getText(), textFieldPasswordLoginPanel.getText());
                         } else {
-
                             labelInvalidDescription.setText(HandlingMessage.INVALID_FULL_NAME.toString());
                         }
                     } else {
@@ -300,6 +292,7 @@ public class LoginView extends JFrame {
             for (JComponent component : componentsList) {
                 ComponentUtils.setComponentsAttributes(component, font, dimension);
             }
+        }
     }
 
     private class SignUpPanel extends JPanel {
@@ -315,10 +308,14 @@ public class LoginView extends JFrame {
         private JPanel panelCenterSignUp;
         private JPanel panelSouthSignUp;
 
+
         private SignUpPanel() {
             SignUpInit();
             SignUpStart();
         }
+
+
+
 
         private void SignUpInit() {
             labelSignUpTitle = new JLabel("Sign Up");
@@ -357,7 +354,11 @@ public class LoginView extends JFrame {
             ComponentUtils.setComponentsAttributes(buttonSubmitSignUp, new Font("Narkisim", Font.BOLD, 20), new Dimension(110, 30));
             panelSouthSignUp.add(buttonSubmitSignUp);
             this.add(panelSouthSignUp, BorderLayout.SOUTH);
+            //Setting the action listener to the button
+            setButtonSubmitActionListener();
+        }
 
+        private void setButtonSubmitActionListener() {
             buttonSubmitSignUp.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -365,25 +366,33 @@ public class LoginView extends JFrame {
                     String password = textFieldPasswordSignUp.getText();
                     String confirmPassword = textFieldConfirmPasswordSignUp.getText();
 
-                    if (!fullName.equals("") && !password.equals("") && !confirmPassword.equals("")) {
-                        if (validateUsersFullName(fullName)) {
-                            // Using BiPredicate Functional Interface inorder to check if the passwords match each other
-                            if (confirmPasswords(password, confirmPassword, (firstPassword, secondPassword) -> firstPassword.equals(secondPassword))) {
+                    loginUtils.validateUsersFullNameAndPasswords(fullName, password, confirmPassword);
+//                    if (!fullName.equals("") && !password.equals("") && !confirmPassword.equals("")) {
+//                        if (validateUsersFullName(fullName)) {
+//                            // Using BiPredicate Functional Interface inorder to check if the passwords match each other
+//                            if (confirmPasswords(password, confirmPassword, (firstPassword, secondPassword) -> firstPassword.equals(secondPassword))) {
                                 //Here going to add a new user to the users table.
-                                ((ViewManager) viewManager).getViewModel().addNewUser(new User(fullName, password));
-                            } else {
-                                labelInvalidDescription.setText(HandlingMessage.PASSWORDS_DO_NOT_MATCH.toString());
-                            }
-                        } else {
-                            labelInvalidDescription.setText(HandlingMessage.INVALID_FULL_NAME.toString());
-                        }
-                    } else {
-                        labelInvalidDescription.setText(HandlingMessage.EMPTY_FIELDS.toString());
-                    }
+                                loginUtils.addNewUser(new User(fullName, password));
+//                            } else {
+//                                labelInvalidDescription.setText(HandlingMessage.PASSWORDS_DO_NOT_MATCH.toString());
+//                            }
+//                        } else {
+//                            labelInvalidDescription.setText(HandlingMessage.INVALID_FULL_NAME.toString());
+//                        }
+//                    } else {
+//                        labelInvalidDescription.setText(HandlingMessage.EMPTY_FIELDS.toString());
+//                    }
                 }
             });
         }
 
+        /**
+         * this method use the functional interface as BiPredicate inorder to test if the 2 passwords are equal.
+         * @param firstPassword first password
+         * @param secondPassword second password
+         * @param passwordsMatchTest functional interface which gets the lambda function
+         * @return true if the passwords match else false.
+         */
         private boolean confirmPasswords(String firstPassword, String secondPassword, BiPredicate<String, String> passwordsMatchTest) {
             return passwordsMatchTest.test(firstPassword, secondPassword);
         }
@@ -407,5 +416,4 @@ public class LoginView extends JFrame {
             }
         }
     }
-}
 }
