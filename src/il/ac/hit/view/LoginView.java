@@ -27,14 +27,34 @@ public class LoginView extends JFrame {
     private SignUpPanel signUpPanel;
     private GridLayout gridLayoutWestPanel;
     private LoginUtils loginUtils;
+    private boolean areUserCredentialsValidInSignUpPanel = true;
+    private boolean areUserCredentialsValidInLoginPanel = true;
 
-//    public LoginView(Consumer<User> signUpHandler, BiConsumer<String, String> loginHandler) {
+
+
+    //    public LoginView(Consumer<User> signUpHandler, BiConsumer<String, String> loginHandler) {
 //        initLoginView();
 //        startLoginView();
 //        loginPanel.registerUserAndPasswordInvokeListener(loginHandler);
 //        signUpPanel.registerUserInvokeListener(signUpHandler);
 //    }
 
+
+    /**
+     * setter for flag for LoginPanel.
+      * @param areUserCredentialsValidInLoginPanel
+     */
+    public void setAreUserCredentialsValidInLoginPanel(boolean areUserCredentialsValidInLoginPanel) {
+        this.areUserCredentialsValidInLoginPanel = areUserCredentialsValidInLoginPanel;
+    }
+
+    /**
+     * setter for flag for signUpPanel.
+     * @param areUserCredentialsValidInSignUpPanel
+     */
+    public void setAreUserCredentialsValidInSignUpPanel(boolean areUserCredentialsValidInSignUpPanel) {
+        this.areUserCredentialsValidInSignUpPanel = areUserCredentialsValidInSignUpPanel;
+    }
 
     public LoginView(LoginUtils loginUtils) {
         this.loginUtils = loginUtils;
@@ -259,19 +279,24 @@ public class LoginView extends JFrame {
              *calling the getUser method of the view model for
              */
             buttonOkLoginPanel.addActionListener(new ActionListener() {
+
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (textFieldFullNameLoginPanel.getText() != null && textFieldPasswordLoginPanel.getText() != null) {
-
-                        if (validateUsersFullName(textFieldFullNameLoginPanel.getText())) {
-
-                            loginUtils.validateUserExistence(textFieldFullNameLoginPanel.getText(), textFieldPasswordLoginPanel.getText());
-                        } else {
-                            labelInvalidDescription.setText(HandlingMessage.INVALID_FULL_NAME.toString());
-                        }
-                    } else {
-                        labelInvalidDescription.setText(HandlingMessage.EMPTY_FIELDS.toString());
+                    String userFullName = textFieldFullNameLoginPanel.getText();
+                    String userPassword = textFieldPasswordLoginPanel.getText();
+//                    if (userFullName != null && userPassword != null) {
+//
+//                        if (validateUsersFullName(userFullName)) {
+                    loginUtils.validateUserCredentials(userFullName, userPassword);
+                    if (areUserCredentialsValidInLoginPanel) {
+                        loginUtils.validateUserExistence(userFullName, userPassword);
                     }
+//                        } else {
+//                            labelInvalidDescription.setText(HandlingMessage.INVALID_FULL_NAME.toString());
+//                        }
+//                    } else {
+//                        labelInvalidDescription.setText(HandlingMessage.EMPTY_FIELDS.toString());
+//                    }
                 }
             });
         }
@@ -308,14 +333,10 @@ public class LoginView extends JFrame {
         private JPanel panelCenterSignUp;
         private JPanel panelSouthSignUp;
 
-
         private SignUpPanel() {
             SignUpInit();
             SignUpStart();
         }
-
-
-
 
         private void SignUpInit() {
             labelSignUpTitle = new JLabel("Sign Up");
@@ -335,7 +356,6 @@ public class LoginView extends JFrame {
             this.setPreferredSize(new Dimension(500, 400));
 
             setSignsUpPanelComponents();
-
             BorderLayout borderLayout = new BorderLayout();
             borderLayout.setVgap(20);
             this.setLayout(borderLayout);
@@ -358,6 +378,11 @@ public class LoginView extends JFrame {
             setButtonSubmitActionListener();
         }
 
+        /**
+         * using methods from the loginUtils interface, to validate users credentials
+         * and if and only if the credentials are valid, we're going to add this new user to the
+         * database.
+         */
         private void setButtonSubmitActionListener() {
             buttonSubmitSignUp.addActionListener(new ActionListener() {
                 @Override
@@ -367,21 +392,11 @@ public class LoginView extends JFrame {
                     String confirmPassword = textFieldConfirmPasswordSignUp.getText();
 
                     loginUtils.validateUsersFullNameAndPasswords(fullName, password, confirmPassword);
-//                    if (!fullName.equals("") && !password.equals("") && !confirmPassword.equals("")) {
-//                        if (validateUsersFullName(fullName)) {
-//                            // Using BiPredicate Functional Interface inorder to check if the passwords match each other
-//                            if (confirmPasswords(password, confirmPassword, (firstPassword, secondPassword) -> firstPassword.equals(secondPassword))) {
-                                //Here going to add a new user to the users table.
-                                loginUtils.addNewUser(new User(fullName, password));
-//                            } else {
-//                                labelInvalidDescription.setText(HandlingMessage.PASSWORDS_DO_NOT_MATCH.toString());
-//                            }
-//                        } else {
-//                            labelInvalidDescription.setText(HandlingMessage.INVALID_FULL_NAME.toString());
-//                        }
-//                    } else {
-//                        labelInvalidDescription.setText(HandlingMessage.EMPTY_FIELDS.toString());
-//                    }
+
+                    if(areUserCredentialsValidInSignUpPanel)
+                    {
+                        loginUtils.addNewUser(new User(fullName, password));
+                    }
                 }
             });
         }

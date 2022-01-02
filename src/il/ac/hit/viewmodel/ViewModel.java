@@ -11,5 +11,6 @@ public interface ViewModel
     void validateUserExistence(String fullName, String password);
     void addNewUser(User user);
     void getCategoriesBySpecificUser();
-    void validateUsersFullNameAndPassword(String fullName, String password, String confirmedPassword);
+    void userCredentialsForSignUpPanel(String fullName, String password, String confirmedPassword);
+    void userCredentialsForLoginPanel(String fullName, String password);
 }

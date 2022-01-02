@@ -9,4 +9,5 @@ public interface LoginUtils {
    void validateUserExistence(String fullName, String password);
    void addNewUser(User user);
    void validateUsersFullNameAndPasswords(String fullName, String password, String confirmedPassword);
+   void validateUserCredentials(String fullName, String password);
 }

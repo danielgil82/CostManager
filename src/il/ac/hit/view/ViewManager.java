@@ -31,6 +31,18 @@ public class ViewManager implements View , LoginUtils {
         //AppView = new CostManagerAppView(user);
     }
 
+    /**
+     *  this method suppose to send the full name and the password of the user
+     *  to the viewModel, because of a reuse thinking, because if the in the future
+     *  we'd change the gui part to another one, the logic of validating users credentials
+     *  will still be relevant.
+     * @param fullName of the user
+     * @param password of the user
+     */
+    @Override
+    public void validateUserCredentials(String fullName, String password) {
+        viewModel.userCredentialsForLoginPanel(fullName, password);
+    }
 
     /**
      * this method will get invoked when the button ok in the loginPanel will get clicked
@@ -59,7 +71,7 @@ public class ViewManager implements View , LoginUtils {
      */
     @Override
     public void validateUsersFullNameAndPasswords(String fullName, String password, String confirmedPassword) {
-        viewModel.validateUsersFullNameAndPassword(fullName, password, confirmedPassword);
+        viewModel.userCredentialsForSignUpPanel(fullName, password, confirmedPassword);
     }
 
     @Override
@@ -78,6 +90,18 @@ public class ViewManager implements View , LoginUtils {
 
     @Override
     public void displayMessage(Message message) {
+        loginView.getLabelInvalidDescription().setText(message.getMessage());
+    }
+
+    @Override
+    public void displayMessageAndSetTheFlagValidatorForSignUpPanel(Message message, boolean flag) {
+        loginView.setAreUserCredentialsValidInSignUpPanel(flag);
+        loginView.getLabelInvalidDescription().setText(message.getMessage());
+    }
+
+    @Override
+    public void displayMessageAndSetTheFlagValidatorForLoginPanel(Message message, boolean flag) {
+        loginView.setAreUserCredentialsValidInLoginPanel(flag);
         loginView.getLabelInvalidDescription().setText(message.getMessage());
     }
 
