@@ -1,5 +1,8 @@
 package il.ac.hit.model;
 
+/**
+ * The User class represents a mapping class that represents the users' table in the database.
+ */
 public class User
 {
     private int userID;
