@@ -32,12 +32,18 @@ public enum HandlingMessage
    INVALID_FULL_NAME ( "Invalid full name, please try again"),
    PASSWORDS_DO_NOT_MATCH ( "The passwords you entered don't match");
 
+   // message that represents the handling message
    private String message;
 
+   /**
+    * ctor that recieves the message
+    * @param message the message we received
+    */
    HandlingMessage(String message) {
       this.message = message;
    }
 
+   //getter
    public String getMessage() {
       return message;
    }

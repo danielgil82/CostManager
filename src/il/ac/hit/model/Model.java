@@ -2,6 +2,9 @@ package il.ac.hit.model;
 
 import java.util.Collection;
 
+/**
+ * the interface that represents the model functionality
+ */
 public interface Model
 {
      User getUser(String userFullName, String userPassword) throws CostManagerException;

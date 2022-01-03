@@ -7,6 +7,11 @@ import il.ac.hit.viewmodel.ViewModel;
 
 import java.util.Collection;
 
+/**
+ * An actual class that represents a concrete view.
+ * an also this class is a kind of LoginUtils interface because it has a methods that are going to be used in the
+ * LoginView Class.
+ */
 public class ViewManager implements View , LoginUtils {
 
     private ViewModel viewModel;
@@ -21,14 +26,12 @@ public class ViewManager implements View , LoginUtils {
         return loginView;
     }
 
-
+    /**
+     * Constructor
+     */
     public ViewManager() {
-      //  loginView = new LoginView(this::viewManagerAddNewUser , this::viewManagerValidateUserExistence);
         loginView = new LoginView(this);
         loginView.setVisible(true);
-
-
-        //AppView = new CostManagerAppView(user);
     }
 
     /**
@@ -74,6 +77,10 @@ public class ViewManager implements View , LoginUtils {
         viewModel.userCredentialsForSignUpPanel(fullName, password, confirmedPassword);
     }
 
+    /**
+     * here we set the view model
+     * @param vm the view model
+     */
     @Override
     public void setIViewModel(ViewModel vm) {
         viewModel = vm;

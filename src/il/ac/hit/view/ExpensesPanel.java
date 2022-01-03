@@ -4,15 +4,31 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
 
+/**
+ * this class represents the expenses panel
+ */
 public class ExpensesPanel extends JPanel
 {
+    /**
+     * data member which represents all the expenses by a specific category
+     */
     private CategorySelectorPanel panelCategorySelector;
-   // private TableExpensesPanel panelTableExpenses;
+
+    /**
+     * swing components
+     */
+    // private TableExpensesPanel panelTableExpenses;
     private GridLayout gridLayout;
+
+    /**
+     * viewManger that mediate between the view and the model
+     */
     private View viewManager;
 
-
-
+    /**
+     * ctor that recieves a viewManager parameter
+     * @param viewManager the data member that mediate between the view and the model
+     */
     public ExpensesPanel(View viewManager)
     {
         setViewManager(viewManager);
@@ -20,16 +36,28 @@ public class ExpensesPanel extends JPanel
        // panelTableExpenses = new TableExpensesPnael();
     }
 
+    /**
+     * this method returns the panelCategorySelector
+     * @return panel that represents the panel category selector
+     */
     public CategorySelectorPanel getPanelCategorySelector()
     {
         return panelCategorySelector;
     }
 
+    /**
+     * this method returns the viewManager data member
+     * @return viewManager data member
+     */
     public View getViewManager()
     {
         return viewManager;
     }
 
+    /**
+     * this method sets the viewManager data member
+     * @param viewManager data member that mediate between the view and the model
+     */
     public void setViewManager(View viewManager)
     {
         this.viewManager = viewManager;
@@ -50,12 +78,18 @@ public class ExpensesPanel extends JPanel
         private JPanel panelDownCategorySelector;
     //    private final List<Category> listOfCategories = new ArrayList<>();
 
+        /**
+         *
+         */
         public CategorySelectorPanel()
         {
             initCategorySelectorPanel();
             startCategorySelectorPanel();
         }
 
+        /**
+         *
+         */
         private void initCategorySelectorPanel()
         {
             labelCategorySelector = new JLabel("Select Category:");
