@@ -7,7 +7,7 @@ import java.awt.*;
 /**
  *  ComponentUtils is a package friendly class, that has a static method that sets attributes to a given component
  */
-final class ComponentUtils
+public final class ComponentUtils
 {
     /**
      * private ctor to avoid of objects creation of this class

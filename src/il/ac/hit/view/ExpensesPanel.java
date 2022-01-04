@@ -9,20 +9,14 @@ import java.util.Collection;
  */
 public class ExpensesPanel extends JPanel
 {
-    /**
-     * data member which represents all the expenses by a specific category
-     */
+    /** data member which represents all the expenses by a specific category */
     private CategorySelectorPanel panelCategorySelector;
 
-    /**
-     * swing components
-     */
+    /*** swing components*/
     // private TableExpensesPanel panelTableExpenses;
     private GridLayout gridLayout;
 
-    /**
-     * viewManger that mediate between the view and the model
-     */
+    /** viewManger that mediate between the view and the model */
     private View viewManager;
 
     /**
