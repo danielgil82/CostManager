@@ -2,8 +2,10 @@ package il.ac.hit.view;
 
 import il.ac.hit.auxiliary.Message;
 import il.ac.hit.model.User;
-import il.ac.hit.view.Login.LoginUtils;
-import il.ac.hit.view.Login.LoginView;
+import il.ac.hit.view.appcontent.AppUtils;
+import il.ac.hit.view.appcontent.AppView;
+import il.ac.hit.view.login.LoginUtils;
+import il.ac.hit.view.login.LoginView;
 import il.ac.hit.viewmodel.ViewModel;
 
 import java.util.Collection;
@@ -13,11 +15,12 @@ import java.util.Collection;
  * an also this class is a kind of LoginUtils interface because it has a methods that are going to be used in the
  * LoginView Class.
  */
-public class ViewManager implements View , LoginUtils {
+public class ViewManager implements View , LoginUtils , AppUtils {
 
     /** different frames of the application*/
     private LoginView loginView;
     private AppView appView;
+
 
     /** viewModel mediates between the view and model parts */
     private ViewModel viewModel;
@@ -50,11 +53,13 @@ public class ViewManager implements View , LoginUtils {
     }
 
     @Override
-    public void setSpecificUsersCategories(Collection<String> listOfCategories) {
+    public void setCategoriesAccordingToTheLoggedInUser(Collection<String> listOfCategories) {
+
         for (String category : listOfCategories) {
             appView.getListOfCategories().add(category);
         }
-        appView.getExpensesPanel().getPanelCategorySelector().auxiliaryAddCategoriesIntoComboBox(listOfCategories);
+
+   //     appView.getExpensesPanel().getPanelCategorySelector().auxiliaryAddCategoriesIntoComboBox(listOfCategories);
     }
 
 
@@ -159,6 +164,7 @@ public class ViewManager implements View , LoginUtils {
     /**
      * this method resets the user
      */
+    @Override
     public void resetUser() {
         viewModel.resetUser();
     }

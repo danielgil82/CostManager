@@ -1,4 +1,4 @@
-package il.ac.hit.view.Login;
+package il.ac.hit.view.login;
 
 import il.ac.hit.model.User;
 import il.ac.hit.view.ComponentUtils;
@@ -57,6 +57,22 @@ public class LoginView extends JFrame {
     private boolean areUserCredentialsValidInLoginPanel = true;
 
     /**
+     * ctor that receives the loginUtils parameter
+     *
+     * @param loginUtils an interface that has the methods that are going to be invoked by okButton and submitButton
+     */
+    public LoginView(LoginUtils loginUtils) {
+        setLoginUtils(loginUtils);
+        initLoginView();
+        startLoginView();
+    }
+
+    /** setter for loginUtils */
+    public void setLoginUtils(LoginUtils loginUtils) {
+        this.loginUtils = loginUtils;
+    }
+
+    /**
      * this method sets the flag for LoginPanel.
      *
      * @param areUserCredentialsValidInLoginPanel this boolean represents if the credentials of the user
@@ -74,17 +90,6 @@ public class LoginView extends JFrame {
      */
     public void setAreUserCredentialsValidInSignUpPanel(boolean areUserCredentialsValidInSignUpPanel) {
         this.areUserCredentialsValidInSignUpPanel = areUserCredentialsValidInSignUpPanel;
-    }
-
-    /**
-     * ctor that receives the loginUtils parameter
-     *
-     * @param loginUtils an interface that has the methods that are going to be invoked by okButton and submitButton
-     */
-    public LoginView(LoginUtils loginUtils) {
-        this.loginUtils = loginUtils;
-        initLoginView();
-        startLoginView();
     }
 
     /**
@@ -138,7 +143,6 @@ public class LoginView extends JFrame {
 
         //setting the layered pane with panels
         setLayeredPane();
-
 
         //Adding all panels to "this" object which is a JFrame
         this.add(panelNorthLoginFrame, BorderLayout.NORTH);

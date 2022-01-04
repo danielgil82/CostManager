@@ -18,6 +18,5 @@ public interface View
     void init();
     void start();
     void changeFrameFromLoginViewToAppView();
-    void changeFrameFromAppViewToLoginView();
-    void setSpecificUsersCategories(Collection<String> listOfCategories);
+    void setCategoriesAccordingToTheLoggedInUser(Collection<String> listOfCategories);
 }

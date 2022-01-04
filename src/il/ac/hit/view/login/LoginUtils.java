@@ -1,4 +1,4 @@
-package il.ac.hit.view.Login;
+package il.ac.hit.view.login;
 
 import il.ac.hit.model.User;
 

@@ -72,8 +72,7 @@ public class CostManagerViewModel implements ViewModel {
                 model.addNewUserToDBAndUpdateTheListOfUsers(user);
 
                 SwingUtilities.invokeLater(() ->
-                        view.displayMessage
-                                (new Message(HandlingMessage.SIGNED_UP_SUCCESSFULLY.toString())));
+                        view.displayMessage(new Message(HandlingMessage.SIGNED_UP_SUCCESSFULLY.toString())));
 
             } catch (CostManagerException ex) {
                 //lambda expression because Runnable is a functional interface
@@ -90,7 +89,7 @@ public class CostManagerViewModel implements ViewModel {
 
                 categoryCollection = model.getCategoriesBySpecificUser(user.getUserID());
 
-                view.setSpecificUsersCategories(categoryCollection);
+                view.setCategoriesAccordingToTheLoggedInUser(categoryCollection);
             } catch (CostManagerException ex) {
                 //lambda expression because Runnable is a functional interface
                 SwingUtilities.invokeLater(() -> view.displayMessage(new Message(ex.getMessage())));
