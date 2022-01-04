@@ -14,6 +14,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.BiPredicate;
 
+/**
+ * CostManagerViewModel is the class that mediates between the view and the model parts.
+ * In this class we have overridden methods that were declared in the ViewModel interface.
+ * A prat of these methods we have a private methods that do some logic.
+ */
 public class CostManagerViewModel implements ViewModel {
 
     private View view;
@@ -79,22 +84,21 @@ public class CostManagerViewModel implements ViewModel {
 
     @Override
     public void getCategoriesBySpecificUser() {
-        service.submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Collection<String> categoryCollection = new ArrayList<>();
+        service.submit(() -> {
+            try {
+                Collection<String> categoryCollection = new ArrayList<>();
 
-                    categoryCollection = model.getCategoriesBySpecificUser(user.getUserID());
+                categoryCollection = model.getCategoriesBySpecificUser(user.getUserID());
 
-                    view.setSpecificUsersCategories(categoryCollection);
-                } catch (CostManagerException ex) {
-                    //lambda expression because Runnable is a functional interface
-                    SwingUtilities.invokeLater(() -> view.displayMessage(new Message(ex.getMessage())));
-                }
+                view.setSpecificUsersCategories(categoryCollection);
+            } catch (CostManagerException ex) {
+                //lambda expression because Runnable is a functional interface
+                SwingUtilities.invokeLater(() -> view.displayMessage(new Message(ex.getMessage())));
             }
         });
     }
+
+
 
     /**
      * first we ensure that the awt event thread is the one that run right now.
@@ -115,7 +119,6 @@ public class CostManagerViewModel implements ViewModel {
             SwingUtilities.invokeLater(() -> signUpValidatorCredentials(fullName, password, confirmedPassword));
         }
     }
-
 
     /**
      * first we ensure that the awt event thread is the one that run right now.
@@ -219,7 +222,7 @@ public class CostManagerViewModel implements ViewModel {
 
     /**
      * Here we set the model data member.
-     * @param model
+     * @param model the model of our application.
      */
     @Override
     public void setModel(Model model) {
@@ -229,6 +232,7 @@ public class CostManagerViewModel implements ViewModel {
     /**
      * Here we reset the user.
      */
+    @Override
     public void resetUser() {
         user = null;
     }

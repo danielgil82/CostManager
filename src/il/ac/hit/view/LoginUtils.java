@@ -3,7 +3,8 @@ package il.ac.hit.view;
 import il.ac.hit.model.User;
 
 /**
- * this interface has the methods that will be invoked from LoginPanel and SignUpPanel
+ * this interface has the methods that will be invoked by the okButton and submitButton in
+ * LoginPanel and SignUpPanel respectively
  */
 public interface LoginUtils {
    void validateUserExistence(String fullName, String password);

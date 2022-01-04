@@ -6,8 +6,8 @@ import il.ac.hit.viewmodel.ViewModel;
 import java.util.Collection;
 
 /**
- * View interface is the interface that has the methods that are going
- * to be implements by a concrete view object which is in our case would be an object of the ViewManager class.
+ * View interface is an interface, that has the methods that are going
+ * to be implemented by a concrete view object which is in our case would be an object of the ViewManager class.
  */
 public interface View
 {

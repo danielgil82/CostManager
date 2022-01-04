@@ -26,7 +26,7 @@ public class ExpensesPanel extends JPanel
     private View viewManager;
 
     /**
-     * ctor that recieves a viewManager parameter
+     * ctor that receives a viewManager parameter
      * @param viewManager the data member that mediate between the view and the model
      */
     public ExpensesPanel(View viewManager)

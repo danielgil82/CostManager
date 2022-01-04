@@ -10,15 +10,15 @@ import java.util.*;
  * This class represents the interaction with the database and the logic behind that
  */
 public class CostManagerModel implements Model {
-    //this string represents the driver full qualified name
+    /**this string represents the driver full qualified name */
     private final String driverFullQualifiedName = "com.mysql.jdbc.Driver";
-    //this string represents the connection to the database
+    /** this string represents the connection to the database */
     private final String connectionStringToDB = "jdbc:mysql://localhost:3306/costmanagerproj";
-    //list of all users that signed up to our application
+    /** list of all users that signed up to our application */
     private final List<User> listOfUsers = new ArrayList<>();
 
     /**
-     * ctor
+     * ctor of the CostManagerModel
      * @throws CostManagerException the exception we defined to our application
      */
     public CostManagerModel() throws CostManagerException {

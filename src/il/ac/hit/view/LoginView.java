@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiPredicate;
 
 /**
  * this class represents the loginView frame
@@ -58,7 +57,9 @@ public class LoginView extends JFrame {
 
     /**
      * this method sets the flag for LoginPanel.
-      * @param areUserCredentialsValidInLoginPanel
+     *
+     * @param areUserCredentialsValidInLoginPanel this boolean represents if the credentials of the user
+     *                                            are valid in LoginPanel
      */
     public void setAreUserCredentialsValidInLoginPanel(boolean areUserCredentialsValidInLoginPanel) {
         this.areUserCredentialsValidInLoginPanel = areUserCredentialsValidInLoginPanel;
@@ -66,15 +67,18 @@ public class LoginView extends JFrame {
 
     /**
      * this method sets the flag for signUpPanel.
-     * @param areUserCredentialsValidInSignUpPanel
+     *
+     * @param areUserCredentialsValidInSignUpPanel this boolean represents if the credentials of the user
+     *                                             are valid in SignUpPanel
      */
     public void setAreUserCredentialsValidInSignUpPanel(boolean areUserCredentialsValidInSignUpPanel) {
         this.areUserCredentialsValidInSignUpPanel = areUserCredentialsValidInSignUpPanel;
     }
 
     /**
-     * ctor that recives the loginUtils parameter
-     * @param loginUtils
+     * ctor that receives the loginUtils parameter
+     *
+     * @param loginUtils an interface that has the methods that are going to be invoked by okButton and submitButton
      */
     public LoginView(LoginUtils loginUtils) {
         this.loginUtils = loginUtils;
@@ -84,7 +88,8 @@ public class LoginView extends JFrame {
 
     /**
      * this method returns the labelInvalidDescription
-     * @return
+     *
+     * @return a label that shows the description
      */
     public JLabel getLabelInvalidDescription() {
 
@@ -111,7 +116,7 @@ public class LoginView extends JFrame {
     }
 
     /**
-     *   adding components to the right panels
+     * adding components to the panels
      */
     public void startLoginView() {
         //North Panel
@@ -129,19 +134,12 @@ public class LoginView extends JFrame {
         panelSouthLoginFrame.setBackground(Color.cyan);
         //Center Panel
         this.setLayout(new BorderLayout());
-        setLayeredPanel();
-        //  panelCenterLoginFrame.add(loginPanel);
-        //panelCenterLoginFrame.add(signUpPanel);
+
+        //setting the layered pane with panels
+        setLayeredPane();
 
 
-        //Login And SignUp panels
-        //loginPanel.setVisible(false);
-        //signUpPanel.setVisible(false);
-
-
-        /**
-         * Adding all panels to "this" object which is a JFrame
-         */
+        //Adding all panels to "this" object which is a JFrame
         this.add(panelNorthLoginFrame, BorderLayout.NORTH);
         this.add(panelWestLoginFrame, BorderLayout.WEST);
         this.add(panelSouthLoginFrame, BorderLayout.SOUTH);
@@ -163,10 +161,7 @@ public class LoginView extends JFrame {
     /**
      * setting the layered pane.
      */
-    private void setLayeredPanel() {
-        int xPos = loginButton.getLocation().x + loginButton.getWidth();
-        int yPos = loginButton.getLocation().y;
-
+    private void setLayeredPane() {
         layeredPaneCenter.setLayout(new CardLayout(0, 0));
         setLoginPanelPartOfTheLayeredPane();
         setSignUpPanelPartOfTheLayeredPane();
@@ -285,14 +280,12 @@ public class LoginView extends JFrame {
             panelLoginSouth.add(buttonOkLoginPanel);
             this.add(panelLoginSouth, BorderLayout.SOUTH);
 
-            /**
-             * this method setting the buttonOk action listener
-             */
+            //this method setting the buttonOk action listener
             setButtonOkActionListener();
         }
 
         /**
-         * Action listener for the buttonOk.
+         * Action listener for the buttonOk
          */
         private void setButtonOkActionListener() {
             buttonOkLoginPanel.addActionListener(new ActionListener() {
@@ -319,6 +312,7 @@ public class LoginView extends JFrame {
             Font font = new Font("Narkisim", Font.BOLD, 20);
             Dimension dimension = new Dimension(new Dimension(0, 0));
 
+            //Here there is a use of a static method of the ComponentUtils class
             ComponentUtils.setComponentsAttributes(labelLoginTitle, new Font("Narkisim", Font.BOLD, 40), new Dimension(150, 70));
 
             componentsList.add(labelFullNameLoginPanel);
@@ -354,7 +348,7 @@ public class LoginView extends JFrame {
         private JPanel panelSouthSignUp;
 
         /**
-         * Ctor
+         * Ctor that call the init and start methods that build and set the attributes of the SignUpPanel
          */
         private SignUpPanel() {
             SignUpInit();
@@ -421,8 +415,7 @@ public class LoginView extends JFrame {
 
                     loginUtils.validateUsersFullNameAndPasswords(fullName, password, confirmPassword);
 
-                    if(areUserCredentialsValidInSignUpPanel)
-                    {
+                    if (areUserCredentialsValidInSignUpPanel) {
                         loginUtils.addNewUser(new User(fullName, password));
                     }
                 }

@@ -8,15 +8,20 @@ import java.util.Collection;
 /**
  * class that represents AppView itself
  */
-public class AppView extends JFrame
-{
-    //list of all categories
+public class AppView extends JFrame {
+    /**
+     * list of all categories
+     */
     private final Collection<String> listOfCategories = new ArrayList<>();
 
-    //viewManger is the mediator between the view and the model
+    /**
+     * viewManger is the mediator between the view and the model
+     */
     private View viewManager;
 
-    //swing components
+    /**
+     * swing components
+     */
     private JButton allExpensesButton;
     private JButton operationsButton;
     private JButton reportButton;
@@ -48,11 +53,11 @@ public class AppView extends JFrame
 //    private ReportPanel reportPanel;
 
     /**
-     * ctor that recieves the viewManager
+     * ctor that receives the viewManager
+     *
      * @param viewManager
      */
-    public AppView(View viewManager)
-    {
+    public AppView(View viewManager) {
         setViewManager(viewManager);
         initAppView();
         startAppView();
@@ -60,6 +65,7 @@ public class AppView extends JFrame
 
     /**
      * this method returns the listOfCategories
+     *
      * @return all the categories
      */
     public Collection<String> getListOfCategories() {
@@ -68,27 +74,26 @@ public class AppView extends JFrame
 
     /**
      * this method return the expense panel
+     *
      * @return expense panel
      */
-    public ExpensesPanel getExpensesPanel()
-    {
-         return expensesPanel;
+    public ExpensesPanel getExpensesPanel() {
+        return expensesPanel;
     }
 
     /**
      * this method set the viewManager data member
+     *
      * @param viewManager viewManager that mediate between the view and the  model
      */
-    public void setViewManager(View viewManager)
-    {
+    public void setViewManager(View viewManager) {
         this.viewManager = viewManager;
     }
 
     /**
      * this method initialize the swing components
      */
-    private void initAppView()
-    {
+    private void initAppView() {
         expensesPanel = new ExpensesPanel(viewManager);
         allExpensesButton = new JButton("Expenses");
         operationsButton = new JButton("Operations");
@@ -113,8 +118,7 @@ public class AppView extends JFrame
     /**
      * this method settings the panels, buttons and their attributes
      */
-    private void startAppView()
-    {
+    private void startAppView() {
         setApplicationFrame();
         setNorthPanel();
         setNorthPanelComponentAttributes();
@@ -125,14 +129,13 @@ public class AppView extends JFrame
     /**
      * this method settings the south panel of the application and defined the relevant text
      */
-    private void setSouthPanel()
-    {
+    private void setSouthPanel() {
         panelSouth.setBackground(new Color(190, 190, 230, 155));
         panelSouth.setBounds(0, 900, 1300, 100);
 
         ComponentUtils.setComponentsAttributes(labelFeedbackMessage,
                 new Font("Narkisim", Font.BOLD, 30),
-                new Dimension(1240,50));
+                new Dimension(1240, 50));
 
         panelSouth.add(labelFeedbackMessage);
         panelAppContent.add(panelSouth, BorderLayout.SOUTH);
@@ -141,8 +144,7 @@ public class AppView extends JFrame
     /**
      * this method settings the north panel of the application, which is acting like the client navigation bar.
      */
-    private void setNorthPanel()
-    {
+    private void setNorthPanel() {
         panelNorth.setLayout(panelNorthFlowLayout);
         panelNorth.setBackground(new Color(190, 190, 230, 155));
         panelNorth.setBounds(0, 0, 1300, 200);
@@ -157,8 +159,8 @@ public class AppView extends JFrame
     /**
      * this method represents the buttons ActionListeners
      */
-    private void setButtonsActionListeners()
-    {
+    private void setButtonsActionListeners() {
+
         allExpensesButton.addActionListener(e ->
         {
             layeredPaneCenter.removeAll();
@@ -190,13 +192,10 @@ public class AppView extends JFrame
     /**
      * this method sets each of the north's panel components attributes
      */
-    private void setNorthPanelComponentAttributes()
-    {
+    private void setNorthPanelComponentAttributes() {
         Component[] components = panelNorth.getComponents();
-        for (Component component : components)
-        {
-            if (component instanceof JButton)
-            {
+        for (Component component : components) {
+            if (component instanceof JButton) {
                 ComponentUtils.setComponentsAttributes(component,
                         new Font("Narkisim", Font.BOLD, 30),
                         new Dimension(200, 70));
@@ -211,8 +210,7 @@ public class AppView extends JFrame
     /**
      * this method sets the application frame size
      */
-    private void setApplicationFrame()
-    {
+    private void setApplicationFrame() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1300, 1000);
         ComponentUtils.centralizeWindow(this);

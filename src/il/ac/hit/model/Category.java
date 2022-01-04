@@ -4,9 +4,9 @@ package il.ac.hit.model;
  * The category class represents a mapping class that represents the categories' table in the database.
  */
 public class Category
-{   // category name
+{
+    /** data members that represent the category table attributes*/
     private String categoryName;
-    // the id of the user that has that category.
     private int userID;
 
     /**

@@ -33,7 +33,8 @@ final class ComponentUtils
     }
 
     /**
-     * this method should center a window that it recieves.
+     * this method centers a window that it receives.
+     * @param frame the given frame that are going to be centered
      */
     public static void centralizeWindow(Window frame) {
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();

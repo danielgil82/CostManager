@@ -3,58 +3,62 @@ package il.ac.hit.model;
 /**
  * The User class represents a mapping class that represents the users' table in the database.
  */
-public class User
-{
+public class User {
+    /**
+     * data members that represent the users' table attributes
+     */
     private int userID;
     private String fullName;
     private String usersPassword;
 
-    public User(int userID, String fullName, String usersPassword)
-    {
-      setID(userID);
-      setFullName(fullName);
-      setUsersPassword(usersPassword);
+    /**
+     * ctor that receives the user attributes including the userID
+     * @param userID the id of the user
+     * @param fullName the name of the user
+     * @param usersPassword the password of the user
+     */
+    public User(int userID, String fullName, String usersPassword) {
+        this(fullName, usersPassword);
+        setID(userID);
     }
 
-    public User(String fullName, String usersPassword)
-    {
+    /** ctor that receives the user attributes excluding the userID
+     * @param fullName the name of the user
+     * @param usersPassword the password of the user
+     */
+    public User(String fullName, String usersPassword) {
         setFullName(fullName);
         setUsersPassword(usersPassword);
     }
 
-    public int getUserID()
-    {
+    /** getters */
+    public int getUserID() {
         return userID;
     }
 
-    public String getUsersPassword()
-    {
+    public String getUsersPassword() {
         return usersPassword;
     }
 
-    public String getFullName()
-    {
+    public String getFullName() {
         return fullName;
     }
 
-    public void setID(int id)
-    {
+    /** setter */
+    public void setID(int id) {
         this.userID = id;
     }
 
-    public void setFullName(String fullName)
-    {
+    public void setFullName(String fullName) {
         this.fullName = fullName;
     }
 
-    public void setUsersPassword(String usersPassword)
-    {
+    public void setUsersPassword(String usersPassword) {
         this.usersPassword = usersPassword;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "User{" +
                 "id=" + userID +
                 ", fullName='" + fullName + '\'' +

@@ -14,10 +14,23 @@ import java.util.Collection;
  */
 public class ViewManager implements View , LoginUtils {
 
-    private ViewModel viewModel;
+    /** different frames of the application*/
     private LoginView loginView;
     private AppView appView;
 
+    /** viewModel mediates between the view and model parts */
+    private ViewModel viewModel;
+
+
+    /**
+     * Constructor that inits the loginView member
+     */
+    public ViewManager() {
+        loginView = new LoginView(this);
+        loginView.setVisible(true);
+    }
+
+    /** getters */
     public ViewModel getViewModel() {
         return viewModel;
     }
@@ -27,12 +40,22 @@ public class ViewManager implements View , LoginUtils {
     }
 
     /**
-     * Constructor
+     * here we set the view model
+     * @param vm the view model
      */
-    public ViewManager() {
-        loginView = new LoginView(this);
-        loginView.setVisible(true);
+    @Override
+    public void setIViewModel(ViewModel vm) {
+        viewModel = vm;
     }
+
+    @Override
+    public void setSpecificUsersCategories(Collection<String> listOfCategories) {
+        for (String category : listOfCategories) {
+            appView.getListOfCategories().add(category);
+        }
+        appView.getExpensesPanel().getPanelCategorySelector().auxiliaryAddCategoriesIntoComboBox(listOfCategories);
+    }
+
 
     /**
      *  this method suppose to send the full name and the password of the user
@@ -77,14 +100,7 @@ public class ViewManager implements View , LoginUtils {
         viewModel.userCredentialsForSignUpPanel(fullName, password, confirmedPassword);
     }
 
-    /**
-     * here we set the view model
-     * @param vm the view model
-     */
-    @Override
-    public void setIViewModel(ViewModel vm) {
-        viewModel = vm;
-    }
+
 
     @Override
     public void init() {
@@ -95,45 +111,64 @@ public class ViewManager implements View , LoginUtils {
     public void start() {
     }
 
+    /**
+     * this method receives message and displays it to the user via the loginView
+     * @param message the relevant message to display
+     */
     @Override
     public void displayMessage(Message message) {
         loginView.getLabelInvalidDescription().setText(message.getMessage());
     }
 
+    /**
+     * this method receives message and displays it to the user via the loginView
+     * and updates the flag that indicates the validity of the user's credentials
+     *
+     * @param message the relevant message to display
+     * @param flag that indicates if the credentials of the user are valid
+     */
     @Override
     public void displayMessageAndSetTheFlagValidatorForSignUpPanel(Message message, boolean flag) {
         loginView.setAreUserCredentialsValidInSignUpPanel(flag);
         loginView.getLabelInvalidDescription().setText(message.getMessage());
     }
 
+    /**
+     * this method receives message and displays it to the user via the loginView
+     * and updates the flag that indicates the validity of the user's credentials
+     *
+     * @param message the relevant message to display
+     * @param flag that indicates if the credentials of the user are valid
+     */
     @Override
     public void displayMessageAndSetTheFlagValidatorForLoginPanel(Message message, boolean flag) {
         loginView.setAreUserCredentialsValidInLoginPanel(flag);
         loginView.getLabelInvalidDescription().setText(message.getMessage());
     }
 
+    /**
+     * this method changes the frame from app page to the login page.
+     */
     @Override
     public void changeFrameFromAppViewToLoginView() {
         appView.dispose();
         loginView.setVisible(true);
     }
 
+    /**
+     * this method resets the user
+     */
     public void resetUser() {
-        ((CostManagerViewModel) viewModel).resetUser();
+        viewModel.resetUser();
     }
 
+    /**
+     * this method changes the frame from the login page to the app page.
+     */
     @Override
     public void changeFrameFromLoginViewToAppView() {
         loginView.setVisible(false);
         appView = new AppView(this);
         appView.setVisible(true);
-    }
-
-    @Override
-    public void setSpecificUsersCategories(Collection<String> listOfCategories) {
-        for (String category : listOfCategories) {
-            appView.getListOfCategories().add(category);
-        }
-        appView.getExpensesPanel().getPanelCategorySelector().auxiliaryAddCategoriesIntoComboBox(listOfCategories);
     }
 }
