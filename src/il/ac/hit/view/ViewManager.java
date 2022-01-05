@@ -52,17 +52,6 @@ public class ViewManager implements View , LoginUtils , AppUtils {
         viewModel = vm;
     }
 
-    @Override
-    public void setCategoriesAccordingToTheLoggedInUser(Collection<String> listOfCategories) {
-
-        for (String category : listOfCategories) {
-            appView.getListOfCategories().add(category);
-        }
-
-   //     appView.getExpensesPanel().getPanelCategorySelector().auxiliaryAddCategoriesIntoComboBox(listOfCategories);
-    }
-
-
     /**
      *  this method suppose to send the full name and the password of the user
      *  to the viewModel, because of a reuse thinking, because if the in the future
@@ -142,7 +131,6 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     /**
      * this method receives message and displays it to the user via the loginView
      * and updates the flag that indicates the validity of the user's credentials
-     *
      * @param message the relevant message to display
      * @param flag that indicates if the credentials of the user are valid
      */
@@ -177,5 +165,22 @@ public class ViewManager implements View , LoginUtils , AppUtils {
         loginView.setVisible(false);
         appView = new AppView(this);
         appView.setVisible(true);
+    }
+
+
+    @Override
+    public void getCategoriesThatBelongToSpecificUser() {
+        viewModel.getCategoriesBySpecificUser();
+    }
+
+    @Override
+    public void setCategoriesAccordingToTheLoggedInUser(Collection<String> listOfCategories) {
+        appView.setTheCategoriesList(listOfCategories);
+
+//        for (String category : listOfCategories) {
+//            appView.getListOfCategories().add(category);
+//        }
+
+        //     appView.getExpensesPanel().getPanelCategorySelector().auxiliaryAddCategoriesIntoComboBox(listOfCategories);
     }
 }

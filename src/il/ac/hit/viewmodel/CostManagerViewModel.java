@@ -85,11 +85,13 @@ public class CostManagerViewModel implements ViewModel {
     public void getCategoriesBySpecificUser() {
         service.submit(() -> {
             try {
-                Collection<String> categoryCollection = new ArrayList<>();
+                Collection<String> categoryCollection;
 
                 categoryCollection = model.getCategoriesBySpecificUser(user.getUserID());
 
-                view.setCategoriesAccordingToTheLoggedInUser(categoryCollection);
+                SwingUtilities.invokeLater(() -> view.setCategoriesAccordingToTheLoggedInUser(categoryCollection));
+
+
             } catch (CostManagerException ex) {
                 //lambda expression because Runnable is a functional interface
                 SwingUtilities.invokeLater(() -> view.displayMessage(new Message(ex.getMessage())));

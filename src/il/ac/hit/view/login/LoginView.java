@@ -106,7 +106,7 @@ public class LoginView extends JFrame {
      * this method initialize the swing components
      */
     public void initLoginView() {
-        gridLayoutWestPanel = new GridLayout(2, 1, 0, 5);
+        gridLayoutWestPanel = new GridLayout(2, 1, 0, 300);
         layeredPaneCenter = new JLayeredPane();
         loginPanelPartOfTheLayeredPane = new JPanel();
         signUPPanelPartOfTheLayeredPane = new JPanel();
@@ -193,29 +193,22 @@ public class LoginView extends JFrame {
      * adding attributes to each of the buttons in the west panel of the login frame.
      */
     public void setButtonAttributes() {
-        ComponentUtils.setComponentsAttributes(signUpButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(80, 10));
-        ComponentUtils.setComponentsAttributes(loginButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(80, 10));
+//        loginButton.setBounds(0, 500, 180, 20);
+        ComponentUtils.setComponentsAttributes(signUpButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(120, 20 ));
+        ComponentUtils.setComponentsAttributes(loginButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(150, 20));
     }
 
     /**
      * this method adds buttons actionListeners
      */
     private void setButtonsActionListeners() {
-        //Login button
-        loginButton.addActionListener(e ->
-        {
-            layeredPaneCenter.removeAll();
-            layeredPaneCenter.add(loginPanelPartOfTheLayeredPane);
-            layeredPaneCenter.revalidate();
-        });
+        //loginButton
+        ComponentUtils.setActionListenersToChangePanelsOnLayeredPane(
+                layeredPaneCenter, loginButton, loginPanelPartOfTheLayeredPane);
 
-        //SignUp button
-        signUpButton.addActionListener(e ->
-        {
-            layeredPaneCenter.removeAll();
-            layeredPaneCenter.add(signUPPanelPartOfTheLayeredPane);
-            layeredPaneCenter.revalidate();
-        });
+        //signUpButton
+        ComponentUtils.setActionListenersToChangePanelsOnLayeredPane(
+                layeredPaneCenter, signUpButton, signUPPanelPartOfTheLayeredPane);
     }
 
     /**

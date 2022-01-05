@@ -23,6 +23,7 @@ public final class ComponentUtils
      * @param dimensions indicates the dimensions of the component.
      */
     public static void setComponentsAttributes(Component component, Font font, Dimension dimensions) {
+
         if (component instanceof JLabel)
         {
             ((JLabel) component).setHorizontalAlignment(SwingConstants.CENTER);
@@ -41,5 +42,20 @@ public final class ComponentUtils
         int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
         int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
         frame.setLocation(x, y);
+    }
+
+    /**
+     * this method sets the action listener for different buttons, that are going to change
+     * panels from the current panel to the destination panel on the layered pane that are given.
+     * @param layeredPane the pane that we will display another panel on it.
+     * @param button the button that getting action listener.
+     * @param destinationPanel the panel to display now one the given layered pane.
+     */
+    public static void setActionListenersToChangePanelsOnLayeredPane(JLayeredPane layeredPane,JButton button, JPanel destinationPanel) {
+        button.addActionListener(e -> {
+            layeredPane.removeAll();
+            layeredPane.add(destinationPanel);
+            layeredPane.revalidate();
+        });
     }
 }
