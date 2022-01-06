@@ -9,6 +9,7 @@ import il.ac.hit.view.login.LoginView;
 import il.ac.hit.viewmodel.ViewModel;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * An actual class that represents a concrete view.
@@ -30,8 +31,7 @@ public class ViewManager implements View , LoginUtils , AppUtils {
      * Constructor that inits the loginView member
      */
     public ViewManager() {
-        loginView = new LoginView(this);
-        loginView.setVisible(true);
+
     }
 
     /** getters */
@@ -85,7 +85,6 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     }
 
     /**
-     *
      * @param fullName of the user
      * @param password password the user choose
      * @param confirmedPassword confirmation of the users password
@@ -99,7 +98,8 @@ public class ViewManager implements View , LoginUtils , AppUtils {
 
     @Override
     public void init() {
-        //   loginPageFrame = new LoginPageFrame();
+        loginView = new LoginView(this);
+        loginView.setVisible(true);
     }
 
     @Override
@@ -167,20 +167,13 @@ public class ViewManager implements View , LoginUtils , AppUtils {
         appView.setVisible(true);
     }
 
-
     @Override
     public void getCategoriesThatBelongToSpecificUser() {
         viewModel.getCategoriesBySpecificUser();
     }
 
     @Override
-    public void setCategoriesAccordingToTheLoggedInUser(Collection<String> listOfCategories) {
+    public void setCategoriesAccordingToTheLoggedInUser(List<String> listOfCategories) {
         appView.setTheCategoriesList(listOfCategories);
-
-//        for (String category : listOfCategories) {
-//            appView.getListOfCategories().add(category);
-//        }
-
-        //     appView.getExpensesPanel().getPanelCategorySelector().auxiliaryAddCategoriesIntoComboBox(listOfCategories);
     }
 }

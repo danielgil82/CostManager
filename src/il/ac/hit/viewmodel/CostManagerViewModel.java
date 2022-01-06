@@ -10,6 +10,7 @@ import il.ac.hit.view.View;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.BiPredicate;
@@ -25,7 +26,7 @@ public class CostManagerViewModel implements ViewModel {
     private Model model;
     private User user;
     private ExecutorService service;
-
+    private List<String> categoriesOfTheUser = new ArrayList<>();
     /**
      * ctor of the CostManagerViewModel, it constructs the number of the thread
      * that are going to be in the thread pool
@@ -47,7 +48,7 @@ public class CostManagerViewModel implements ViewModel {
 
                 //Doesn't require a check on the user because if the user exists it will return into the user, and then
                 //frames will be changed, else it will be caught by the catch
-                view.changeFrameFromLoginViewToAppView();
+               SwingUtilities.invokeLater(() -> view.changeFrameFromLoginViewToAppView());
 
             } catch (CostManagerException ex) {
                 //lambda expression because Runnable is a functional interface
@@ -83,18 +84,18 @@ public class CostManagerViewModel implements ViewModel {
 
     @Override
     public void getCategoriesBySpecificUser() {
-        service.submit(() -> {
-            try {
-                Collection<String> categoryCollection;
+        service.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    categoriesOfTheUser = model.getCategoriesBySpecificUser(user.getUserID());
 
-                categoryCollection = model.getCategoriesBySpecificUser(user.getUserID());
+                    SwingUtilities.invokeLater(() -> view.setCategoriesAccordingToTheLoggedInUser(categoriesOfTheUser));
 
-                SwingUtilities.invokeLater(() -> view.setCategoriesAccordingToTheLoggedInUser(categoryCollection));
-
-
-            } catch (CostManagerException ex) {
-                //lambda expression because Runnable is a functional interface
-                SwingUtilities.invokeLater(() -> view.displayMessage(new Message(ex.getMessage())));
+                } catch (CostManagerException ex) {
+                    //lambda expression because Runnable is a functional interface
+                    SwingUtilities.invokeLater(() -> view.displayMessage(new Message(ex.getMessage())));
+                }
             }
         });
     }

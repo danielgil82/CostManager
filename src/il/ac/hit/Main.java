@@ -50,6 +50,7 @@ public class Main
                 view.start();
             }
         });
+
         viewModel.setModel(model);
         viewModel.setView(view);
         view.setIViewModel(viewModel);

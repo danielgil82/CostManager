@@ -4,6 +4,7 @@ import il.ac.hit.auxiliary.Message;
 import il.ac.hit.viewmodel.ViewModel;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * View interface is an interface, that has the methods that are going
@@ -18,5 +19,5 @@ public interface View
     void init();
     void start();
     void changeFrameFromLoginViewToAppView();
-    void setCategoriesAccordingToTheLoggedInUser(Collection<String> listOfCategories);
+    void setCategoriesAccordingToTheLoggedInUser(List<String> listOfCategories);
 }

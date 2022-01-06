@@ -14,7 +14,7 @@ import java.util.List;
 public class AppView extends JFrame {
 
     /** list of all categories that belongs to a specific user*/
-    private final List<String> categoriesListBySpecificUser = new ArrayList<>();
+    //private final List<String> categoriesListBySpecificUser = new ArrayList<>();
 
     private AppUtils appUtils;
     /**
@@ -35,7 +35,7 @@ public class AppView extends JFrame {
     private JPanel panelCurrencies;
     private JPanel panelSouthAppView;
     private JLayeredPane layeredPaneCenterAppView;
-    private JComboBox comboBoxCategories;
+    private JComboBox<String> comboBoxCategories;
     private FlowLayout panelNorthFlowLayout;
     private BorderLayout borderLayoutPanelContent;
 
@@ -53,27 +53,17 @@ public class AppView extends JFrame {
         setAppUtils(appUtils);
         initAppView();
         startAppView();
-        insertCategoriesToComboBox();
     }
 
     /**
-     * this method sets the categories to the categoriesListBySpecificUser
+     * this method recieves the categories that belong to the loggedIn user , and then
+     * calls to a method that sets the categories to the combobox
      * @param listOfCategories that are going to be added to the categoriesListBySpecificUser
      */
-    public void setTheCategoriesList(Collection<String> listOfCategories) {
-        for (String category : listOfCategories) {
-            categoriesListBySpecificUser.add(category);
-        }
-
-        categoriesListBySpecificUser.add("All");
-    }
-
-    /**
-     * this method return the expense panel
-     * @return expense panel
-     */
-    public ExpensesByCategory getExpensesPanel() {
-        return expensesByCategory;
+    public void setTheCategoriesList(List<String> listOfCategories) {
+        //insert categories to the combo box
+        listOfCategories.add("all");
+        insertCategoriesToComboBox(listOfCategories);
     }
 
     /**
@@ -86,7 +76,7 @@ public class AppView extends JFrame {
 
     /*** this method initialize the swing components */
     private void initAppView() {
-        comboBoxCategories = new JComboBox();
+        comboBoxCategories = new JComboBox<>();
         expensesByCategory = new ExpensesByCategory();
         buttonExpenses = new JButton("Expenses");
         buttonOperations = new JButton("Operations");
@@ -105,7 +95,6 @@ public class AppView extends JFrame {
         panelSouthAppView = new JPanel();
         layeredPaneCenterAppView = new JLayeredPane();
         panelNorthFlowLayout = new FlowLayout(0, 25, 0);
-
     }
 
     /**
@@ -121,8 +110,8 @@ public class AppView extends JFrame {
 
         //get all the categories that belong to the loggedIn user.
         appUtils.getCategoriesThatBelongToSpecificUser();
-        //insert categories to the combo box
-      //  insertCategoriesToComboBox();
+
+
         setSouthPanel();
     }
 
@@ -142,25 +131,21 @@ public class AppView extends JFrame {
      * and added the panelAllExpenses to the LayeredPane
      */
     private void setPanelAllExpensesPartOfTheLayeredPane() {
+
         panelAllExpenses.add(expensesByCategory);
         layeredPaneCenterAppView.add(panelAllExpenses);
     }
 
     /**
-     * first we clear all the items in the combo box, and then we add each of the categories
-     * to the combo box.
+     * first we clear all the items in the combo box, and then we add each of the categories to the combo box.
      */
-    private void insertCategoriesToComboBox() {
+    private void insertCategoriesToComboBox(List<String> listOfCategories) {
         clearComboBoxesItems();
 
-        for (String category : categoriesListBySpecificUser) {
+        for (String category : listOfCategories) {
             comboBoxCategories.addItem(category);
         }
     }
-//    private Object makeObj(final String item)
-//    {
-//        return new Object() {public String toString() {return item;}};
-//    }
 
     /**
      * Setting the combo box
@@ -169,8 +154,8 @@ public class AppView extends JFrame {
     {
         ComponentUtils.setComponentsAttributes(
                 comboBoxCategories,
-                new Font("Narkisim", Font.BOLD, 30),
-                new Dimension(200, 30));
+                new Font("Narkisim", Font.BOLD, 25),
+                new Dimension(200, 35));
     }
 
     /**
@@ -291,18 +276,14 @@ public class AppView extends JFrame {
         private CategorySelectorPanel panelCategorySelector;
 
         /*** swing components*/
-        // private TableExpensesPanel panelTableExpenses;
         private JPanel panelTableData;
         private JScrollPane scrollPaneTable;
         private JTable tableData;
         private GridLayout gridLayoutExpensesPanel;
 
 
-        /**
-         * ctor
-         */
-        public ExpensesByCategory()
-        {
+        /*** ctor*/
+        public ExpensesByCategory() {
             initExpensesPanel();
             startExpensesPanel();
         }
@@ -332,11 +313,11 @@ public class AppView extends JFrame {
             scrollPaneTable.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             scrollPaneTable.setViewportView(tableData);
             panelTableData.setPreferredSize(new Dimension(500, 270));
+
         }
 
         /**
-         * package friendly class CategorySelectorPanel which
-         * allows the user to choose the category in order to display
+         * CategorySelectorPanel class allows the user to choose the category in order to display
          * the expenses according to the chosen category
          */
         private class CategorySelectorPanel extends JPanel
@@ -347,7 +328,7 @@ public class AppView extends JFrame {
             private FlowLayout flowLayoutPanelCenterLabelAndComboBox;
             private JPanel panelNorthTitleCategorySelector;
             private JPanel panelCenterLabelAndComboBox;
-            private JPanel panelSouthDisplayButton;
+            private JPanel panelSouthOfTheCategorySelectorPanel;
 
 
             /*** ctor */
@@ -367,7 +348,7 @@ public class AppView extends JFrame {
                 flowLayoutPanelCenterLabelAndComboBox.setHgap(80);
                 panelNorthTitleCategorySelector = new JPanel();
                 panelCenterLabelAndComboBox = new JPanel(flowLayoutPanelCenterLabelAndComboBox);
-                panelSouthDisplayButton = new JPanel();
+                panelSouthOfTheCategorySelectorPanel = new JPanel();
             }
 
             private void startCategorySelectorPanel()
@@ -376,8 +357,6 @@ public class AppView extends JFrame {
                 setLabelSelectCategory();
                 setBtnDisplayCategory();
                 locateComponentsOnTheCategorySelectorPanel();
-
-               // setComboBoxCategories();
             }
 
 //            private void setCategoryPanelAttributes() {
@@ -424,8 +403,9 @@ public class AppView extends JFrame {
                 panelCenterLabelAndComboBox.add(labelCategorySelector);
                 panelCenterLabelAndComboBox.add(comboBoxCategories);
                 this.add(panelCenterLabelAndComboBox, BorderLayout.CENTER);
-                panelSouthDisplayButton.add(buttonDisplayExpenses);
-                this.add(panelSouthDisplayButton, BorderLayout.SOUTH);
+                panelSouthOfTheCategorySelectorPanel.add(buttonDisplayExpenses);
+                this.add(panelSouthOfTheCategorySelectorPanel, BorderLayout.SOUTH);
+
             }
 
             /**

@@ -446,7 +446,7 @@ public class CostManagerModel implements Model {
      * @throws CostManagerException the exception we defined to our application
      */
     @Override
-    public Collection<String> getCategoriesBySpecificUser(int userId) throws CostManagerException {
+    public List<String> getCategoriesBySpecificUser(int userId) throws CostManagerException {
        //query that gets all the categories that belong to a specific user
         String getCategoriesByUserQuery = "SELECT category FROM categories where user_id = ?";
 
@@ -454,7 +454,7 @@ public class CostManagerModel implements Model {
              PreparedStatement preparedStatement = connection.prepareStatement(getCategoriesByUserQuery)) {
 
             preparedStatement.setInt(1, userId);
-            ArrayList<String> listOfCategories = new ArrayList<>();
+            List<String> listOfCategories = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
