@@ -29,17 +29,17 @@ public class CostManagerViewModel implements ViewModel {
     private List<String> categoriesOfTheUser = new ArrayList<>();
     private List<Expense> expensesListByCategory = new ArrayList<>();
     /**
-     * ctor of the CostManagerViewModel, it constructs the number of the thread
-     * that are going to be in the thread pool
+     * Ctor of the CostManagerViewModel, it constructs the number of the thread
+     * that are going to be in the thread pool.
      */
     public CostManagerViewModel() {
         this.service = Executors.newFixedThreadPool(3);
     }
 
     /**
-     * here we ensure that the user exists in the database.
-     * @param fullName of the user.
-     * @param password of the user.
+     * Here we ensure that the user exists in the database.
+     * @param fullName - of the user.
+     * @param password - of the user.
      */
     @Override
     public void validateUserExistence(String fullName, String password) {
@@ -59,10 +59,10 @@ public class CostManagerViewModel implements ViewModel {
     }
 
     /**
-     * first we check if the user exists, if it does exist, we catch the exception
+     * First we check if the user exists, if it does exist, we catch the exception
      * that tells that the user already exists, else we add a new user to the database,
      * and display a feedback message to the user.
-     * @param user to add to the database.
+     * @param user - to add to the database.
      */
     @Override
     public void addNewUser(User user) {
@@ -144,11 +144,11 @@ public class CostManagerViewModel implements ViewModel {
     }
 
     /**
-     * first we ensure that the awt event thread is the one that run right now.
+     * First we ensure that the awt event thread is the one that run right now.
      * Then we validate users credentials when he signs up.
-     * @param fullName fullName of the user
-     * @param password password of the user
-     * @param confirmedPassword confirmed password of the user
+     * @param fullName - fullName of the user.
+     * @param password - password of the user.
+     * @param confirmedPassword - confirmed password of the user.
      */
     @Override
     public void validateUserCredentialsForSignUpPanel(String fullName, String password, String confirmedPassword) {
@@ -164,10 +164,10 @@ public class CostManagerViewModel implements ViewModel {
     }
 
     /**
-     * first we ensure that the awt event thread is the one that run right now.
+     * First we ensure that the awt event thread is the one that run right now.
      * Then we validate users credentials when he logs in.
-     * @param fullName fullName of the user
-     * @param password password of the user
+     * @param fullName - fullName of the user
+     * @param password - password of the user
      */
     @Override
     public void validateUserCredentialsForLoginPanel(String fullName, String password) {
@@ -182,9 +182,9 @@ public class CostManagerViewModel implements ViewModel {
     }
 
     /**
-     * this method suppose to validate the credentials of the user
-     * @param fullName of the user
-     * @param password of the user
+     * This method suppose to validate the credentials of the user.
+     * @param fullName - of the user.
+     * @param password - of the user.
      */
     private void loginValidatorCredentials(String fullName, String password) {
         if (fullName.equals("") || password.equals("")) {
@@ -200,12 +200,12 @@ public class CostManagerViewModel implements ViewModel {
     }
 
     /**
-     * Here we validate users credentials when he signs up. The reason for the validations to appear here ,at the
+     * Here we validate users credentials when he signs up. The reason for the validations to appear here, at the
      * view model class is because of a reuse, if in the future we'll change the GUI to another type of GUI
      * this kind of logic would still be in need, that's why it is important to implement it here.
-     * @param fullName fullName of the user
-     * @param password password of the user
-     * @param confirmedPassword confirmed password of the user
+     * @param fullName - fullName of the user.
+     * @param password - password of the user.
+     * @param confirmedPassword - confirmed password of the user.
      */
     private void signUpValidatorCredentials(String fullName, String password, String confirmedPassword) {
 
@@ -228,10 +228,10 @@ public class CostManagerViewModel implements ViewModel {
     }
 
     /**
-     * this method use the functional interface as BiPredicate inorder to test if the 2 passwords are equal.
-     * @param firstPassword first password
-     * @param secondPassword second password
-     * @param passwordsMatchTest functional interface which gets the lambda function and uses the test abstract function.
+     * This method use the functional interface as BiPredicate inorder to test if the 2 passwords are equal.
+     * @param firstPassword - first password.
+     * @param secondPassword - second password.
+     * @param passwordsMatchTest - functional interface which gets the lambda function and uses the test abstract function.
      * @return true if the passwords match else false.
      */
     private boolean confirmPasswords(String firstPassword, String secondPassword, BiPredicate<String, String> passwordsMatchTest) {
@@ -239,7 +239,8 @@ public class CostManagerViewModel implements ViewModel {
     }
 
     /**
-     * @param fullName users input for full name
+     * This method ...
+     * @param fullName - users input for full name.
      * @return checks if the full name consists of letters and spaces.
      */
     private boolean validateThatUserInputConsistOnlyLetters(String fullName) {
@@ -256,7 +257,7 @@ public class CostManagerViewModel implements ViewModel {
 
     /**
      * Here we set the view data member.
-     * @param view
+     * @param view - ..
      */
     @Override
     public void setView(View view) {
@@ -265,7 +266,7 @@ public class CostManagerViewModel implements ViewModel {
 
     /**
      * Here we set the model data member.
-     * @param model the model of our application.
+     * @param model - the model of our application.
      */
     @Override
     public void setModel(Model model) {

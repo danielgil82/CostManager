@@ -7,26 +7,22 @@ import java.sql.Date;
 import java.util.*;
 
 /**
- * This class represents the interaction with the database and the logic behind that
+ * This class represents the interaction with the database and the logic behind that.
  */
 public class CostManagerModel implements Model {
-    /**
-     * this string represents the driver full qualified name
-     */
+    /** This string represents the driver full qualified name. */
     private final String driverFullQualifiedName = "com.mysql.jdbc.Driver";
-    /**
-     * this string represents the connection to the database
-     */
+
+    /** This string represents the connection to the database. */
     private final String connectionStringToDB = "jdbc:mysql://localhost:3306/costmanagerproj";
-    /**
-     * list of all users that signed up to our application
-     */
+
+    /** List of all users that signed up to our application. */
     private final List<User> listOfUsers = new ArrayList<>();
 
     /**
-     * ctor of the CostManagerModel
+     * Ctor of the CostManagerModel.
      *
-     * @throws CostManagerException the exception we defined to our application
+     * @throws CostManagerException - the exception we defined to our application.
      */
     public CostManagerModel() throws CostManagerException {
         try {
@@ -38,9 +34,9 @@ public class CostManagerModel implements Model {
     }
 
     /**
-     * this method add a new user when he signed up, to the listOfUsers we defined
+     * This method add a new user when he signed up, to the listOfUsers we defined.
      *
-     * @throws CostManagerException the exception we defined to our application
+     * @throws CostManagerException - the exception we defined to our application.
      */
     private void getAllUsersFromTheDB() throws CostManagerException {
         //query to select all the rows from the user table
@@ -64,11 +60,11 @@ public class CostManagerModel implements Model {
     }
 
     /**
-     * this method add new category to the categories table in the database
+     * This method add new category to the categories' table in the database.
      *
-     * @param category the category that the user choose to add to the database
-     * @return the number of rows were affected
-     * @throws CostManagerException the exception we defined to our application
+     * @param category - the category that the user choose to add to the database.
+     * @return the number of rows were affected.
+     * @throws CostManagerException - the exception we defined to our application.
      */
     @Override
     public int addNewCategory(Category category) throws CostManagerException {
@@ -315,10 +311,10 @@ public class CostManagerModel implements Model {
     /**
      * Optional gives the opportunity to return an "Optional" user or empty one.
      *
-     * @param userFullName represent the name of the user
-     * @param userPassword represent the password of the user
-     * @return the user if the there is one
-     * @throws CostManagerException the exception we defined to our application
+     * @param userFullName - represent the name of the user.
+     * @param userPassword - represent the password of the user.
+     * @return the user if the there is one.
+     * @throws CostManagerException - the exception we defined to our application.
      */
     @Override
     public User getUser(String userFullName, String userPassword) throws CostManagerException {
@@ -335,12 +331,12 @@ public class CostManagerModel implements Model {
     }
 
     /**
-     * checkIfTheUserExists method checks if the user already exists,
+     * CheckIfTheUserExists method checks if the user already exists,
      * using Optional that gives the opportunity to return true or false according to it.
      *
-     * @param user is -the user we want to check about if he exists or not.
+     * @param user - is the user we want to check about if he exists or not.
      * @return true if exists else throws exception that the user already exists.
-     * @throws CostManagerException the exception we defined to our application
+     * @throws CostManagerException - the exception we defined to our application.
      */
     public boolean checkIfTheUserExists(User user) throws CostManagerException {
         Optional<User> checkIfExists = listOfUsers
@@ -359,12 +355,12 @@ public class CostManagerModel implements Model {
     /**
      * This function adding new user to the database by
      * checking the number of rows that were affected.
-     * if the number of rows that affected is not 1,
+     * If the number of rows that affected is not 1,
      * it means there was a problem with adding this user.
      * Otherwise, everything gone okay.
      *
-     * @param userToAdd is the new user we want to add to the database
-     * @throws CostManagerException the exception we defined to our application
+     * @param userToAdd - is the new user we want to add to the database.
+     * @throws CostManagerException - the exception we defined to our application.
      */
     @Override
     public void addNewUserToDBAndUpdateTheListOfUsers(User userToAdd) throws CostManagerException {
@@ -490,10 +486,10 @@ public class CostManagerModel implements Model {
 //        }
     }
 
-    /**
-     * @param userId -> identifies the user, thus we can get the categories according to that user
-     * @return all categories of a specific user
-     * @throws CostManagerException the exception we defined to our application
+    /** This method recieves a user id and by it gets the categories that belong him.
+     * @param userId - identifies the user, thus we can get the categories according to that user.
+     * @return all categories of a specific user.
+     * @throws CostManagerException - the exception we defined to our application.
      */
     @Override
     public List<String> getCategoriesBySpecificUser(int userId) throws CostManagerException {

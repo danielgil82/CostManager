@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * the interface that represents the model functionality
+ * The interface that represents the model functionality.
  */
 public interface Model
 {

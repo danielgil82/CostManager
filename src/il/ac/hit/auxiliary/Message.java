@@ -5,12 +5,12 @@ package il.ac.hit.auxiliary;
  */
 public class Message {
     /**
-     * String data member that represents the message
+     * String data member that represents the message.
      */
     private String content;
 
     /**
-     * ctor that gets the string that represents the content of the message to display.
+     * Ctor that gets the string that represents the content of the message to display.
      * @param content of the message
      */
     public Message(String content) {
@@ -18,8 +18,8 @@ public class Message {
     }
 
     /**
-     * getter
-     * @return the content of the message
+     * Getter
+     * @return the content of the message.
      */
     public String getMessage() {
         return content;

@@ -3,12 +3,10 @@ package il.ac.hit.model;
 import java.sql.Date;
 
 /**
- * The Expense class represents a mapping class that represents the costs' table in the database
+ * The Expense class represents a mapping class that represents the costs' table in the database.
  */
 public class Expense {
-    /**
-     * data members that represent the costs' table attributes
-     */
+    /** Data members that represent the costs' table attributes. */
     private int expenseID;
     private int costSum;
     private String category;
@@ -18,14 +16,14 @@ public class Expense {
     private int userID;
 
     /**
-     * ctor that receives parameter of an Expense excluded the expenseID.
+     * Ctor that receives parameter of an Expense excluded the expenseID.
      *
-     * @param category             category of the expense.
-     * @param costSum              sum of the expense.
-     * @param currency             currency of the expense.
-     * @param descriptionOfExpense description of the expense.
-     * @param purchaseDate         date of the expense.
-     * @param userID               the user that made the purchase.
+     * @param category - category of the expense.
+     * @param costSum - sum of the expense.
+     * @param currency - currency of the expense.
+     * @param descriptionOfExpense - description of the expense.
+     * @param purchaseDate - date of the expense.
+     * @param userID - the user that made the purchase.
      */
     public Expense(String category, int costSum, String currency, String descriptionOfExpense, Date purchaseDate, int userID) {
         setCategory(category);
@@ -37,22 +35,22 @@ public class Expense {
     }
 
     /**
-     * ctor that receives parameter of an Expense included the expenseID .
+     * Ctor that receives parameter of an Expense included the expenseID.
      *
-     * @param expenseID            the id of the expense.
-     * @param category             category of the expense.
-     * @param costSum              sum of the expense.
-     * @param currency             currency of the expense.
-     * @param descriptionOfExpense description of the expense.
-     * @param purchaseDate         date of the expense.
-     * @param userID               the user that made the purchase.
+     * @param expenseID - the id of the expense.
+     * @param category - category of the expense.
+     * @param costSum - sum of the expense.
+     * @param currency - currency of the expense.
+     * @param descriptionOfExpense - description of the expense.
+     * @param purchaseDate - date of the expense.
+     * @param userID - the user that made the purchase.
      */
     public Expense(int expenseID, String category, int costSum, String currency, String descriptionOfExpense, Date purchaseDate, int userID) {
         this(category, costSum, currency, descriptionOfExpense, purchaseDate, userID);
         setExpenseID(expenseID);
     }
 
-    /** getters */
+    /** Getters */
     public int getUserID() {
         return userID;
     }
@@ -81,7 +79,7 @@ public class Expense {
         return purchaseDate;
     }
 
-    /** setter */
+    /** Setter */
     public void setUserID(int userID) {
         this.userID = userID;
     }

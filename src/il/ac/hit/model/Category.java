@@ -5,14 +5,14 @@ package il.ac.hit.model;
  */
 public class Category
 {
-    /** data members that represent the category table attributes*/
+    /** Data members that represent the category table attributes. */
     private String categoryName;
     private int userID;
 
     /**
-     * ctor that gets the name of the category, and the id of the user
-     * @param categoryName category's name
-     * @param userID user id
+     * Ctor that gets the name of the category, and the id of the user.
+     * @param categoryName - category's name
+     * @param userID - user id
      */
     public Category(String categoryName, int userID)
     {
@@ -21,8 +21,8 @@ public class Category
     }
 
     /**
-     * get the category name
-     * @return name
+     * Get the category name.
+     * @return categoryName - category name
      */
     public String getCategoryName()
     {
@@ -30,8 +30,8 @@ public class Category
     }
 
     /**
-     * get the user id
-     * @return the user id
+     * Get the user id.
+     * @return userID - the user id
      */
     public int getUserID()
     {
@@ -39,8 +39,8 @@ public class Category
     }
 
     /**
-     * set the category name
-     * @param categoryName the category name
+     * Set the category name.
+     * @param categoryName - the category name
      */
     public void setCategoryName(String categoryName)
     {
@@ -48,8 +48,8 @@ public class Category
     }
 
     /**
-     * set the user id
-     * @param userID the user id
+     * Set the user id.
+     * @param userID - the user id
      */
     public void setUserID(int userID)
     {

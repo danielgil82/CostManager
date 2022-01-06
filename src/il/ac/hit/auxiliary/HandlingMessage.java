@@ -11,7 +11,7 @@ public enum HandlingMessage
    DUPLICATED_ROW("Oops seems like this row is already defined"),
 
    /**
-    * handling messages that relate to user
+    * Handling messages that relate to user.
     */
    USER_DOES_NOT_EXISTS ("User doesn't exist, try again or sign up"),
    USER_ALREADY_EXISTS ( "User already exists, sign up with different details"),

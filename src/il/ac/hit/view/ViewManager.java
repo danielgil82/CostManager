@@ -13,28 +13,26 @@ import java.util.List;
 
 /**
  * An actual class that represents a concrete view.
- * an also this class is a kind of LoginUtils interface because it has a methods that are going to be used in the
+ * And also this class is a kind of LoginUtils interface because it has a methods that are going to be used in the
  * LoginView Class.
  */
 public class ViewManager implements View , LoginUtils , AppUtils {
 
-    /** different frames of the application*/
+    /** Different frames of the application*/
     private LoginView loginView;
     private AppView appView;
 
 
-    /** viewModel mediates between the view and model parts */
+    /** ViewModel mediates between the view and model parts. */
     private ViewModel viewModel;
 
 
-    /**
-     * Constructor that inits the loginView member
-     */
+    /*** Constructor that inits the loginView member. */
     public ViewManager() {
 
     }
 
-    /** getters */
+    /** Getters. */
     public ViewModel getViewModel() {
         return viewModel;
     }
@@ -44,8 +42,8 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     }
 
     /**
-     * here we set the view model
-     * @param vm the view model
+     * Here we set the view model.
+     * @param vm - the view model.
      */
     @Override
     public void setIViewModel(ViewModel vm) {
@@ -53,12 +51,12 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     }
 
     /**
-     *  this method suppose to send the full name and the password of the user
+     *  This method suppose to send the full name and the password of the user
      *  to the viewModel, because of a reuse thinking, because if the in the future
      *  we'd change the gui part to another one, the logic of validating users credentials
      *  will still be relevant.
-     * @param fullName of the user
-     * @param password of the user
+     * @param fullName - of the user.
+     * @param password - of the user.
      */
     @Override
     public void validateUserCredentials(String fullName, String password) {
@@ -66,35 +64,33 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     }
 
     /**
-     * this method will get invoked when the button ok in the loginPanel will get clicked
-     * the method that will get invoked when the ok button in loginPanel clicked
-     * @param fullName users name
-     * @param password users password
+     * This method will get invoked when the button ok in the loginPanel will get clicked
+     * the method that will get invoked when the ok button in loginPanel clicked.
+     * @param fullName - users name.
+     * @param password - users password.
      */
     @Override
     public void validateUserExistence(String fullName, String password) {
         viewModel.validateUserExistence(fullName, password);
     }
 
-    /** this method adds new user to database.
-     * @param userToAdd to the database
+    /** This method adds new user to database.
+     * @param userToAdd - to the database.
      */
     @Override
     public void addNewUser(User userToAdd){
         viewModel.addNewUser(userToAdd);
     }
 
-    /**
-     * @param fullName of the user
-     * @param password password the user choose
-     * @param confirmedPassword confirmation of the users password
+    /**This method...
+     * @param fullName - of the user.
+     * @param password - password the user choose.
+     * @param confirmedPassword - confirmation of the users password.
      */
     @Override
     public void validateUsersFullNameAndPasswords(String fullName, String password, String confirmedPassword) {
         viewModel.validateUserCredentialsForSignUpPanel(fullName, password, confirmedPassword);
     }
-
-
 
     @Override
     public void init() {
@@ -107,8 +103,8 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     }
 
     /**
-     * this method receives message and displays it to the user via the loginView
-     * @param message the relevant message to display
+     * This method receives message and displays it to the user via the loginView.
+     * @param message - the relevant message to display.
      */
     @Override
     public void displayMessage(Message message) {
@@ -116,11 +112,11 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     }
 
     /**
-     * this method receives message and displays it to the user via the loginView
-     * and updates the flag that indicates the validity of the user's credentials
+     * This method receives message and displays it to the user via the loginView
+     * and updates the flag that indicates the validity of the user's credentials.
      *
-     * @param message the relevant message to display
-     * @param flag that indicates if the credentials of the user are valid
+     * @param message - the relevant message to display.
+     * @param flag - that indicates if the credentials of the user are valid.
      */
     @Override
     public void displayMessageAndSetTheFlagValidatorForSignUpPanel(Message message, boolean flag) {
@@ -129,10 +125,10 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     }
 
     /**
-     * this method receives message and displays it to the user via the loginView
-     * and updates the flag that indicates the validity of the user's credentials
-     * @param message the relevant message to display
-     * @param flag that indicates if the credentials of the user are valid
+     * This method receives message and displays it to the user via the loginView
+     * and updates the flag that indicates the validity of the user's credentials.
+     * @param message - the relevant message to display.
+     * @param flag - that indicates if the credentials of the user are valid.
      */
     @Override
     public void displayMessageAndSetTheFlagValidatorForLoginPanel(Message message, boolean flag) {
@@ -140,26 +136,20 @@ public class ViewManager implements View , LoginUtils , AppUtils {
         loginView.getLabelInvalidDescription().setText(message.getMessage());
     }
 
-    /**
-     * this method changes the frame from app page to the login page.
-     */
+    /*** This method changes the frame from app page to the login page. */
     @Override
     public void changeFrameFromAppViewToLoginView() {
         appView.dispose();
         loginView.setVisible(true);
     }
 
-    /**
-     * this method resets the user
-     */
+    /** This method resets the user. */
     @Override
     public void resetUser() {
         viewModel.resetUser();
     }
 
-    /**
-     * this method changes the frame from the login page to the app page.
-     */
+    /*** This method changes the frame from the login page to the app page. */
     @Override
     public void changeFrameFromLoginViewToAppView() {
         loginView.setVisible(false);
