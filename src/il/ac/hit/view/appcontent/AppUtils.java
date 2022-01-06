@@ -4,4 +4,5 @@ public interface AppUtils {
     void resetUser();
     void changeFrameFromAppViewToLoginView();
     void getCategoriesThatBelongToSpecificUser();
+    void getExpensesByCategory(String categoryType);
 }

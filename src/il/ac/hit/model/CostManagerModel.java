@@ -10,15 +10,22 @@ import java.util.*;
  * This class represents the interaction with the database and the logic behind that
  */
 public class CostManagerModel implements Model {
-    /**this string represents the driver full qualified name */
+    /**
+     * this string represents the driver full qualified name
+     */
     private final String driverFullQualifiedName = "com.mysql.jdbc.Driver";
-    /** this string represents the connection to the database */
+    /**
+     * this string represents the connection to the database
+     */
     private final String connectionStringToDB = "jdbc:mysql://localhost:3306/costmanagerproj";
-    /** list of all users that signed up to our application */
+    /**
+     * list of all users that signed up to our application
+     */
     private final List<User> listOfUsers = new ArrayList<>();
 
     /**
      * ctor of the CostManagerModel
+     *
      * @throws CostManagerException the exception we defined to our application
      */
     public CostManagerModel() throws CostManagerException {
@@ -32,6 +39,7 @@ public class CostManagerModel implements Model {
 
     /**
      * this method add a new user when he signed up, to the listOfUsers we defined
+     *
      * @throws CostManagerException the exception we defined to our application
      */
     private void getAllUsersFromTheDB() throws CostManagerException {
@@ -46,8 +54,8 @@ public class CostManagerModel implements Model {
             while (resultSet.next()) {
                 listOfUsers.add
                         (new User(resultSet.getInt("user_id"),
-                        resultSet.getString("full_name"),
-                        resultSet.getString("password")));
+                                resultSet.getString("full_name"),
+                                resultSet.getString("password")));
             }
 
         } catch (SQLException exception) {
@@ -57,6 +65,7 @@ public class CostManagerModel implements Model {
 
     /**
      * this method add new category to the categories table in the database
+     *
      * @param category the category that the user choose to add to the database
      * @return the number of rows were affected
      * @throws CostManagerException the exception we defined to our application
@@ -67,9 +76,8 @@ public class CostManagerModel implements Model {
         String addNewCategoryQuery = "insert into categories (category, user_id)"
                 + "value(?,?)";
 
-        try(Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-            PreparedStatement addNewCategory = connection.prepareStatement(addNewCategoryQuery))
-        {
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+             PreparedStatement addNewCategory = connection.prepareStatement(addNewCategoryQuery)) {
             connection.setAutoCommit(false);
             addNewCategory.setString(1, category.getCategoryName());
             addNewCategory.setInt(2, category.getUserID());
@@ -79,8 +87,7 @@ public class CostManagerModel implements Model {
                 throw new CostManagerException(HandlingMessage.SOMETHING_WENT_WRONG);
             }
             return numberOfRowsAffected;
-        }
-        catch (SQLException exception) {
+        } catch (SQLException exception) {
             throw new CostManagerException(HandlingMessage.PROBLEM_WITH_GETTING_THE_USERS);
         }
 //        Connection connection = null;
@@ -307,6 +314,7 @@ public class CostManagerModel implements Model {
 
     /**
      * Optional gives the opportunity to return an "Optional" user or empty one.
+     *
      * @param userFullName represent the name of the user
      * @param userPassword represent the password of the user
      * @return the user if the there is one
@@ -329,11 +337,12 @@ public class CostManagerModel implements Model {
     /**
      * checkIfTheUserExists method checks if the user already exists,
      * using Optional that gives the opportunity to return true or false according to it.
+     *
      * @param user is -the user we want to check about if he exists or not.
      * @return true if exists else throws exception that the user already exists.
      * @throws CostManagerException the exception we defined to our application
      */
-    public boolean checkIfTheUserExists(User user) throws CostManagerException{
+    public boolean checkIfTheUserExists(User user) throws CostManagerException {
         Optional<User> checkIfExists = listOfUsers
                 .stream()
                 .filter(currentUser -> currentUser.getFullName().equals(user.getFullName()) &&
@@ -341,7 +350,7 @@ public class CostManagerModel implements Model {
                 .findFirst();
 
         if (checkIfExists.isPresent()) {
-             throw new CostManagerException(HandlingMessage.USER_ALREADY_EXISTS);
+            throw new CostManagerException(HandlingMessage.USER_ALREADY_EXISTS);
         } else {
             return true;
         }
@@ -385,20 +394,31 @@ public class CostManagerModel implements Model {
 
 
     @Override
-    public Collection<Expense> getAllExpenses(int userID) throws CostManagerException {
-        Connection connection = null;
-        PreparedStatement prepareStatement = null;
-        ResultSet resultSet = null;
-        try {
-            //Creating a connection string
-            connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-            //performing simple query
-            String querySql = "SELECT * FROM costs " +
-                    "where user_id = ?";
+    public List<Expense> getExpensesByCategory(int userID, String categoryType) throws CostManagerException {
+//        Connection connection = null;
+//        PreparedStatement prepareStatement = null;
+//        ResultSet resultSet = null;
+        String getExpensesQuery;
+        boolean isCategoryEqualsToAll = false;
 
-            prepareStatement = connection.prepareStatement(querySql);
-            prepareStatement.setInt(1, userID);
-            resultSet = prepareStatement.executeQuery();
+        if (categoryType.equals("all")) {
+            getExpensesQuery = "SELECT * FROM costs " + "where user_id = ? ";
+            isCategoryEqualsToAll = true;
+        } else {
+            getExpensesQuery = "SELECT * FROM costs " +
+                    "where user_id = ? and category = ? ";
+        }
+
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+             PreparedStatement preparedStatement = connection.prepareStatement(getExpensesQuery)) {
+
+            preparedStatement.setInt(1, userID);
+
+            if (!isCategoryEqualsToAll) {
+                preparedStatement.setString(2, categoryType);
+            }
+
+            ResultSet resultSet = preparedStatement.executeQuery();
             List<Expense> costExpensesList = new LinkedList<>();
 
             while (resultSet.next()) {
@@ -413,31 +433,61 @@ public class CostManagerModel implements Model {
             }
 
             return costExpensesList;
+
         } catch (SQLException ex) {
             throw new CostManagerException(HandlingMessage.COULD_NOT_GET_ALL_EXPENSES, ex);
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException ex) {
-                    throw new CostManagerException(HandlingMessage.PROBLEM_WITH_THE_RESULT_SET, ex);
-                }
-            }
-            if (prepareStatement != null) {
-                try {
-                    prepareStatement.close();
-                } catch (SQLException ex) {
-                    throw new CostManagerException(HandlingMessage.PROBLEM_WITH_THE_STATEMENT, ex);
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException ex) {
-                    throw new CostManagerException(HandlingMessage.SOMETHING_WENT_WRONG, ex);
-                }
-            }
         }
+
+
+//        try {
+//            //Creating a connection string
+//            connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+//            //performing simple query
+//            String querySql = "SELECT * FROM costs " +
+//                    "where user_id = ?";
+//
+//            prepareStatement = connection.prepareStatement(querySql);
+//            prepareStatement.setInt(1, userID);
+//            resultSet = prepareStatement.executeQuery();
+//            List<Expense> costExpensesList = new LinkedList<>();
+//
+//            while (resultSet.next()) {
+//                costExpensesList.add(new Expense
+//                        (resultSet.getInt("cost_id"),
+//                                resultSet.getString("category"),
+//                                resultSet.getInt("sum_cost"),
+//                                resultSet.getString("currency"),
+//                                resultSet.getString("description"),
+//                                resultSet.getDate("date"),
+//                                resultSet.getInt("user_id")));
+//            }
+//
+//            return costExpensesList;
+//        } catch (SQLException ex) {
+//            throw new CostManagerException(HandlingMessage.COULD_NOT_GET_ALL_EXPENSES, ex);
+//        } finally {
+//            if (resultSet != null) {
+//                try {
+//                    resultSet.close();
+//                } catch (SQLException ex) {
+//                    throw new CostManagerException(HandlingMessage.PROBLEM_WITH_THE_RESULT_SET, ex);
+//                }
+//            }
+//            if (prepareStatement != null) {
+//                try {
+//                    prepareStatement.close();
+//                } catch (SQLException ex) {
+//                    throw new CostManagerException(HandlingMessage.PROBLEM_WITH_THE_STATEMENT, ex);
+//                }
+//            }
+//            if (connection != null) {
+//                try {
+//                    connection.close();
+//                } catch (SQLException ex) {
+//                    throw new CostManagerException(HandlingMessage.SOMETHING_WENT_WRONG, ex);
+//                }
+//            }
+//        }
     }
 
     /**
@@ -447,7 +497,7 @@ public class CostManagerModel implements Model {
      */
     @Override
     public List<String> getCategoriesBySpecificUser(int userId) throws CostManagerException {
-       //query that gets all the categories that belong to a specific user
+        //query that gets all the categories that belong to a specific user
         String getCategoriesByUserQuery = "SELECT category FROM categories where user_id = ?";
 
         try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");

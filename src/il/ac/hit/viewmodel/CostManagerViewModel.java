@@ -1,6 +1,7 @@
 package il.ac.hit.viewmodel;
 
 import il.ac.hit.auxiliary.HandlingMessage;
+import il.ac.hit.model.Expense;
 import il.ac.hit.model.User;
 import il.ac.hit.auxiliary.Message;
 import il.ac.hit.model.CostManagerException;
@@ -27,6 +28,7 @@ public class CostManagerViewModel implements ViewModel {
     private User user;
     private ExecutorService service;
     private List<String> categoriesOfTheUser = new ArrayList<>();
+    private List<Expense> expensesListByCategory = new ArrayList<>();
     /**
      * ctor of the CostManagerViewModel, it constructs the number of the thread
      * that are going to be in the thread pool
@@ -100,7 +102,26 @@ public class CostManagerViewModel implements ViewModel {
         });
     }
 
+    @Override
+    public void getExpensesBySpecificCategory(String categoryType) {
+        service.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
 
+                    expensesListByCategory = model.getExpensesByCategory(user.getUserID(), categoryType);
+
+                    SwingUtilities.invokeLater(() ->
+                            view.setExpensesTableByCategoryInAppView(expensesListByCategory));
+
+
+                } catch (CostManagerException ex) {
+                    //lambda expression because Runnable is a functional interface
+                    SwingUtilities.invokeLater(() -> view.displayMessage(new Message(ex.getMessage())));
+                }
+            }
+        });
+    }
 
     /**
      * first we ensure that the awt event thread is the one that run right now.
@@ -110,7 +131,7 @@ public class CostManagerViewModel implements ViewModel {
      * @param confirmedPassword confirmed password of the user
      */
     @Override
-    public void userCredentialsForSignUpPanel(String fullName, String password, String confirmedPassword) {
+    public void validateUserCredentialsForSignUpPanel(String fullName, String password, String confirmedPassword) {
 
         if (SwingUtilities.isEventDispatchThread())
         {
@@ -129,7 +150,7 @@ public class CostManagerViewModel implements ViewModel {
      * @param password password of the user
      */
     @Override
-    public void userCredentialsForLoginPanel(String fullName, String password) {
+    public void validateUserCredentialsForLoginPanel(String fullName, String password) {
         if (SwingUtilities.isEventDispatchThread())
         {
             loginValidatorCredentials(fullName, password);

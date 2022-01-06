@@ -1,10 +1,13 @@
 package il.ac.hit.view.appcontent;
 
+import il.ac.hit.model.Expense;
 import il.ac.hit.view.ComponentUtils;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.List;
 
@@ -55,25 +58,6 @@ public class AppView extends JFrame {
         startAppView();
     }
 
-    /**
-     * this method recieves the categories that belong to the loggedIn user , and then
-     * calls to a method that sets the categories to the combobox
-     * @param listOfCategories that are going to be added to the categoriesListBySpecificUser
-     */
-    public void setTheCategoriesList(List<String> listOfCategories) {
-        //insert categories to the combo box
-        listOfCategories.add("all");
-        insertCategoriesToComboBox(listOfCategories);
-    }
-
-    /**
-     * this method set the viewManager data member
-     * @param appUtils viewManager that mediate between the view and the  model
-     */
-    public void setAppUtils(AppUtils appUtils) {
-        this.appUtils = appUtils;
-    }
-
     /*** this method initialize the swing components */
     private void initAppView() {
         comboBoxCategories = new JComboBox<>();
@@ -111,8 +95,53 @@ public class AppView extends JFrame {
         //get all the categories that belong to the loggedIn user.
         appUtils.getCategoriesThatBelongToSpecificUser();
 
-
         setSouthPanel();
+    }
+
+    /**
+     * this method recieves the categories that belong to the loggedIn user , and then
+     * calls to a method that sets the categories to the combobox
+     * @param listOfCategories that are going to be added to the categoriesListBySpecificUser
+     */
+    public void setTheCategoriesList(List<String> listOfCategories) {
+        //insert categories to the combo box
+        listOfCategories.add("all");
+        insertCategoriesToComboBox(listOfCategories);
+    }
+
+    /**
+     * this method builds the expenses' table of the user that logged in
+     * @param expensesByCategory list of the expenses according to the chosen category.
+     */
+    public void setTableInAllExpensesPanel(List<Expense> expensesByCategory) {
+        // create the titles for the tables
+        DefaultTableModel tableDataModel = new DefaultTableModel(new String[]{
+                "cost_id", "category", "sum_cost", "currency", "description", "date", "user_id"},
+                0);
+
+        // add each cost to the table model
+        for (Expense expense : expensesByCategory)
+        {
+            tableDataModel.addRow(new Object[]{
+                    expense.getExpenseID(),
+                    expense.getCategory(),
+                    expense.getCostSum(),
+                    expense.getCurrency(),
+                    expense.getExpenseDescription(),
+                    expense.getPurchaseDate(),
+                    expense.getUserID()
+            });
+        }
+        // link the model and the table
+       this.expensesByCategory.tableData.setModel(tableDataModel);
+    }
+
+    /**
+     * this method set the viewManager data member
+     * @param appUtils viewManager that mediate between the view and the  model
+     */
+    public void setAppUtils(AppUtils appUtils) {
+        this.appUtils = appUtils;
     }
 
     /**
@@ -136,9 +165,7 @@ public class AppView extends JFrame {
         layeredPaneCenterAppView.add(panelAllExpenses);
     }
 
-    /**
-     * first we clear all the items in the combo box, and then we add each of the categories to the combo box.
-     */
+    /** first we clear all the items in the combo box, and then we add each of the categories to the combo box.*/
     private void insertCategoriesToComboBox(List<String> listOfCategories) {
         clearComboBoxesItems();
 
@@ -147,9 +174,7 @@ public class AppView extends JFrame {
         }
     }
 
-    /**
-     * Setting the combo box
-     */
+    /*** Setting the combo box */
     private void setComboBoxCategory()
     {
         ComponentUtils.setComponentsAttributes(
@@ -209,28 +234,19 @@ public class AppView extends JFrame {
         ComponentUtils.setActionListenersToChangePanelsOnLayeredPane(layeredPaneCenterAppView, buttonOperations, panelOperations);
         ComponentUtils.setActionListenersToChangePanelsOnLayeredPane(layeredPaneCenterAppView, buttonReport, panelReport);
         ComponentUtils.setActionListenersToChangePanelsOnLayeredPane(layeredPaneCenterAppView, buttonCurrencies, panelCurrencies);
-//        setActionListeners(buttonExpenses, panelExpenses);
-//        setActionListeners(buttonOperations, panelOperations);
-//        setActionListeners(buttonReport, panelReport);
-//        setActionListeners(buttonCurrencies, panelCurrencies);
 
+        //different action listener for the buttonLogout.
         buttonLogout.addActionListener(e -> {
             appUtils.resetUser();
             appUtils.changeFrameFromAppViewToLoginView();
         });
     }
 
-//    /** this method changes between different panels */
-//    private void setActionListeners(JButton button, JPanel panel) {
-//        button.addActionListener(e -> {
-//            layeredPaneCenterAppView.removeAll();
-//            layeredPaneCenterAppView.add(panel);
-//            layeredPaneCenterAppView.revalidate();
-//        });
-//    }
-
     /**
      * this method sets each of the north's panel components attributes
+     * by first extracting all the buttons from the northPanel
+     * and then their attributes, and separately set the labelCostManagerTitle attributes
+     *
      */
     private void setNorthPanelComponentAttributes() {
 
@@ -260,14 +276,6 @@ public class AppView extends JFrame {
         this.add(panelAppContent);
     }
 
-//    private void setLabelsAttributes(List<JComponent> listOfComponents ) {
-//        for (JComponent component : listOfComponents) {
-//
-//        }
-//    }
-
-
-
     /**
      * this class represents the expenses panel
      */
@@ -281,13 +289,13 @@ public class AppView extends JFrame {
         private JTable tableData;
         private GridLayout gridLayoutExpensesPanel;
 
-
         /*** ctor*/
         public ExpensesByCategory() {
             initExpensesPanel();
             startExpensesPanel();
         }
 
+        /** this method inits the all the data members in "this" */
         private void initExpensesPanel() {
             panelCategorySelector = new CategorySelectorPanel();
             panelTableData = new JPanel();
@@ -296,6 +304,10 @@ public class AppView extends JFrame {
             gridLayoutExpensesPanel = new GridLayout(2, 1, 0, 150);
         }
 
+        /**
+         *  this method adding different components to "this",
+         *  and calling to a method that builds the expenses table.
+         */
         private void startExpensesPanel() {
             this.setLayout(gridLayoutExpensesPanel);
             this.add(panelCategorySelector);
@@ -303,25 +315,24 @@ public class AppView extends JFrame {
             this.add(panelTableData);
         }
 
+        /** this method builds the expenses table*/
         private void setExpensesTableBySpecificCategory() {
             panelTableData.setLayout(new BorderLayout());
             panelTableData.add(scrollPaneTable);
-            tableData.setFont(new Font("Narkisim", Font.PLAIN, 15));
+            tableData.setFont(new Font("Narkisim", Font.PLAIN, 20));
             tableData.setRowHeight(30);
             tableData.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             scrollPaneTable.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             scrollPaneTable.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             scrollPaneTable.setViewportView(tableData);
             panelTableData.setPreferredSize(new Dimension(500, 270));
-
         }
 
         /**
          * CategorySelectorPanel class allows the user to choose the category in order to display
          * the expenses according to the chosen category
          */
-        private class CategorySelectorPanel extends JPanel
-        {
+        private class CategorySelectorPanel extends JPanel {
             private JLabel labelFilterExpensesByCategory;
             private JLabel labelCategorySelector;
             private JButton buttonDisplayExpenses;
@@ -332,14 +343,13 @@ public class AppView extends JFrame {
 
 
             /*** ctor */
-            public CategorySelectorPanel()
-            {
+            public CategorySelectorPanel() {
                 initCategorySelectorPanel();
                 startCategorySelectorPanel();
             }
 
-            private void initCategorySelectorPanel()
-            {
+            /** this method inits the all the data members in "this" */
+            private void initCategorySelectorPanel() {
                 labelFilterExpensesByCategory = new JLabel("Filter your expenses by specific category");
                 labelCategorySelector = new JLabel("Select Category:");
                 buttonDisplayExpenses = new JButton("Display");
@@ -351,17 +361,17 @@ public class AppView extends JFrame {
                 panelSouthOfTheCategorySelectorPanel = new JPanel();
             }
 
-            private void startCategorySelectorPanel()
-            {
+            /**
+             * this method calls different methods that set different
+             * components attributes.
+             */
+            private void startCategorySelectorPanel() {
                 setLabelFilterByCategoryTitle();
-                setLabelSelectCategory();
-                setBtnDisplayCategory();
+                setLabelSelectCategoryAttributes();
+                setBtnDisplayCategoryAttributes();
                 locateComponentsOnTheCategorySelectorPanel();
+                setButtonDisplayListener();
             }
-
-//            private void setCategoryPanelAttributes() {
-//                this.setBackground(Color.red);
-//            }
 
             /**
              * Setting the label which acts as the title of the panel
@@ -376,7 +386,7 @@ public class AppView extends JFrame {
             /**
              * Setting the label next to the combo box
              */
-            private void setLabelSelectCategory() {
+            private void setLabelSelectCategoryAttributes() {
                 ComponentUtils.setComponentsAttributes(
                         labelCategorySelector,
                         new Font("Narkisim", Font.BOLD, 20),
@@ -386,7 +396,7 @@ public class AppView extends JFrame {
             /**
              * Setting the button in charge of sending the desired category
              */
-            private void setBtnDisplayCategory() {
+            private void setBtnDisplayCategoryAttributes() {
                 ComponentUtils.setComponentsAttributes(
                         buttonDisplayExpenses,
                         new Font("Narkisim", Font.BOLD, 25),
@@ -405,29 +415,13 @@ public class AppView extends JFrame {
                 this.add(panelCenterLabelAndComboBox, BorderLayout.CENTER);
                 panelSouthOfTheCategorySelectorPanel.add(buttonDisplayExpenses);
                 this.add(panelSouthOfTheCategorySelectorPanel, BorderLayout.SOUTH);
-
             }
 
-            /**
-             * asking for the categories from the model via the ViewModel
-             */
-            private void setComboBoxCategories()
-            {
-                //Casting the viewManager from IView To ViewManager
-                //((ViewManager)(viewManager)).getViewModel().getCategoriesBySpecificUser();
-            }
-
-
-            /**
-             * Auxiliary public method for calling a private one here in the class because
-             * we don't want this logic to be exposed to other classes outside.
-             * @param listOfCategories the categories that are being put into the combo box
-             */
-            public void auxiliaryAddCategoriesIntoComboBox(Collection<String> listOfCategories)
-            {
-                //addCategoriesIntoComboBox(listOfCategories);
+            /** this method adds action listener to the display button.*/
+            private void setButtonDisplayListener() {
+                buttonDisplayExpenses.addActionListener(e ->
+                        appUtils.getExpensesByCategory(comboBoxCategories.getSelectedItem().toString()));
             }
         }
-
     }
 }

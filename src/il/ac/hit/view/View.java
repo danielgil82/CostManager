@@ -1,6 +1,7 @@
 package il.ac.hit.view;
 
 import il.ac.hit.auxiliary.Message;
+import il.ac.hit.model.Expense;
 import il.ac.hit.viewmodel.ViewModel;
 
 import java.util.Collection;
@@ -20,4 +21,5 @@ public interface View
     void start();
     void changeFrameFromLoginViewToAppView();
     void setCategoriesAccordingToTheLoggedInUser(List<String> listOfCategories);
+    void setExpensesTableByCategoryInAppView(List<Expense> listOfExpenses);
 }

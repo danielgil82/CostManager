@@ -15,7 +15,7 @@ public interface Model
      int addNewExpense(Expense cost) throws CostManagerException;
      int removeExistingExpense(int id) throws CostManagerException;
      Collection<Expense> getReportByDates(int userID, java.sql.Date startDate, java.sql.Date endDate) throws CostManagerException;
-     Collection<Expense> getAllExpenses(int userID) throws CostManagerException;
+     List<Expense> getExpensesByCategory(int userID, String categoryType) throws CostManagerException;
      List<String> getCategoriesBySpecificUser(int userId) throws CostManagerException;
      boolean checkIfTheUserExists(User user) throws CostManagerException;
 }

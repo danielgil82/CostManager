@@ -1,6 +1,7 @@
 package il.ac.hit.view;
 
 import il.ac.hit.auxiliary.Message;
+import il.ac.hit.model.Expense;
 import il.ac.hit.model.User;
 import il.ac.hit.view.appcontent.AppUtils;
 import il.ac.hit.view.appcontent.AppView;
@@ -8,7 +9,6 @@ import il.ac.hit.view.login.LoginUtils;
 import il.ac.hit.view.login.LoginView;
 import il.ac.hit.viewmodel.ViewModel;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -62,7 +62,7 @@ public class ViewManager implements View , LoginUtils , AppUtils {
      */
     @Override
     public void validateUserCredentials(String fullName, String password) {
-        viewModel.userCredentialsForLoginPanel(fullName, password);
+        viewModel.validateUserCredentialsForLoginPanel(fullName, password);
     }
 
     /**
@@ -91,7 +91,7 @@ public class ViewManager implements View , LoginUtils , AppUtils {
      */
     @Override
     public void validateUsersFullNameAndPasswords(String fullName, String password, String confirmedPassword) {
-        viewModel.userCredentialsForSignUpPanel(fullName, password, confirmedPassword);
+        viewModel.validateUserCredentialsForSignUpPanel(fullName, password, confirmedPassword);
     }
 
 
@@ -175,5 +175,15 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     @Override
     public void setCategoriesAccordingToTheLoggedInUser(List<String> listOfCategories) {
         appView.setTheCategoriesList(listOfCategories);
+    }
+
+    @Override
+    public void getExpensesByCategory(String categoryType) {
+        viewModel.getExpensesBySpecificCategory(categoryType);
+    }
+
+    @Override
+    public void setExpensesTableByCategoryInAppView(List<Expense> listOfExpenses) {
+        appView.setTableInAllExpensesPanel(listOfExpenses);
     }
 }
