@@ -186,4 +186,9 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     public void setExpensesTableByCategoryInAppView(List<Expense> listOfExpenses) {
         appView.setTableInAllExpensesPanel(listOfExpenses);
     }
+
+    @Override
+    public void validateAndSetNewCategory(String category) {
+        viewModel.addNewCategory(category);
+    }
 }

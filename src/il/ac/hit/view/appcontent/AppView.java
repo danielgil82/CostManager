@@ -43,7 +43,7 @@ public class AppView extends JFrame {
     private BorderLayout borderLayoutPanelContent;
 
     private ExpensesByCategory expensesByCategory;
-//    private OperationsPanel operationsPanel;
+    private Operations operations;
 //    private ReportPanel reportPanel;
 //    private CurrenciesPanel currenciesPanel;
 
@@ -62,6 +62,7 @@ public class AppView extends JFrame {
     private void initAppView() {
         comboBoxCategories = new JComboBox<>();
         expensesByCategory = new ExpensesByCategory();
+        operations = new Operations();
         buttonExpenses = new JButton("Expenses");
         buttonOperations = new JButton("Operations");
         buttonReport = new JButton("Report");
@@ -424,4 +425,127 @@ public class AppView extends JFrame {
             }
         }
     }
+
+    private class Operations extends JPanel {
+        /** swing components*/
+        private JPanel panelLeftCategories;
+        private JPanel panelRightCosts;
+        private GridLayout leftGridLayout;
+        private GridLayout rightGridLayout;
+        private FlowLayout flowLayoutOperationsPanel;
+        private AddCategoryPanel addCategory;
+        private RemoveCategoryPanel removeCategory;
+        private AddCostPanel addCostPanel;
+        private RemoveCostPanel removeCostPanel;
+
+
+        public Operations() {
+            initOperationsPanel();
+            startOperationsPanel();
+        }
+
+        private void initOperationsPanel() {
+            panelLeftCategories = new JPanel();
+            panelRightCosts = new JPanel();
+            leftGridLayout = new GridLayout(2, 1, 0, 200);
+            rightGridLayout  = new GridLayout(2, 1, 0, 200);
+            flowLayoutOperationsPanel = new FlowLayout();
+
+//            addCategory =
+//            removeCategory =;
+//            addCostPanel;
+//            removeCostPanel;
+        }
+
+        private void startOperationsPanel() {
+            this.setLayout(flowLayoutOperationsPanel);
+            panelLeftCategories.setLayout(leftGridLayout);
+            panelRightCosts.setLayout(rightGridLayout);
+
+        }
+
+        private class AddCategoryPanel extends JPanel{
+
+            /** swing components*/
+            private JLabel labelTitleAddCategory;
+            private JLabel labelAddCategoryName;
+            private JTextField textFieldAddCategory;
+            private JButton buttonAddNewCategory;
+            private JPanel panelNorthAddCategory;
+            private JPanel panelCenterAddCategory;
+            private JPanel panelSouthAddCategory;
+            private FlowLayout flowLayoutAddCategory;
+
+            public AddCategoryPanel() {
+                initAddCategory();
+                startAddCategory();
+            }
+
+            private void initAddCategory() {
+                labelTitleAddCategory = new JLabel("Add Category:");
+                labelAddCategoryName = new JLabel("Category name:");
+                textFieldAddCategory = new JTextField(10);
+                buttonAddNewCategory = new JButton("Add");
+                panelNorthAddCategory = new JPanel();
+                panelCenterAddCategory = new JPanel();
+                panelSouthAddCategory = new JPanel();
+                flowLayoutAddCategory = new FlowLayout();
+            }
+
+            private void startAddCategory() {
+                setLabelTitleAddCategoryAttributes();
+                setLabelAddCategoryAttributes();
+                setTextFieldAddCategoryAttributes();
+                setBtnAddCategoryAttributes();
+                locateComponentsOnAddCategoryPane();
+                setButtonAddActionListener();
+            }
+
+            private void setLabelTitleAddCategoryAttributes() {
+                ComponentUtils.setComponentsAttributes(labelTitleAddCategory,
+                        new Font("Narkisim", Font.BOLD, 30),
+                        new Dimension(500, 50));
+            }
+            private void setLabelAddCategoryAttributes(){
+                ComponentUtils.setComponentsAttributes(labelAddCategoryName,
+                        new Font("Narkisim", Font.BOLD, 30),
+                        new Dimension(250, 50));
+            }
+
+            private void setTextFieldAddCategoryAttributes(){
+                ComponentUtils.setComponentsAttributes(textFieldAddCategory,
+                        new Font("Narkisim", Font.BOLD, 30),
+                        new Dimension(200, 50));
+            }
+
+            private void setBtnAddCategoryAttributes(){
+                ComponentUtils.setComponentsAttributes(buttonAddNewCategory,
+                        new Font("Narkisim", Font.BOLD, 30),
+                        new Dimension(200, 50));
+            }
+
+            private void locateComponentsOnAddCategoryPane(){
+                this.setLayout(new BorderLayout());
+                panelNorthAddCategory.add(labelTitleAddCategory);
+                this.add(panelNorthAddCategory, BorderLayout.NORTH);
+                panelCenterAddCategory.setLayout(flowLayoutAddCategory);
+                panelCenterAddCategory.add(labelAddCategoryName);
+                panelCenterAddCategory.add(textFieldAddCategory);
+                this.add(panelCenterAddCategory);
+                panelSouthAddCategory.add(buttonAddNewCategory);
+            }
+
+            private void setButtonAddActionListener(){
+                buttonAddNewCategory.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        appUtils.
+                    }
+                });
+            }
+
+        }
+
+    }
+
 }

@@ -10,7 +10,6 @@ import il.ac.hit.view.View;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -123,6 +122,27 @@ public class CostManagerViewModel implements ViewModel {
         });
     }
 
+    @Override
+    public void addNewCategory(String category) {
+        service.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    if(validateThatUserInputConsistOnlyLetters(category)){
+
+                    }else {
+
+                    }
+
+                } catch (CostManagerException ex) {
+                    //lambda expression because Runnable is a functional interface
+                    SwingUtilities.invokeLater(() -> view.displayMessage(new Message(ex.getMessage())));
+                }
+            }
+        });
+    }
+
     /**
      * first we ensure that the awt event thread is the one that run right now.
      * Then we validate users credentials when he signs up.
@@ -170,7 +190,7 @@ public class CostManagerViewModel implements ViewModel {
         if (fullName.equals("") || password.equals("")) {
             view.displayMessageAndSetTheFlagValidatorForLoginPanel(
                     new Message(HandlingMessage.EMPTY_FIELDS.toString()), false);
-        } else if (!validateUsersFullName(fullName)) {
+        } else if (!validateThatUserInputConsistOnlyLetters(fullName)) {
             view.displayMessageAndSetTheFlagValidatorForLoginPanel
                     (new Message(HandlingMessage.INVALID_FULL_NAME.toString()), false);
         } else {
@@ -193,7 +213,7 @@ public class CostManagerViewModel implements ViewModel {
             view.displayMessageAndSetTheFlagValidatorForSignUpPanel(
                     new Message(HandlingMessage.EMPTY_FIELDS.toString()), false);
         }
-        else if (!validateUsersFullName(fullName)) {
+        else if (!validateThatUserInputConsistOnlyLetters(fullName)) {
             view.displayMessageAndSetTheFlagValidatorForSignUpPanel
                     (new Message(HandlingMessage.INVALID_FULL_NAME.toString()), false);
         }
@@ -222,7 +242,7 @@ public class CostManagerViewModel implements ViewModel {
      * @param fullName users input for full name
      * @return checks if the full name consists of letters and spaces.
      */
-    private boolean validateUsersFullName(String fullName) {
+    private boolean validateThatUserInputConsistOnlyLetters(String fullName) {
         char[] chars = fullName.toCharArray();
 
         for (char c : chars) {
