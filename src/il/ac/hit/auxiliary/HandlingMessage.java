@@ -35,10 +35,12 @@ public enum HandlingMessage
    /**
     * handling messages that relate to the categories table
     */
+   NEW_CATEGORY_ADDED_SUCCESSFULLY("The Category added successfully"),
    CATEGORY_ALREADY_EXISTS ("The category already exists, try another one"),
    COULD_NOT_GET_THE_CATEGORIES ("Couldn't get the categories"),
    PROBLEM_WITH_REMOVING_AN_EXISTING_CATEGORY("problem with removing and existing category"),
    PROBLEM_WITH_ADDING_NEW_CATEGORY ("problem with adding new category"),
+   EXISTING_CATEGORY_REMOVED_SUCCESSFULLY("The category removed successfully"),
 
 
    /**
@@ -55,7 +57,9 @@ public enum HandlingMessage
     * handling messages that relate to general usage
     */
    SOMETHING_WENT_WRONG ("Something went wrong"),
-   EMPTY_FIELDS ("One or more of the fields are empty");
+   EMPTY_FIELDS ("One or more of the fields are empty"),
+   INVALID_STRING_INPUT("Please use only letters"),
+   INVALID_INTEGER_INPUT("Please use only digits");
 
 
    /**
@@ -73,12 +77,16 @@ public enum HandlingMessage
 
    /**
     * getter that return the message
-    * @return
+    * @return the message
     */
    public String getMessage() {
       return message;
    }
 
+   /**
+    * Override to the toString.
+    * @return message.
+    */
    @Override
    public String toString() {
       return message;

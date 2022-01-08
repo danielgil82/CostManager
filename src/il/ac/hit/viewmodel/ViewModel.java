@@ -20,5 +20,6 @@ public interface ViewModel
     void validateUserCredentialsForLoginPanel(String fullName, String password);
     void resetUser();
     void getExpensesBySpecificCategory(String categoryType);
-    void addNewCategory(String category);
+    void validateAndAddNewCategory(String category);
+    void removeSpecificCategory(String categoryToRemove);
 }

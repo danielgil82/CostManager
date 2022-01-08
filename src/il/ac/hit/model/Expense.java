@@ -25,7 +25,9 @@ public class Expense {
      * @param purchaseDate - date of the expense.
      * @param userID - the user that made the purchase.
      */
-    public Expense(String category, int costSum, String currency, String descriptionOfExpense, Date purchaseDate, int userID) {
+    public Expense(String category, int costSum,
+                   String currency, String descriptionOfExpense,
+                   Date purchaseDate, int userID) {
         setCategory(category);
         setCostSum(costSum);
         setCurrency(currency);
@@ -45,7 +47,10 @@ public class Expense {
      * @param purchaseDate - date of the expense.
      * @param userID - the user that made the purchase.
      */
-    public Expense(int expenseID, String category, int costSum, String currency, String descriptionOfExpense, Date purchaseDate, int userID) {
+    public Expense(int expenseID, String category,
+                   int costSum, String currency,
+                   String descriptionOfExpense,
+                   Date purchaseDate, int userID) {
         this(category, costSum, currency, descriptionOfExpense, purchaseDate, userID);
         setExpenseID(expenseID);
     }

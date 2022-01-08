@@ -5,5 +5,6 @@ public interface AppUtils {
     void changeFrameFromAppViewToLoginView();
     void getCategoriesThatBelongToSpecificUser();
     void getExpensesByCategory(String categoryType);
-    void validateAndSetNewCategory(String category);
+    void validateAndSetNewCategory(String categoryName);
+    void removeCategory(String categoryName);
 }

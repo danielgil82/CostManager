@@ -1,11 +1,8 @@
 package il.ac.hit.viewmodel;
 
 import il.ac.hit.auxiliary.HandlingMessage;
-import il.ac.hit.model.Expense;
-import il.ac.hit.model.User;
+import il.ac.hit.model.*;
 import il.ac.hit.auxiliary.Message;
-import il.ac.hit.model.CostManagerException;
-import il.ac.hit.model.Model;
 import il.ac.hit.view.View;
 
 import javax.swing.*;
@@ -53,7 +50,7 @@ public class CostManagerViewModel implements ViewModel {
 
             } catch (CostManagerException ex) {
                 //lambda expression because Runnable is a functional interface
-                SwingUtilities.invokeLater(() -> view.displayMessage(new Message(ex.getMessage())));
+                SwingUtilities.invokeLater(() -> view.displayMessageForLoginSection(new Message(ex.getMessage())));
             }
         });
     }
@@ -74,11 +71,11 @@ public class CostManagerViewModel implements ViewModel {
                 model.addNewUserToDBAndUpdateTheListOfUsers(user);
 
                 SwingUtilities.invokeLater(() ->
-                        view.displayMessage(new Message(HandlingMessage.SIGNED_UP_SUCCESSFULLY.toString())));
+                        view.displayMessageForLoginSection(new Message(HandlingMessage.SIGNED_UP_SUCCESSFULLY.toString())));
 
             } catch (CostManagerException ex) {
                 //lambda expression because Runnable is a functional interface
-                SwingUtilities.invokeLater(() -> view.displayMessage(new Message(ex.getMessage())));
+                SwingUtilities.invokeLater(() -> view.displayMessageForLoginSection(new Message(ex.getMessage())));
             }
         });
     }
@@ -91,11 +88,11 @@ public class CostManagerViewModel implements ViewModel {
                 try {
                     categoriesOfTheUser = model.getCategoriesBySpecificUser(user.getUserID());
 
-                    SwingUtilities.invokeLater(() -> view.setCategoriesAccordingToTheLoggedInUser(categoriesOfTheUser));
+                    SwingUtilities.invokeLater(() -> view.setCategories(categoriesOfTheUser));
 
                 } catch (CostManagerException ex) {
                     //lambda expression because Runnable is a functional interface
-                    SwingUtilities.invokeLater(() -> view.displayMessage(new Message(ex.getMessage())));
+                    SwingUtilities.invokeLater(() -> view.displayMessageForLoginSection(new Message(ex.getMessage())));
                 }
             }
         });
@@ -116,28 +113,98 @@ public class CostManagerViewModel implements ViewModel {
 
                 } catch (CostManagerException ex) {
                     //lambda expression because Runnable is a functional interface
-                    SwingUtilities.invokeLater(() -> view.displayMessage(new Message(ex.getMessage())));
+                    SwingUtilities.invokeLater(() -> view.displayMessageForLoginSection(new Message(ex.getMessage())));
                 }
             }
         });
     }
 
+    /**
+     * This method first validates the input of the user, by ensuring that only letters inserted,
+     * afterwards checks that category doesn't already exist, if it does then the user gets a feedback respectively
+     * message.
+     * Lastly if the input is good, and the category doesn't exist , the method sends the category to the database,
+     * to be added.
+     * @param category to add
+     */
     @Override
-    public void addNewCategory(String category) {
+    public void validateAndAddNewCategory(String category) {
         service.submit(new Runnable() {
             @Override
             public void run() {
                 try {
-
+                    //Validation
                     if(validateThatUserInputConsistOnlyLetters(category)){
 
-                    }else {
+                        // Check category existence
+                        if (!categoriesOfTheUser.contains(category)) {
+                            //Add the new category to the database.
+                            model.addNewCategory(new Category(category, user.getUserID()));
 
+                            //Add the category to the list of categories.
+                            categoriesOfTheUser.add(category);
+
+                            SwingUtilities.invokeLater(()-> {
+                                    view.displayMessageForAppSection(new Message
+                                            (HandlingMessage.NEW_CATEGORY_ADDED_SUCCESSFULLY.toString()));
+                                    view.addNewCategoryToComboBox(category);
+                            });
+                        } else {
+                            SwingUtilities.invokeLater(()-> {
+                                    view.displayMessageForAppSection(
+                                            new Message(HandlingMessage.CATEGORY_ALREADY_EXISTS.toString()));
+                            });
+                        }
+
+                    }else {
+                        SwingUtilities.invokeLater(()->{
+                                view.displayMessageForAppSection(new Message(HandlingMessage.INVALID_STRING_INPUT.toString()));
+                        });
+                    }
+                } catch (CostManagerException ex) {
+                    //lambda expression because Runnable is a functional interface
+                    SwingUtilities.invokeLater(() -> {
+                        view.displayMessageForAppSection(new Message(ex.getMessage()));
+                    });
+                }
+            }
+        });
+    }
+
+    /**
+     *
+     * @param categoryToRemove
+     */
+    @Override
+    public void removeSpecificCategory(String categoryToRemove) {
+        service.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (categoriesOfTheUser.contains(categoryToRemove)) {
+
+                        model.removeExistingCategory(new Category(categoryToRemove, user.getUserID()));
+
+                        categoriesOfTheUser.remove(categoryToRemove);
+
+                        SwingUtilities.invokeLater(() -> {
+                            view.displayMessageForAppSection(new Message
+                                    (HandlingMessage.EXISTING_CATEGORY_REMOVED_SUCCESSFULLY.toString()));
+
+                        });
+
+                    } else {
+                        SwingUtilities.invokeLater(() -> {
+                            view.displayMessageForAppSection(new Message
+                                    (HandlingMessage.PROBLEM_WITH_REMOVING_AN_EXISTING_CATEGORY.toString()));
+                        });
                     }
 
                 } catch (CostManagerException ex) {
                     //lambda expression because Runnable is a functional interface
-                    SwingUtilities.invokeLater(() -> view.displayMessage(new Message(ex.getMessage())));
+                    SwingUtilities.invokeLater(() -> {
+                        view.displayMessageForAppSection(new Message(ex.getMessage()));
+                    });
                 }
             }
         });

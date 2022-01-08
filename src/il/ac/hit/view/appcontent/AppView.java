@@ -1,14 +1,15 @@
 package il.ac.hit.view.appcontent;
 
+import com.toedter.calendar.JDateChooser;
 import il.ac.hit.model.Expense;
 import il.ac.hit.view.ComponentUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class AppView extends JFrame {
 
     /** List of all categories that belongs to a specific user. */
     //private final List<String> categoriesListBySpecificUser = new ArrayList<>();
-
+    private boolean isCategoryInputValid;
     private AppUtils appUtils;
     /*** Swing components. */
     private JButton buttonExpenses;
@@ -26,7 +27,7 @@ public class AppView extends JFrame {
     private JButton buttonReport;
     private JButton buttonLogout;
     private JButton buttonCurrencies;
-    private JLabel labelCostManagerTitle;
+    private JLabel labelExpenseManagerTitle;
     private JLabel labelFeedbackMessage;
     private JPanel panelAppContent;
     private JPanel panelNorthAppView;
@@ -41,7 +42,7 @@ public class AppView extends JFrame {
     private BorderLayout borderLayoutPanelContent;
 
     private ExpensesByCategory expensesByCategory;
-    private Operations operations;
+    private CategoryAndExpenseOperations categoryAndExpenseOperations;
 //    private ReportPanel reportPanel;
 //    private CurrenciesPanel currenciesPanel;
 
@@ -60,13 +61,13 @@ public class AppView extends JFrame {
     private void initAppView() {
         comboBoxCategories = new JComboBox<>();
         expensesByCategory = new ExpensesByCategory();
-        operations = new Operations();
+        categoryAndExpenseOperations = new CategoryAndExpenseOperations();
         buttonExpenses = new JButton("Expenses");
         buttonOperations = new JButton("Operations");
         buttonReport = new JButton("Report");
         buttonLogout = new JButton("LogOut");
         buttonCurrencies = new JButton("Currencies");
-        labelCostManagerTitle = new JLabel("Cost Manager");
+        labelExpenseManagerTitle = new JLabel("Cost Manager");
         labelFeedbackMessage = new JLabel();
         borderLayoutPanelContent = new BorderLayout();
         panelAppContent = new JPanel(borderLayoutPanelContent);
@@ -79,6 +80,7 @@ public class AppView extends JFrame {
         layeredPaneCenterAppView = new JLayeredPane();
         panelNorthFlowLayout = new FlowLayout(0, 25, 0);
     }
+
 
     /**
      * This method settings the panels, buttons and their attributes.
@@ -98,13 +100,45 @@ public class AppView extends JFrame {
     }
 
     /**
+     * This method removes the selected category from the combobox.
+     * @param category - to be removed.
+     */
+    public void removeChosenCategoryFromComboBox(String category) {
+        comboBoxCategories.removeItem(comboBoxCategories.getSelectedItem());
+    }
+
+    /**
+     * This method adds a new category to the combobox.
+     * @param category - the chosen category.
+     */
+    public void addCategoryToComboBox(String category) {
+        comboBoxCategories.addItem(category);
+    }
+
+    /**
+     * setter for categoryInput
+     * @param categoryInputValid indicates if the category name is valid or not
+     */
+    public void setCategoryInputValid(boolean categoryInputValid) {
+        isCategoryInputValid = categoryInputValid;
+    }
+
+    /**
+     * This method returns the labelFeedbackMessage.
+     * @return a label that shows the description
+     */
+    public JLabel getLabelFeedbackMessage() {
+        return labelFeedbackMessage;
+    }
+
+    /**
      * This method recieves the categories that belong to the loggedIn user , and then
      * calls to a method that sets the categories to the combobox.
      * @param listOfCategories - that are going to be added to the categoriesListBySpecificUser.
      */
-    public void setTheCategoriesList(List<String> listOfCategories) {
+    public void setTheCategoriesToComboBox(List<String> listOfCategories) {
         //insert categories to the combo box
-        listOfCategories.add("all");
+//        listOfCategories.add("all");
         insertCategoriesToComboBox(listOfCategories);
     }
 
@@ -150,7 +184,8 @@ public class AppView extends JFrame {
         layeredPaneCenterAppView.setBounds(0, 200, 1200, 650);
         layeredPaneCenterAppView.setLayout(new CardLayout(0, 0));
         setPanelAllExpensesPartOfTheLayeredPane();
-       // setSignUpPanelPartOfTheLayeredPane();
+        setPanelOperationsPartOfTheLayeredPane();
+        //    setPanelOperationsPartOfTheLayeredPane();
         panelAppContent.add(layeredPaneCenterAppView, BorderLayout.CENTER);
     }
 
@@ -159,9 +194,15 @@ public class AppView extends JFrame {
      * and added the panelAllExpenses to the LayeredPane.
      */
     private void setPanelAllExpensesPartOfTheLayeredPane() {
-
+        panelAllExpenses.setBackground(new Color(230, 230, 230));
         panelAllExpenses.add(expensesByCategory);
         layeredPaneCenterAppView.add(panelAllExpenses);
+    }
+
+    private void setPanelOperationsPartOfTheLayeredPane() {
+        panelOperations.setBackground(new Color(230, 230, 230));
+        panelOperations.add(categoryAndExpenseOperations);
+        layeredPaneCenterAppView.add(panelOperations);
     }
 
     /** First we clear all the items in the combo box, and then we add each of the categories to the combo box. */
@@ -171,6 +212,8 @@ public class AppView extends JFrame {
         for (String category : listOfCategories) {
             comboBoxCategories.addItem(category);
         }
+
+        comboBoxCategories.addItem("all");
     }
 
     /*** Setting the combo box. */
@@ -219,7 +262,7 @@ public class AppView extends JFrame {
         panelNorthAppView.add(buttonOperations);
         panelNorthAppView.add(buttonReport);
         panelNorthAppView.add(buttonCurrencies);
-        panelNorthAppView.add(labelCostManagerTitle);
+        panelNorthAppView.add(labelExpenseManagerTitle);
         panelNorthAppView.add(buttonLogout);
         panelAppContent.add(panelNorthAppView, BorderLayout.NORTH);
     }
@@ -259,9 +302,9 @@ public class AppView extends JFrame {
             }
         }
 
-        labelCostManagerTitle.setFont(new Font("Narkisim", Font.BOLD, 55));
-        labelCostManagerTitle.setBounds(1000, 0, 200, 100);
-        labelCostManagerTitle.setForeground(Color.red);
+        labelExpenseManagerTitle.setFont(new Font("Narkisim", Font.BOLD, 55));
+        labelExpenseManagerTitle.setBounds(1000, 0, 200, 100);
+        labelExpenseManagerTitle.setForeground(Color.red);
     }
 
     /**
@@ -332,7 +375,7 @@ public class AppView extends JFrame {
          * the expenses according to the chosen category.
          */
         private class CategorySelectorPanel extends JPanel {
-            private JLabel labelFilterExpensesByCategory;
+            private JLabel labelFilterExpensesByCategoryTitle;
             private JLabel labelCategorySelector;
             private JButton buttonDisplayExpenses;
             private FlowLayout flowLayoutPanelCenterLabelAndComboBox;
@@ -349,12 +392,12 @@ public class AppView extends JFrame {
 
             /** This method inits the all the data members in "this". */
             private void initCategorySelectorPanel() {
-                labelFilterExpensesByCategory = new JLabel("Filter your expenses by specific category");
+                labelFilterExpensesByCategoryTitle = new JLabel("Filter your expenses by specific category");
                 labelCategorySelector = new JLabel("Select Category:");
                 buttonDisplayExpenses = new JButton("Display");
                 flowLayoutPanelCenterLabelAndComboBox = new FlowLayout();
                 flowLayoutPanelCenterLabelAndComboBox.setVgap(35);
-                flowLayoutPanelCenterLabelAndComboBox.setHgap(80);
+                flowLayoutPanelCenterLabelAndComboBox.setHgap(35);
                 panelNorthTitleCategorySelector = new JPanel();
                 panelCenterLabelAndComboBox = new JPanel(flowLayoutPanelCenterLabelAndComboBox);
                 panelSouthOfTheCategorySelectorPanel = new JPanel();
@@ -376,7 +419,7 @@ public class AppView extends JFrame {
              */
             private void setLabelFilterByCategoryTitle() {
                 ComponentUtils.setComponentsAttributes(
-                        labelFilterExpensesByCategory,
+                        labelFilterExpensesByCategoryTitle,
                         new Font("Narkisim", Font.BOLD, 30),
                         new Dimension(600, 50));
             }
@@ -406,7 +449,8 @@ public class AppView extends JFrame {
              */
             private void locateComponentsOnTheCategorySelectorPanel() {
                 this.setLayout(new BorderLayout());
-                panelNorthTitleCategorySelector.add(labelFilterExpensesByCategory);
+                panelNorthTitleCategorySelector.add(labelFilterExpensesByCategoryTitle);
+                panelNorthTitleCategorySelector.setBackground(new Color(207, 220, 218, 255));
                 this.add(panelNorthTitleCategorySelector, BorderLayout.NORTH);
                 panelCenterLabelAndComboBox.add(labelCategorySelector);
                 panelCenterLabelAndComboBox.add(comboBoxCategories);
@@ -423,44 +467,50 @@ public class AppView extends JFrame {
         }
     }
 
-    private class Operations extends JPanel {
+    private class CategoryAndExpenseOperations extends JPanel {
         /** Swing components*/
         private JPanel panelLeftCategories;
-        private JPanel panelRightCosts;
+        private JPanel panelRightExpenses;
         private GridLayout leftGridLayout;
         private GridLayout rightGridLayout;
         private FlowLayout flowLayoutOperationsPanel;
         private AddCategoryPanel addCategory;
         private RemoveCategoryPanel removeCategory;
         private AddCostPanel addCostPanel;
-        private RemoveCostPanel removeCostPanel;
+//        private RemoveCostPanel removeCostPanel;
 
 
-        public Operations() {
+        public CategoryAndExpenseOperations() {
             initOperationsPanel();
             startOperationsPanel();
         }
 
         private void initOperationsPanel() {
             panelLeftCategories = new JPanel();
-            panelRightCosts = new JPanel();
+            panelRightExpenses = new JPanel();
             leftGridLayout = new GridLayout(2, 1, 0, 200);
             rightGridLayout  = new GridLayout(2, 1, 0, 200);
-            flowLayoutOperationsPanel = new FlowLayout();
+            flowLayoutOperationsPanel = new FlowLayout(0, 10, 0);
 
-//            addCategory =
-//            removeCategory =;
-//            addCostPanel;
+            addCategory = new AddCategoryPanel();
+            removeCategory = new RemoveCategoryPanel();
+            addCostPanel = new AddCostPanel();
 //            removeCostPanel;
         }
 
         private void startOperationsPanel() {
             this.setLayout(flowLayoutOperationsPanel);
             panelLeftCategories.setLayout(leftGridLayout);
-            panelRightCosts.setLayout(rightGridLayout);
+            panelRightExpenses.setLayout(rightGridLayout);
+            panelLeftCategories.add(addCategory);
+            panelLeftCategories.add(removeCategory);
+            this.add(panelLeftCategories);
 
+           panelRightExpenses.add(addCostPanel);
+            this.add(panelRightExpenses);
         }
 
+        /*** add category panel class represents adding new category operation as a panel.*/
         private class AddCategoryPanel extends JPanel{
 
             /** Swing components*/
@@ -473,20 +523,20 @@ public class AppView extends JFrame {
             private JPanel panelSouthAddCategory;
             private FlowLayout flowLayoutAddCategory;
 
-            public AddCategoryPanel() {
+            private AddCategoryPanel() {
                 initAddCategory();
                 startAddCategory();
             }
 
             private void initAddCategory() {
-                labelTitleAddCategory = new JLabel("Add Category:");
+                labelTitleAddCategory = new JLabel("Add Category");
                 labelAddCategoryName = new JLabel("Category name:");
                 textFieldAddCategory = new JTextField(10);
                 buttonAddNewCategory = new JButton("Add");
                 panelNorthAddCategory = new JPanel();
                 panelCenterAddCategory = new JPanel();
                 panelSouthAddCategory = new JPanel();
-                flowLayoutAddCategory = new FlowLayout();
+                flowLayoutAddCategory = new FlowLayout(0, 25, 25);
             }
 
             private void startAddCategory() {
@@ -512,10 +562,10 @@ public class AppView extends JFrame {
             private void setTextFieldAddCategoryAttributes(){
                 ComponentUtils.setComponentsAttributes(textFieldAddCategory,
                         new Font("Narkisim", Font.BOLD, 30),
-                        new Dimension(200, 50));
+                        new Dimension(200, 40));
             }
 
-            private void setBtnAddCategoryAttributes(){
+            private void setBtnAddCategoryAttributes() {
                 ComponentUtils.setComponentsAttributes(buttonAddNewCategory,
                         new Font("Narkisim", Font.BOLD, 30),
                         new Dimension(200, 50));
@@ -524,22 +574,306 @@ public class AppView extends JFrame {
             private void locateComponentsOnAddCategoryPane(){
                 this.setLayout(new BorderLayout());
                 panelNorthAddCategory.add(labelTitleAddCategory);
+                panelNorthAddCategory.setBackground(new Color(207, 220, 218, 255));
                 this.add(panelNorthAddCategory, BorderLayout.NORTH);
                 panelCenterAddCategory.setLayout(flowLayoutAddCategory);
                 panelCenterAddCategory.add(labelAddCategoryName);
                 panelCenterAddCategory.add(textFieldAddCategory);
-                this.add(panelCenterAddCategory);
+                this.add(panelCenterAddCategory, BorderLayout.CENTER);
                 panelSouthAddCategory.add(buttonAddNewCategory);
+                this.add(panelSouthAddCategory, BorderLayout.SOUTH);
             }
 
             private void setButtonAddActionListener(){
                 buttonAddNewCategory.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        appUtils.
+                        appUtils.validateAndSetNewCategory(textFieldAddCategory.getText());
+
+
+                        textFieldAddCategory.setText("");
                     }
                 });
             }
         }
+
+        private class RemoveCategoryPanel extends JPanel{
+
+            /** swing components*/
+            private JLabel labelRemoveCategoryTitle;
+            private JLabel labelRemoveCategory;
+            private JButton buttonRemoveCategory;
+            private JPanel panelNorthRemoveCategory;
+            private JPanel panelCenterRemoveCategory;
+            private JPanel panelSouthRemoveCategory;
+            private FlowLayout flowLayoutRemoveCategory;
+
+            private RemoveCategoryPanel() {
+                initRemoveCategory();
+                startRemoveCategory();
+            }
+
+            private void initRemoveCategory(){
+                labelRemoveCategoryTitle = new JLabel("Remove Category");
+                labelRemoveCategory = new JLabel("Select category:");
+                buttonRemoveCategory = new JButton("Remove");
+                panelNorthRemoveCategory = new JPanel();
+                panelCenterRemoveCategory = new JPanel();
+                panelSouthRemoveCategory = new JPanel();
+                flowLayoutRemoveCategory = new FlowLayout(0, 25, 25);
+            }
+
+            private void startRemoveCategory(){
+                setLabelTitleRemoveCategoryAttributes();
+                setLabelRemoveCategoryAttributes();
+                setButtonRemoveAttributes();
+                locateComponentsOnRemovePane();
+                setButtonRemoveActionListener();
+            }
+
+            private void setLabelTitleRemoveCategoryAttributes() {
+                ComponentUtils.setComponentsAttributes(labelRemoveCategoryTitle,
+                        new Font("Narkisim", Font.BOLD, 30),
+                        new Dimension(500, 50));
+            }
+
+            private void setLabelRemoveCategoryAttributes() {
+                ComponentUtils.setComponentsAttributes(labelRemoveCategory,
+                        new Font("Narkisim", Font.BOLD, 30),
+                        new Dimension(250, 50));
+            }
+
+            private void setButtonRemoveAttributes() {
+                ComponentUtils.setComponentsAttributes(buttonRemoveCategory,
+                        new Font("Narkisim", Font.BOLD, 30),
+                        new Dimension(200, 50));
+            }
+
+            private void locateComponentsOnRemovePane() {
+                this.setLayout(new BorderLayout());
+                panelNorthRemoveCategory.add(labelRemoveCategoryTitle);
+                panelNorthRemoveCategory.setBackground(new Color(207, 220, 218, 255));
+                this.add(panelNorthRemoveCategory, BorderLayout.NORTH);
+                panelCenterRemoveCategory.setLayout(flowLayoutRemoveCategory);
+                panelCenterRemoveCategory.add(labelRemoveCategory);
+                panelCenterRemoveCategory.add(comboBoxCategories);
+                this.add(panelCenterRemoveCategory, BorderLayout.CENTER);
+                panelSouthRemoveCategory.add(buttonRemoveCategory);
+                this.add(panelSouthRemoveCategory, BorderLayout.SOUTH);
+            }
+
+            private void setButtonRemoveActionListener() {
+                buttonRemoveCategory.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        appUtils.removeCategory(comboBoxCategories.getSelectedItem().toString());
+                    }
+                });
+            }
+        }
+
+        /**
+         * Class that represents the Add Expense Panel Operation.
+         */
+        private class AddCostPanel extends JPanel{
+
+            /**
+             * Swing components
+             */
+            private JLabel labelAddCostTitle;
+            private JLabel labelCategoryAddCostPanel;
+            private JLabel labelSumCost;
+            private JLabel labelCurrency;
+            private JLabel labelDescription;
+            private JLabel labelDate;
+            private JTextField textFieldSumCost;
+            private JTextField textFieldCurrency;
+            private JTextArea textFieldDescription;
+
+            private JDateChooser dateChooser;
+
+//            private JComboBox<> comboBoxCategory;
+//            private JComboBox<Currency> comboBoxCurrency;
+            private JButton buttonClearInputsInAddCostPanel;
+            private JButton buttonAddNewCost;
+            private JPanel panelNorthAddCost;
+            private JPanel panelCenterAddCost;
+            private JPanel panelSouthAddCost;
+            private GridLayout gridLayoutCenterPanelAddCost;
+            private FlowLayout flowLayoutSouthPanelAddCost;
+
+            private AddCostPanel() {
+                initAddExpense();
+                startAddExpense();
+            }
+
+            private void initAddExpense() {
+                labelAddCostTitle = new JLabel("Add Cost");
+                labelCategoryAddCostPanel = new JLabel("Category:");
+                labelSumCost = new JLabel("Sum cost:");
+                labelCurrency = new JLabel("Currency:");
+                labelDescription = new JLabel("Description:");
+                labelDate = new JLabel("Date:");
+                textFieldSumCost = new JTextField(10);
+                textFieldCurrency = new JTextField(10);
+                textFieldDescription = new JTextArea(10,3);
+                dateChooser = new JDateChooser();
+                buttonClearInputsInAddCostPanel = new JButton("Clear");
+                buttonAddNewCost = new JButton("Add");
+                panelNorthAddCost = new JPanel();
+                panelCenterAddCost = new JPanel();
+                panelSouthAddCost = new JPanel();
+                gridLayoutCenterPanelAddCost = new GridLayout(5, 2, 20 , 20);
+                flowLayoutSouthPanelAddCost = new FlowLayout();
+
+            }
+
+            private void startAddExpense() {
+                setLabelTitleAddCostAttributes();
+                setLabelCategoryAddCostPanelAttributes();
+                setLabelSumCostAttributes();
+                setLabelCurrencyAttributes();
+                setLabelDescriptionAttributes();
+                setLabelDateAttributes();
+                setTextFieldSumCost();
+                setTextFieldCurrency();
+                setTextFieldDescription();
+                setDateChooserFieldAttributes();
+                setButtonClearAddCostPanelAttributes();
+                setButtonAddInAddCostPanelAttributes();
+                locateComponentsOnAddCostPanel();
+                setButtonsAddCostPanelActionListeners();
+            }
+
+            private void setLabelTitleAddCostAttributes() {
+                ComponentUtils.setComponentsAttributes(labelAddCostTitle,
+                        new Font("Narkisim", Font.BOLD, 30),
+                        new Dimension(500, 50));
+            }
+
+            private void setLabelCategoryAddCostPanelAttributes() {
+                ComponentUtils.setComponentsAttributes(labelCategoryAddCostPanel,
+                        new Font("Narkisim", Font.BOLD, 30),
+                        new Dimension(100, 50));
+            }
+
+            private void setLabelSumCostAttributes() {
+                ComponentUtils.setComponentsAttributes(labelSumCost,
+                        new Font("Narkisim", Font.BOLD, 30),
+                        new Dimension(100, 50));
+            }
+
+            private void setLabelCurrencyAttributes() {
+                ComponentUtils.setComponentsAttributes(labelCurrency,
+                        new Font("Narkisim", Font.BOLD, 30),
+                        new Dimension(100, 50));
+            }
+
+
+            private void setLabelDescriptionAttributes() {
+                ComponentUtils.setComponentsAttributes(labelDescription,
+                        new Font("Narkisim", Font.BOLD, 30),
+                        new Dimension(100, 50));
+            }
+
+            private void setLabelDateAttributes() {
+                ComponentUtils.setComponentsAttributes(labelDate,
+                        new Font("Narkisim", Font.BOLD, 30),
+                        new Dimension(100, 50));
+            }
+
+            private void setTextFieldSumCost() {
+                ComponentUtils.setComponentsAttributes(textFieldSumCost,
+                        new Font("Narkisim", Font.BOLD, 30),
+                        new Dimension(100, 50));
+            }
+
+            private void setTextFieldCurrency() {
+                ComponentUtils.setComponentsAttributes(textFieldCurrency,
+                        new Font("Narkisim", Font.BOLD, 30),
+                        new Dimension(100, 50));
+            }
+
+            private void setTextFieldDescription() {
+                ComponentUtils.setComponentsAttributes(textFieldDescription,
+                        new Font("Narkisim", Font.BOLD, 30),
+                        new Dimension(100, 50));
+            }
+
+            private void setDateChooserFieldAttributes() {
+                dateChooser.setDateFormatString("yyyy-MM-dd");
+
+                ComponentUtils.setComponentsAttributes(textFieldDescription,
+                        new Font("Tahoma", Font.PLAIN, 20),
+                        new Dimension(100, 50));
+            }
+
+
+            private void setButtonClearAddCostPanelAttributes() {
+                ComponentUtils.setComponentsAttributes(buttonClearInputsInAddCostPanel,
+                        new Font("Narkisim", Font.BOLD, 30),
+                        new Dimension(200, 50));
+            }
+            private void setButtonAddInAddCostPanelAttributes() {
+                ComponentUtils.setComponentsAttributes(buttonAddNewCost,
+                        new Font("Narkisim", Font.BOLD, 30),
+                        new Dimension(200, 50));
+            }
+
+            private void locateComponentsOnAddCostPanel() {
+                this.setLayout(new BorderLayout());
+                panelNorthAddCost.add(labelAddCostTitle);
+                this.add(panelNorthAddCost, BorderLayout.NORTH);
+
+                panelCenterAddCost.setLayout(gridLayoutCenterPanelAddCost);
+                panelCenterAddCost.add(labelCategoryAddCostPanel);
+                panelCenterAddCost.add(comboBoxCategories);
+                panelCenterAddCost.add(labelSumCost);
+                panelCenterAddCost.add(textFieldSumCost);
+                panelCenterAddCost.add(labelCurrency);
+                panelCenterAddCost.add(textFieldCurrency);
+                panelCenterAddCost.add(labelDescription);
+                panelCenterAddCost.add(textFieldDescription);
+                panelCenterAddCost.add(labelDate);
+                panelCenterAddCost.add(dateChooser);
+                this.add(panelCenterAddCost, BorderLayout.CENTER);
+
+                panelSouthAddCost.setLayout(flowLayoutSouthPanelAddCost);
+                panelSouthAddCost.add(buttonClearInputsInAddCostPanel);
+                panelSouthAddCost.add(buttonAddNewCost);
+                this.add(panelSouthAddCost, BorderLayout.SOUTH);
+
+            }
+
+
+            private void setButtonsAddCostPanelActionListeners() {
+                setButtonClearActionListener();
+            }
+
+            private void setButtonClearActionListener() {
+                buttonClearInputsInAddCostPanel.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                            clearAllTextFieldsOfAddCostPanel();
+                    }
+                });
+            }
+
+            private void clearAllTextFieldsOfAddCostPanel() {
+                Component[] components = panelCenterAddCost.getComponents();
+
+                for (Component component : components) {
+                    if (component instanceof JTextField || component instanceof JTextArea ) {
+                        ((JTextComponent) component).setText("");
+                    }
+                }
+            }
+
+
+
+
+        }
+
+
     }
 }

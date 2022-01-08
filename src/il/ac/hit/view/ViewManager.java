@@ -107,8 +107,41 @@ public class ViewManager implements View , LoginUtils , AppUtils {
      * @param message - the relevant message to display.
      */
     @Override
-    public void displayMessage(Message message) {
+    public void displayMessageForLoginSection(Message message) {
         loginView.getLabelInvalidDescription().setText(message.getMessage());
+    }
+
+    /**
+     * This method receives message and displays it to the user via the appView.
+     * @param message - the relevant message to display.
+     */
+    @Override
+    public void displayMessageForAppSection(Message message) {
+        appView.getLabelFeedbackMessage().setText(message.getMessage());
+    }
+
+
+    /**
+     * This method receives a category and then calls for
+     * removeChosenCategoryFromComboBox that responsible for removing the category
+     * from the combobox.
+     *
+     * @param category - to remove from combobox.
+     */
+    @Override
+    public void removeCategoryFromComboBox(String category) {
+        appView.removeChosenCategoryFromComboBox(category);
+    }
+
+
+    //    @Override
+//    public void isTheCategoryNameInputValid(boolean isValid) {
+//        appView.setCategoryInputValid(isValid);
+//    }
+
+    @Override
+    public void addNewCategoryToComboBox(String category) {
+        appView.addCategoryToComboBox(category);
     }
 
     /**
@@ -157,28 +190,62 @@ public class ViewManager implements View , LoginUtils , AppUtils {
         appView.setVisible(true);
     }
 
+    /**
+     * This method calls the getCategoriesBySpecificUser in the viewModel
+     * that responsible for getting the categories that belong to specific user.
+     */
     @Override
     public void getCategoriesThatBelongToSpecificUser() {
         viewModel.getCategoriesBySpecificUser();
     }
 
+    /**
+     * This method call the setTheCategoriesList in appView
+     * that responsible for setting the categories to the combobox.
+     * @param listOfCategories - category list.
+     */
     @Override
-    public void setCategoriesAccordingToTheLoggedInUser(List<String> listOfCategories) {
-        appView.setTheCategoriesList(listOfCategories);
+    public void setCategories(List<String> listOfCategories) {
+        appView.setTheCategoriesToComboBox(listOfCategories);
     }
 
+    /**
+     * This method call the getExpensesBySpecificCategory in viewModel
+     * that responsible for getting expenses by given category.
+     * @param categoryType - the expenses that would return are going to be based on the categoryType we receive here.
+     */
     @Override
     public void getExpensesByCategory(String categoryType) {
         viewModel.getExpensesBySpecificCategory(categoryType);
     }
 
+    /**
+     *This method call the setExpensesTableByCategoryInAppView in appView
+     * that responsible for setting the expense table.
+     * @param listOfExpenses - expenses list.
+     */
     @Override
     public void setExpensesTableByCategoryInAppView(List<Expense> listOfExpenses) {
         appView.setTableInAllExpensesPanel(listOfExpenses);
     }
 
+    /**
+     * This method call the validateAndAddNewCategory in viewModel
+     * that responsible for validating and adding a new category to the database and to the list of categories.
+     * @param categoryName - category's name.
+     */
     @Override
-    public void validateAndSetNewCategory(String category) {
-        viewModel.addNewCategory(category);
+    public void validateAndSetNewCategory(String categoryName) {
+        viewModel.validateAndAddNewCategory(categoryName);
+    }
+
+    /**
+     * This method call the removeCategory in viewModel
+     * that responsible for remove the selected category from the database and from the list of categories.
+     * @param categoryName - selected category to remove.
+     */
+    @Override
+    public void removeCategory(String categoryName) {
+        viewModel.removeSpecificCategory(categoryName);
     }
 }
