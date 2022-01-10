@@ -25,4 +25,5 @@ public interface View
    // void isTheCategoryNameInputValid(boolean isValid);
     void addNewCategoryToComboBox(String category);
     void removeCategoryFromComboBox(String category);
+    void setCostsID(List<Integer> costsID);
 }

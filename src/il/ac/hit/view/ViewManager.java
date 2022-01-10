@@ -9,6 +9,7 @@ import il.ac.hit.view.login.LoginUtils;
 import il.ac.hit.view.login.LoginView;
 import il.ac.hit.viewmodel.ViewModel;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -206,7 +207,7 @@ public class ViewManager implements View , LoginUtils , AppUtils {
      */
     @Override
     public void setCategories(List<String> listOfCategories) {
-        appView.setTheCategoriesToComboBox(listOfCategories);
+        appView.setTheCategoriesToCategoriesComboBox(listOfCategories);
     }
 
     /**
@@ -248,4 +249,45 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     public void removeCategory(String categoryName) {
         viewModel.removeSpecificCategory(categoryName);
     }
+
+    /**
+     * This method sends all the parameters it got to the viewModel by calling validateAndAddNewCost
+     * the actual validation would take place there.
+     *
+     * @param categorySelected - category the user selected.
+     * @param sumCost - how much the expense cost.
+     * @param currency - type of currency.
+     * @param description - the description of the cost.
+     * @param date - the date the cost was made.
+     */
+    @Override
+    public void validateAndAddNewCost(String categorySelected, String sumCost,
+                                      String currency, String description, Date date) {
+
+        viewModel.validateAndAddNewCost(categorySelected, sumCost, currency,description ,date);
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void getCostsID() {
+        viewModel.getCostsID();
+    }
+
+    /**
+     *
+     * @param costsID
+     */
+    @Override
+    public void setCostsID(List<Integer> costsID) {
+        appView.setTheCostsIDToCostIDComboBox(costsID);
+    }
+
+    @Override
+    public void removeCost(int costID) {
+        viewModel.removeCost(costID);
+    }
+
+
 }

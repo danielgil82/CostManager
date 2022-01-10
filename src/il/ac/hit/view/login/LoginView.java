@@ -381,8 +381,8 @@ public class LoginView extends JFrame {
             this.setLayout(borderLayout);
             panelNorthSignUp.add(labelSignUpTitle);
             this.add(panelNorthSignUp, BorderLayout.NORTH);
-            GridLayout gridLayout = new GridLayout(3, 2, 20, 0);
-            gridLayout.setVgap(20);
+            GridLayout gridLayout = new GridLayout(3, 2, 20, 10);
+//            gridLayout.setVgap(20);
             panelCenterSignUp.setLayout(gridLayout);
             panelCenterSignUp.add((labelFullNameSignUp));
             panelCenterSignUp.add(textFieldFullNameSignUp);

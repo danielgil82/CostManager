@@ -10,13 +10,19 @@ import java.util.*;
  * This class represents the interaction with the database and the logic behind that.
  */
 public class CostManagerModel implements Model {
-    /** This string represents the driver full qualified name. */
+    /**
+     * This string represents the driver full qualified name.
+     */
     private final String driverFullQualifiedName = "com.mysql.jdbc.Driver";
 
-    /** This string represents the connection to the database. */
+    /**
+     * This string represents the connection to the database.
+     */
     private final String connectionStringToDB = "jdbc:mysql://localhost:3306/costmanagerproj";
 
-    /** List of all users that signed up to our application. */
+    /**
+     * List of all users that signed up to our application.
+     */
     private final List<User> listOfUsers = new ArrayList<>();
 
     /**
@@ -67,7 +73,7 @@ public class CostManagerModel implements Model {
      * @throws CostManagerException - the exception we defined to our application.
      */
     @Override
-    public int addNewCategory(Category category) throws CostManagerException {
+    public void addNewCategory(Category category) throws CostManagerException {
         //query to insert a new category to the categories' table in the database
         String addNewCategoryQuery = "insert into categories (category, user_id)"
                 + "value(?,?)";
@@ -85,8 +91,6 @@ public class CostManagerModel implements Model {
                 throw new CostManagerException(HandlingMessage.PROBLEM_WITH_ADDING_NEW_CATEGORY);
             }
 
-            return numberOfRowsAffected;
-
         } catch (SQLException exception) {
             throw new CostManagerException(HandlingMessage.SOMETHING_WENT_WRONG, exception);
         }
@@ -95,6 +99,7 @@ public class CostManagerModel implements Model {
 
     /**
      * This method deletes a category from the database.
+     *
      * @param categoryToDelete - the category that is going to be deleted.
      * @throws CostManagerException - the exception we defined to our application.
      */
@@ -103,8 +108,8 @@ public class CostManagerModel implements Model {
         String removeExistingCategoryQuery = "delete from categories where category = ? AND " +
                 "user_id = ?";
 
-        try(Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-            PreparedStatement prepareStatement= connection.prepareStatement(removeExistingCategoryQuery);) {
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+             PreparedStatement prepareStatement = connection.prepareStatement(removeExistingCategoryQuery);) {
 
             connection.setAutoCommit(false);
             prepareStatement.setString(1, categoryToDelete.getCategoryName());
@@ -189,87 +194,107 @@ public class CostManagerModel implements Model {
     }
 
     @Override
-    public int addNewExpense(Expense expense) throws CostManagerException {
+    public void addNewCost(Expense cost) throws CostManagerException {
+
         String addNewExpenseQuery = "insert into costs (category, sum_cost, currency, description, date, user_id)"
                 + "value(?, ?, ?, ?, ?, ?)";
-        Connection connection = null;
-        PreparedStatement addNewExpense = null;
-        try {
-            connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-            addNewExpense = connection.prepareStatement(addNewExpenseQuery);
+
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+             PreparedStatement prepareStatement = connection.prepareStatement(addNewExpenseQuery);) {
+
             connection.setAutoCommit(false);
-            addNewExpense.setString(1, expense.getCategory());
-            addNewExpense.setInt(2, expense.getCostSum());
-            addNewExpense.setString(3, expense.getCurrency());
-            addNewExpense.setString(4, expense.getExpenseDescription());
-            addNewExpense.setDate(5, expense.getPurchaseDate());
-            addNewExpense.setInt(6, expense.getUserID());
-            int numberOfRowsAffected = addNewExpense.executeUpdate();
+            prepareStatement.setString(1, cost.getCategory());
+            prepareStatement.setInt(2, cost.getCostSum());
+            prepareStatement.setString(3, cost.getCurrency());
+            prepareStatement.setString(4, cost.getExpenseDescription());
+            prepareStatement.setDate(5, cost.getPurchaseDate());
+            prepareStatement.setInt(6, cost.getUserID());
+
+            int numberOfRowsAffected = prepareStatement.executeUpdate();
+
             connection.commit();
+
             if (numberOfRowsAffected != 1) {
-                throw new CostManagerException(HandlingMessage.SOMETHING_WENT_WRONG);
+                throw new CostManagerException(HandlingMessage.PROBLEM_WITH_ADDING_NEW_EXPENSE);
             }
-            return numberOfRowsAffected;
+
         } catch (SQLException exception) {
-            if (exception instanceof SQLIntegrityConstraintViolationException) {
-                throw new CostManagerException(HandlingMessage.EXPENSE_ALREADY_EXISTS, exception);
-            } else if (connection != null) {
-                // System.err.print("Transaction is being rolled back");
-                try {
-                    connection.rollback();
-                    return 0;
-                } catch (SQLException ex) {
-                    throw new CostManagerException(HandlingMessage.PROBLEM_WITH_ROLLING_BACK, ex);
-                }
-            } else {
-                throw new CostManagerException(HandlingMessage.PROBLEM_WITH_ADDING_NEW_EXPENSE,
-                        exception);
-            }
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException ex) {
-                throw new CostManagerException(HandlingMessage.PROBLEM_WITH_CLOSING_THE_CONNECTION);
-            }
+            throw new CostManagerException(HandlingMessage.SOMETHING_WENT_WRONG, exception);
         }
+
+//        try {
+//            connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+//            addNewExpense = connection.prepareStatement(addNewExpenseQuery);
+//            connection.setAutoCommit(false);
+//            addNewExpense.setString(1, cost.getCategory());
+//            addNewExpense.setInt(2, cost.getCostSum());
+//            addNewExpense.setString(3, cost.getCurrency());
+//            addNewExpense.setString(4, cost.getExpenseDescription());
+//            addNewExpense.setDate(5, cost.getPurchaseDate());
+//            addNewExpense.setInt(6, cost.getUserID());
+//            int numberOfRowsAffected = addNewExpense.executeUpdate();
+//            connection.commit();
+//            if (numberOfRowsAffected != 1) {
+//                throw new CostManagerException(HandlingMessage.SOMETHING_WENT_WRONG);
+//            }
+//            return numberOfRowsAffected;
+//        } catch (SQLException exception) {
+//            if (exception instanceof SQLIntegrityConstraintViolationException) {
+//                throw new CostManagerException(HandlingMessage.EXPENSE_ALREADY_EXISTS, exception);
+//            } else if (connection != null) {
+//                // System.err.print("Transaction is being rolled back");
+//                try {
+//                    connection.rollback();
+//                    return 0;
+//                } catch (SQLException ex) {
+//                    throw new CostManagerException(HandlingMessage.PROBLEM_WITH_ROLLING_BACK, ex);
+//                }
+//            } else {
+//                throw new CostManagerException(HandlingMessage.PROBLEM_WITH_ADDING_NEW_EXPENSE,
+//                        exception);
+//            }
+//        } finally {
+//            try {
+//                connection.close();
+//            } catch (SQLException ex) {
+//                throw new CostManagerException(HandlingMessage.PROBLEM_WITH_CLOSING_THE_CONNECTION);
+//            }
+//        }
     }
 
+    /**
+     *
+     * @param costID
+     * @throws CostManagerException
+     */
     @Override
-    public int removeExistingExpense(int expenseID) throws CostManagerException {
-        String removeExistingExpenseQuery = "delete from costs where cost_id = ?";
-        Connection connection = null;
-        PreparedStatement prepareStatement = null;
+    public void removeExistingCost(int costID) throws CostManagerException {
+        String removeExistingExpenseQuery = "delete from costs where cost_id = ? ";
 
-        try {
-            //Creating a connection string
-            connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-            prepareStatement = connection.prepareStatement(removeExistingExpenseQuery);
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+             PreparedStatement prepareStatement = connection.prepareStatement(removeExistingExpenseQuery);) {
             connection.setAutoCommit(false);
-            prepareStatement.setInt(1, expenseID);
+            prepareStatement.setInt(1, costID);
+
             int numberOfRowsAffected = prepareStatement.executeUpdate();
             connection.commit();
-            return numberOfRowsAffected;
+
+            if (numberOfRowsAffected != 1) {
+                throw new CostManagerException(HandlingMessage.PROBLEM_WITH_REMOVING_EXISTING_EXPENSE);
+            }
         } catch (SQLException exception) {
-            if (connection != null) {
-                // System.err.print("Transaction is being rolled back");
-                try {
-                    connection.rollback();
-                    return -1;
-                } catch (SQLException ex) {
-                    throw new CostManagerException(HandlingMessage.PROBLEM_WITH_ROLLING_BACK, ex);
-                }
-            } else {
-                throw new CostManagerException(HandlingMessage.PROBLEM_WITH_REMOVING_EXISTING_EXPENSE, exception);
-            }
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException ex) {
-                throw new CostManagerException(HandlingMessage.PROBLEM_WITH_CLOSING_THE_CONNECTION);
-            }
+            throw new CostManagerException(HandlingMessage.SOMETHING_WENT_WRONG, exception);
         }
     }
 
+    /**
+     *
+     * @param userID
+     * @param startDate
+     * @param endDate
+     * @return
+     * @throws CostManagerException
+     */
     @Override
     public Collection<Expense> getReportByDates(int userID, Date startDate, Date endDate) throws CostManagerException {
         String getReportByDatesQuery = "select * from costs WHERE userID = ? AND" +
@@ -298,7 +323,6 @@ public class CostManagerModel implements Model {
 
         } catch (SQLException exception) {
             throw new CostManagerException(HandlingMessage.COULD_NOT_FIND_EXPENSES_BETWEEN_THESE_DATES, exception);
-        } finally {
         }
     }
 
@@ -383,6 +407,12 @@ public class CostManagerModel implements Model {
     }
 
 
+    /**
+     * @param userID
+     * @param categoryType
+     * @return
+     * @throws CostManagerException
+     */
     @Override
     public List<Expense> getExpensesByCategory(int userID, String categoryType) throws CostManagerException {
 
@@ -428,7 +458,9 @@ public class CostManagerModel implements Model {
 
     }
 
-    /** This method recieves a user id and by it gets the categories that belong him.
+    /**
+     * This method recieves a user id and by it gets the categories that belong him.
+     *
      * @param userId - identifies the user, thus we can get the categories according to that user.
      * @return all categories of a specific user.
      * @throws CostManagerException - the exception we defined to our application.

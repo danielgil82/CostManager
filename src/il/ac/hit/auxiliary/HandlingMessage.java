@@ -46,12 +46,20 @@ public enum HandlingMessage
    /**
     * handling messages that relate to the costs table.
     */
+   NEW_COST_ADDED_SUCCESSFULLY("The cost added successfully"),
+   COST_REMOVED_SUCCESSFULLY("The cost removed successfully"),
    PROBLEM_WITH_REMOVING_SPECIFIC_EXPENSES_BY_SPECIFIC_CATEGORY ("problem with removing expenses by specific category."),
    COULD_NOT_GET_ALL_EXPENSES ("Couldn't get all expenses"),
    EXPENSE_ALREADY_EXISTS ("Oops seems like this expense already exists, try another one"),
    PROBLEM_WITH_ADDING_NEW_EXPENSE ("problem with adding new expense"),
    PROBLEM_WITH_REMOVING_EXISTING_EXPENSE ("problem with removing an existing expense"),
    COULD_NOT_FIND_EXPENSES_BETWEEN_THESE_DATES ("Couldn't find any expenses between these two dates"),
+   CANT_REMOVE_NO_COST ("You don't have cost to remove"),
+   INVALID_SUM_COST("Use only digits in the sum cost field."),
+   INVALID_CURRENCY("Use only letters in the currency field."),
+
+
+
 
    /**
     * handling messages that relate to general usage
