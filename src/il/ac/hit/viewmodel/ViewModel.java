@@ -27,4 +27,5 @@ public interface ViewModel
     void validateAndAddNewCost(String categorySelected, String sumCost, String currency, String description, Date date);
     void removeCost(int costID);
     void getCostsID();
+    void removeCostsThatReferToSpecificCategory(String category);
 }

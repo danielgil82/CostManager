@@ -241,13 +241,31 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     }
 
     /**
-     * This method call the removeCategory in viewModel
+     * This method calls the removeCategory in viewModel
      * that responsible for remove the selected category from the database and from the list of categories.
      * @param categoryName - selected category to remove.
      */
     @Override
     public void removeCategory(String categoryName) {
         viewModel.removeSpecificCategory(categoryName);
+    }
+
+    /**
+     * This method calls to
+     */
+    @Override
+    public void removeCostsThatReferToChosenCategory(String category) {
+        viewModel.removeCostsThatReferToSpecificCategory(category);
+    }
+
+
+    /**
+     *
+     * @param costsIDToRemove
+     */
+    @Override
+    public void removeCostsFromCostIDComboBox(List<Integer> costsIDToRemove) {
+       appView.updateCostIDComboBox(costsIDToRemove);
     }
 
     /**
@@ -290,4 +308,14 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     }
 
 
+    /**
+     * This method is responsible for calling methods in AppView,
+     * that responsible for updating the category combo boxes and cost id combo box.
+     * @param category - category to remove from category combo boxes, and the related cost id's that relate to that
+     *                   category in the cost id combo box.
+     */
+    @Override
+    public void updateCategoriesComboBoxes(String category) {
+        appView.updateCategoriesComboBoxes(category);
+    }
 }

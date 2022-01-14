@@ -12,4 +12,5 @@ public interface AppUtils {
     void validateAndAddNewCost(String categorySelected, String sumCost, String currency, String description, Date date);
     void removeCost(int categoryID);
     void getCostsID();
+    void removeCostsThatReferToChosenCategory(String category);
 }

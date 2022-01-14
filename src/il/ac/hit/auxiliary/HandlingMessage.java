@@ -38,7 +38,7 @@ public enum HandlingMessage
    NEW_CATEGORY_ADDED_SUCCESSFULLY("The Category added successfully"),
    CATEGORY_ALREADY_EXISTS ("The category already exists, try another one"),
    COULD_NOT_GET_THE_CATEGORIES ("Couldn't get the categories"),
-   PROBLEM_WITH_REMOVING_AN_EXISTING_CATEGORY("problem with removing and existing category"),
+   PROBLEM_WITH_REMOVING_AN_EXISTING_CATEGORY("problem with removing an existing category"),
    PROBLEM_WITH_ADDING_NEW_CATEGORY ("problem with adding new category"),
    EXISTING_CATEGORY_REMOVED_SUCCESSFULLY("The category removed successfully"),
 

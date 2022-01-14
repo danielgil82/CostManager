@@ -1,5 +1,6 @@
 package il.ac.hit.viewmodel;
 
+import com.sun.org.apache.xpath.internal.operations.Equals;
 import il.ac.hit.auxiliary.HandlingMessage;
 import il.ac.hit.model.*;
 import il.ac.hit.auxiliary.Message;
@@ -154,6 +155,7 @@ public class CostManagerViewModel implements ViewModel {
                             SwingUtilities.invokeLater(() -> {
                                 view.displayMessageForAppSection(new Message
                                         (HandlingMessage.NEW_CATEGORY_ADDED_SUCCESSFULLY.toString()));
+
                                 view.addNewCategoryToComboBox(category);
                             });
                         } else {
@@ -189,7 +191,6 @@ public class CostManagerViewModel implements ViewModel {
     @Override
     public void validateAndAddNewCost(String categorySelected, String sumCost,
                                       String currency, String description, Date date) {
-
         service.submit(new Runnable() {
             @Override
             public void run() {
@@ -203,6 +204,8 @@ public class CostManagerViewModel implements ViewModel {
                             model.addNewCost(new Expense(categorySelected, cost, currency, description,
                                     new java.sql.Date(date.getTime()), user.getUserID()));
 
+                            getCostsID();
+
                             SwingUtilities.invokeLater(() -> {
                                 view.displayMessageForAppSection(new Message(
                                         HandlingMessage.NEW_COST_ADDED_SUCCESSFULLY.toString()));
@@ -214,7 +217,6 @@ public class CostManagerViewModel implements ViewModel {
                             view.displayMessageForAppSection(new Message(HandlingMessage.EMPTY_FIELDS.toString()));
                         });
                     }
-
 
                 } catch (CostManagerException ex) {
                     //lambda expression because Runnable is a functional interface
@@ -235,6 +237,11 @@ public class CostManagerViewModel implements ViewModel {
             @Override
             public void run() {
                 try {
+
+                    if (allCosts.size() != 0) {
+                        allCosts.clear();
+                    }
+
                     allCosts = model.getExpensesByCategory(user.getUserID(), "all");
 
                     List<Integer> costsID = new ArrayList<>();
@@ -312,7 +319,6 @@ public class CostManagerViewModel implements ViewModel {
     }
 
     /**
-     *
      * @param costID
      */
     @Override
@@ -347,14 +353,19 @@ public class CostManagerViewModel implements ViewModel {
                 try {
                     if (categoriesOfTheUser.contains(categoryToRemove)) {
 
+//                        List<Expense> costsThatRelateToTheChosenCategory = allCosts.stream()
+//                                .filter(ex -> ex.getCategory().equals(categoryToRemove)).collect(Collectors.toList());
+
                         model.removeExistingCategory(new Category(categoryToRemove, user.getUserID()));
 
                         categoriesOfTheUser.remove(categoryToRemove);
 
+
                         SwingUtilities.invokeLater(() -> {
+                            view.updateCategoriesComboBoxes(categoryToRemove);
+
                             view.displayMessageForAppSection(new Message
                                     (HandlingMessage.EXISTING_CATEGORY_REMOVED_SUCCESSFULLY.toString()));
-
                         });
 
                     } else {
@@ -372,6 +383,65 @@ public class CostManagerViewModel implements ViewModel {
                 }
             }
         });
+    }
+
+    /**
+     * @param category
+     */
+    @Override
+    public void removeCostsThatReferToSpecificCategory(String category) {
+        service.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    List<Integer> costToDelete = getCostsThatSupposeToDeleted(category);
+
+                    model.removeCostsBySpecificCategory(new Category(category, user.getUserID()));
+
+                    SwingUtilities.invokeLater(() -> {
+                        view.removeCostsFromCostIDComboBox(costToDelete);
+                    });
+
+
+                } catch (CostManagerException ex) {
+                    //lambda expression because Runnable is a functional interface
+                    SwingUtilities.invokeLater(() -> {
+                        view.displayMessageForAppSection(new Message(ex.getMessage()));
+                    });
+                }
+            }
+        });
+    }
+
+    /**
+     * This method responsible for create and return list of costs ID's that related to a receiving category.
+     *
+     * At first this method constructs a list that suppose to have the costsID's that should be
+     * deleted from the combo box.
+     *
+     * Secondly, there is a need to update the list of all costs in this class  "CostManagerViewModel", that's why
+     * another data structure was allocated in order to hold the needed expenses that suppose to be deleted.
+     *
+     * At the end, the expenses that suppose to be deleted get deleted from allCosts list.
+     *
+     * @param category - the costs that are going to be deleted according to this category.
+     * @return list of cost ID's.
+     */
+    private List<Integer> getCostsThatSupposeToDeleted(String category) {
+        List<Integer> costsID = new ArrayList<>();
+        List<Expense> toRemove = new ArrayList<>();
+
+        for (Expense expense : allCosts) {
+            if (expense.getCategory().equals(category)) {
+                costsID.add(expense.getExpenseID());
+                toRemove.add(expense);
+            }
+        }
+
+        toRemove.forEach(ex -> allCosts.remove(ex));
+
+        return costsID;
     }
 
     /**
@@ -438,7 +508,6 @@ public class CostManagerViewModel implements ViewModel {
      * @param confirmedPassword - confirmed password of the user.
      */
     private void signUpValidatorCredentials(String fullName, String password, String confirmedPassword) {
-
         if (fullName.equals("") || password.equals("") || confirmedPassword.equals("")) {
             view.displayMessageAndSetTheFlagValidatorForSignUpPanel(
                     new Message(HandlingMessage.EMPTY_FIELDS.toString()), false);
@@ -474,15 +543,20 @@ public class CostManagerViewModel implements ViewModel {
      * @return checks if the full name consists of letters and spaces.
      */
     private boolean validateThatUserInputConsistOnlyLetters(String fullName) {
-        char[] chars = fullName.toCharArray();
+        boolean isValid = true;
 
-        for (char c : chars) {
-            if (!Character.isLetter(c) && c != ' ') {
-                return false;
+        if (!fullName.equals("")) {
+            for (char c : fullName.toCharArray()) {
+                if (!Character.isLetter(c) || Character.isWhitespace(c)) {
+                    isValid = false;
+                    break;
+                }
             }
+        } else {
+            isValid = false;
         }
 
-        return true;
+        return isValid;
     }
 
     /**

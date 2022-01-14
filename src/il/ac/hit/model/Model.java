@@ -12,6 +12,7 @@ public interface Model
      void addNewUserToDBAndUpdateTheListOfUsers(User user) throws CostManagerException;
      void addNewCategory(Category newCategoryToAdd) throws CostManagerException;
      void removeExistingCategory(Category categoryToDelete) throws CostManagerException;
+     void removeCostsBySpecificCategory(Category category) throws CostManagerException;
      void addNewCost(Expense cost) throws CostManagerException;
      void removeExistingCost(int costID) throws CostManagerException;
      Collection<Expense> getReportByDates(int userID, java.sql.Date startDate, java.sql.Date endDate) throws CostManagerException;

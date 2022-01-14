@@ -41,7 +41,9 @@ public class AppView extends JFrame {
     private JPanel panelCurrencies;
     private JPanel panelSouthAppView;
     private JLayeredPane layeredPaneCenterAppView;
-    private JComboBox<String> comboBoxCategories;
+    private JComboBox<String> comboBoxCategoriesAddCostPanel;
+    private JComboBox<String> comboBoxCategoriesAllExpensesPanel;
+    private JComboBox<String> comboBoxCategoriesRemoveCategoryPanel;
     private JComboBox<Integer> comboBoxCostID;
     private FlowLayout panelNorthFlowLayout;
     private BorderLayout borderLayoutPanelContent;
@@ -66,7 +68,9 @@ public class AppView extends JFrame {
 
     /*** This method initialize the swing components. */
     private void initAppView() {
-        comboBoxCategories = new JComboBox<>();
+        comboBoxCategoriesAddCostPanel = new JComboBox<>();
+        comboBoxCategoriesAllExpensesPanel = new JComboBox<>();
+        comboBoxCategoriesRemoveCategoryPanel = new JComboBox<>();
         comboBoxCostID = new JComboBox<>();
         expensesByCategory = new ExpensesByCategory();
         categoryAndExpenseOperations = new CategoryAndExpenseOperations();
@@ -99,7 +103,9 @@ public class AppView extends JFrame {
         setNorthPanel();
         setNorthPanelComponentAttributes();
         setButtonsActionListeners();
-        setComboBoxCategory();
+        setComboBoxAttributes(comboBoxCategoriesAddCostPanel);
+        setComboBoxAttributes(comboBoxCategoriesAllExpensesPanel);
+        setComboBoxAttributes(comboBoxCategoriesRemoveCategoryPanel);
         setLayeredPane();
 
         //get all the categories that belong to the loggedIn user.
@@ -114,7 +120,7 @@ public class AppView extends JFrame {
      * @param category - to be removed.
      */
     public void removeChosenCategoryFromComboBox(String category) {
-        comboBoxCategories.removeItem(comboBoxCategories.getSelectedItem());
+        comboBoxCategoriesAddCostPanel.removeItem(comboBoxCategoriesAddCostPanel.getSelectedItem());
     }
 
     /**
@@ -123,7 +129,30 @@ public class AppView extends JFrame {
      * @param category - the chosen category.
      */
     public void addCategoryToComboBox(String category) {
-        comboBoxCategories.addItem(category);
+        comboBoxCategoriesAddCostPanel.addItem(category);
+        comboBoxCategoriesRemoveCategoryPanel.addItem(category);
+        comboBoxCategoriesAllExpensesPanel.addItem(category);
+    }
+
+    /**
+     * Updating the category combo boxes by deleting the given category.
+     * @param categoryToRemove - the category that's going to be deleted.
+     */
+    public void updateCategoriesComboBoxes(String categoryToRemove) {
+        comboBoxCategoriesAllExpensesPanel.removeItem(categoryToRemove);
+        comboBoxCategoriesRemoveCategoryPanel.removeItem(categoryToRemove);
+        comboBoxCategoriesAddCostPanel.removeItem(categoryToRemove);
+    }
+
+    /**
+     * This method is responsible for updating the combobox by removing a cost id that returned
+     * from the costIDToRemove list.
+     * @param costIDToRemove - list that have the costsID that must be removed from the comboBoxCostID.
+     */
+    public void updateCostIDComboBox(List<Integer> costIDToRemove) {
+        for (Integer costID: costIDToRemove) {
+            comboBoxCostID.removeItem(costID);
+        }
     }
 
     /**
@@ -153,7 +182,7 @@ public class AppView extends JFrame {
     public void setTheCategoriesToCategoriesComboBox(List<String> listOfCategories) {
         //insert categories to the combo box
 //        listOfCategories.add("all");
-        insertCategoriesToComboBox(listOfCategories);
+        insertCategoriesToComboBoxes(listOfCategories);
     }
 
     /**
@@ -245,24 +274,26 @@ public class AppView extends JFrame {
     /**
      * First we clear all the items in the combo box, and then we add each of the categories to the combo box.
      */
-    private void insertCategoriesToComboBox(List<String> listOfCategories) {
-        clearComboBoxesItems(comboBoxCategories);
+    private void insertCategoriesToComboBoxes(List<String> listOfCategories) {
+        clearComboBoxesItems(comboBoxCategoriesAddCostPanel);
+        clearComboBoxesItems(comboBoxCategoriesAllExpensesPanel);
+        clearComboBoxesItems(comboBoxCategoriesRemoveCategoryPanel);
+
+        comboBoxCategoriesAllExpensesPanel.addItem("all");
 
         for (String category : listOfCategories) {
-            comboBoxCategories.addItem(category);
+            comboBoxCategoriesAddCostPanel.addItem(category);
+            comboBoxCategoriesAllExpensesPanel.addItem(category);
+            comboBoxCategoriesRemoveCategoryPanel.addItem(category);
         }
-
-        comboBoxCategories.addItem("all");
     }
 
     /*** Setting the combo box. */
-    private void setComboBoxCategory() {
+    private void setComboBoxAttributes(JComboBox<String> comboBox) {
         ComponentUtils.setComponentsAttributes(
-                comboBoxCategories,
+                comboBox,
                 new Font("Narkisim", Font.BOLD, 30),
                 new Dimension(180, 35));
-
-
     }
 
     /**
@@ -272,14 +303,13 @@ public class AppView extends JFrame {
         if (comboBox.getItemCount() > 0) {
             comboBox.removeAllItems();
         }
-
     }
 
     /**
      * This method settings the south panel of the application and defined the relevant text.
      */
     private void setSouthPanel() {
-        panelSouthAppView.setBackground(new Color(190, 190, 230, 155));
+        panelSouthAppView.setBackground(new Color(190, 190, 230, 255));
         panelSouthAppView.setBounds(0, 900, 1400, 100);
 
         ComponentUtils.setComponentsAttributes(labelFeedbackMessage,
@@ -499,7 +529,7 @@ public class AppView extends JFrame {
                 panelNorthTitleCategorySelector.setBackground(new Color(207, 220, 218, 255));
                 this.add(panelNorthTitleCategorySelector, BorderLayout.NORTH);
                 panelCenterLabelAndComboBox.add(labelCategorySelector);
-                panelCenterLabelAndComboBox.add(comboBoxCategories);
+                panelCenterLabelAndComboBox.add(comboBoxCategoriesAllExpensesPanel);
                 this.add(panelCenterLabelAndComboBox, BorderLayout.CENTER);
                 panelSouthOfTheCategorySelectorPanel.add(buttonDisplayExpenses);
                 this.add(panelSouthOfTheCategorySelectorPanel, BorderLayout.SOUTH);
@@ -510,7 +540,7 @@ public class AppView extends JFrame {
              */
             private void setButtonDisplayListener() {
                 buttonDisplayExpenses.addActionListener(e ->
-                        appUtils.getExpensesByCategory(comboBoxCategories.getSelectedItem().toString()));
+                        appUtils.getExpensesByCategory(comboBoxCategoriesAllExpensesPanel.getSelectedItem().toString()));
             }
         }
     }
@@ -647,7 +677,6 @@ public class AppView extends JFrame {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         appUtils.validateAndSetNewCategory(textFieldAddCategory.getText());
-
                         textFieldAddCategory.setText("");
                     }
                 });
@@ -716,7 +745,7 @@ public class AppView extends JFrame {
                 this.add(panelNorthRemoveCategory, BorderLayout.NORTH);
                 panelCenterRemoveCategory.setLayout(flowLayoutRemoveCategory);
                 panelCenterRemoveCategory.add(labelRemoveCategory);
-                panelCenterRemoveCategory.add(comboBoxCategories);
+                panelCenterRemoveCategory.add(comboBoxCategoriesRemoveCategoryPanel);
                 this.add(panelCenterRemoveCategory, BorderLayout.CENTER);
                 panelSouthRemoveCategory.add(buttonRemoveCategory);
                 this.add(panelSouthRemoveCategory, BorderLayout.SOUTH);
@@ -726,7 +755,9 @@ public class AppView extends JFrame {
                 buttonRemoveCategory.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        appUtils.removeCategory(comboBoxCategories.getSelectedItem().toString());
+                        String categoryToRemove = comboBoxCategoriesRemoveCategoryPanel.getSelectedItem().toString();
+                        appUtils.removeCategory(categoryToRemove);
+                        appUtils.removeCostsThatReferToChosenCategory(categoryToRemove);
                     }
                 });
             }
@@ -749,10 +780,9 @@ public class AppView extends JFrame {
             private JTextField textFieldSumCost;
             private JTextField textFieldCurrency;
             private JTextArea textAreaDescription;
-
             private JDateChooser dateChooser;
 
-            //            private JComboBox<> comboBoxCategory;
+//            private JComboBox<> comboBoxCategory;
 //            private JComboBox<Currency> comboBoxCurrency;
             private JButton buttonClearInputsInAddCostPanel;
             private JButton buttonAddNewCost;
@@ -888,7 +918,7 @@ public class AppView extends JFrame {
                 this.add(panelNorthAddCost, BorderLayout.NORTH);
                 panelCenterAddCost.setLayout(gridLayoutCenterPanelAddCost);
                 panelCenterAddCost.add(labelCategoryInAddCostPanel);
-                panelCenterAddCost.add(comboBoxCategories);
+                panelCenterAddCost.add(comboBoxCategoriesAddCostPanel);
                 panelCenterAddCost.add(labelSumCost);
                 panelCenterAddCost.add(textFieldSumCost);
                 panelCenterAddCost.add(labelCurrency);
@@ -938,7 +968,7 @@ public class AppView extends JFrame {
                 }
 
                 dateChooser.setDate(null);
-                comboBoxCategories.setSelectedIndex(0);
+                comboBoxCategoriesAddCostPanel.setSelectedIndex(0);
             }
 
             private void setButtonAddActionListener() {
@@ -952,7 +982,7 @@ public class AppView extends JFrame {
             }
 
             private void addNewCost() {
-                String categorySelected = comboBoxCategories.getSelectedItem().toString();
+                String categorySelected = comboBoxCategoriesAddCostPanel.getSelectedItem().toString();
                 String sumCost = textFieldSumCost.getText();
                 String currency = textFieldCurrency.getText();
                 String description = textAreaDescription.getText();
@@ -993,7 +1023,7 @@ public class AppView extends JFrame {
             private void startRemoveCost() {
                 setLabelTitleRemoveCostAttributes();
                 setLabelCostIDAttributes();
-                setComboboxCostAttributes();
+                setComboboxCostIDAttributes();
                 setButtonRemoveCostAttributes();
                 locateComponentsOnRemoveCostPanel();
                 setButtonRemoveCostActionListener();
@@ -1011,7 +1041,7 @@ public class AppView extends JFrame {
                         new Dimension(120, 30));
             }
 
-            private void setComboboxCostAttributes() {
+            private void setComboboxCostIDAttributes() {
                 ComponentUtils.setComponentsAttributes(
                         comboBoxCostID,
                         new Font("Narkisim", Font.BOLD, 30),

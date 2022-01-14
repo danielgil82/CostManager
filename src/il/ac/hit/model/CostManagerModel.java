@@ -122,74 +122,34 @@ public class CostManagerModel implements Model {
             }
 
         } catch (SQLException exception) {
-
             throw new CostManagerException(HandlingMessage.SOMETHING_WENT_WRONG, exception);
         }
-
-//        try {
-//            connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-//            prepareStatement = connection.prepareStatement(removeExistingCategoryQuery);
-//            connection.setAutoCommit(false);
-//            prepareStatement.setString(1, categoryToDelete.getCategoryName());
-//            prepareStatement.setInt(2, categoryToDelete.getUserID());
-//            int numberOfRowsAffected = prepareStatement.executeUpdate();
-//            connection.commit();
-//            return numberOfRowsAffected;
-//        } catch (SQLException exception) {
-//            if (connection != null) {
-//                //  System.err.print("Transaction is being rolled back");
-//                try {
-//                    connection.rollback();
-//                    return -1;
-//                } catch (SQLException ex) {
-//                    throw new CostManagerException(HandlingMessage.PROBLEM_WITH_ROLLING_BACK, ex);
-//                }
-//            } else {
-//                throw new CostManagerException(HandlingMessage.PROBLEM_WITH_REMOVING_AN_EXISTING_CATEGORY
-//                        , exception);
-//            }
-//        } finally {
-//            try {
-//                connection.close();
-//            } catch (SQLException ex) {
-//                throw new CostManagerException(HandlingMessage.PROBLEM_WITH_CLOSING_THE_CONNECTION);
-//            }
-//        }
     }
 
-    private int removeCostsBySpecificCategoryAndBySpecificUser(Category expensesToDeleteByCategory) throws CostManagerException {
-        String removeExpensesQuery = "delete from costs where category = ? AND " + "user_id = ?";
-        Connection connection = null;
-        PreparedStatement prepareStatement = null;
-        //Creating a connection string
-        try {
-            connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-            prepareStatement = connection.prepareStatement(removeExpensesQuery);
+
+    /**
+     * This method responsible for removing costs that belong to a specific category.
+     * There is no need for checking the number of rows that was affected, because there might be 0 or
+     * more rows that were affected.
+     * @param category - the category which belong to some costs.
+     * @throws CostManagerException - the exception we defined to our application.
+     */
+    @Override
+    public void removeCostsBySpecificCategory(Category category) throws CostManagerException {
+        String removeExpensesQuery = "delete from costs where category = ? AND user_id = ?";
+
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+             PreparedStatement prepareStatement = connection.prepareStatement(removeExpensesQuery);) {
+
             connection.setAutoCommit(false);
-            prepareStatement.setString(1, expensesToDeleteByCategory.getCategoryName());
-            prepareStatement.setInt(2, expensesToDeleteByCategory.getUserID());
-            int numberOfRowsAffected = prepareStatement.executeUpdate();
+            prepareStatement.setString(1, category.getCategoryName());
+            prepareStatement.setInt(2, category.getUserID());
+            prepareStatement.executeUpdate();
             connection.commit();
-            return numberOfRowsAffected;
+
+
         } catch (SQLException exception) {
-            if (connection != null) {
-                //     System.err.print("Transaction is being rolled back");
-                try {
-                    connection.rollback();
-                    return -1;
-                } catch (SQLException ex) {
-                    throw new CostManagerException(HandlingMessage.PROBLEM_WITH_ROLLING_BACK, ex);
-                }
-            } else {
-                throw new CostManagerException(HandlingMessage.PROBLEM_WITH_REMOVING_AN_EXISTING_CATEGORY
-                        , exception);
-            }
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException ex) {
-                throw new CostManagerException(HandlingMessage.PROBLEM_WITH_CLOSING_THE_CONNECTION);
-            }
+            throw new CostManagerException(HandlingMessage.SOMETHING_WENT_WRONG, exception);
         }
     }
 
@@ -263,7 +223,6 @@ public class CostManagerModel implements Model {
     }
 
     /**
-     *
      * @param costID
      * @throws CostManagerException
      */
@@ -288,7 +247,6 @@ public class CostManagerModel implements Model {
     }
 
     /**
-     *
      * @param userID
      * @param startDate
      * @param endDate

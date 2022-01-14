@@ -26,4 +26,6 @@ public interface View
     void addNewCategoryToComboBox(String category);
     void removeCategoryFromComboBox(String category);
     void setCostsID(List<Integer> costsID);
+    void updateCategoriesComboBoxes(String category);
+    void removeCostsFromCostIDComboBox(List<Integer> costsIDToRemove);
 }
