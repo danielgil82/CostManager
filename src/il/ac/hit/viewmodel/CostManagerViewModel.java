@@ -29,7 +29,7 @@ public class CostManagerViewModel implements ViewModel {
     private List<String> categoriesOfTheUser = new ArrayList<>();
     private List<Expense> expensesListByCategory = new ArrayList<>();
     private List<Expense> allCosts = new ArrayList<>();
-
+    private List<Expense> costsBetweenChosenDates = new ArrayList<>();
     /**
      * Ctor of the CostManagerViewModel, it constructs the number of the thread
      * that are going to be in the thread pool.
@@ -180,6 +180,44 @@ public class CostManagerViewModel implements ViewModel {
         });
     }
 
+
+    /**
+     * This method is responsible for getting back to the view all the costs that we're purchased between the given
+     * dates.
+     * @param startDate - start date.
+     * @param endDate - end date.
+     */
+    @Override
+    public void getCostsBetweenGivenDates(Date startDate, Date endDate) {
+        service.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //Validation that the dates aren't null
+                    if (startDate != null && endDate != null) {
+
+                        costsBetweenChosenDates = model.getReportByDates(user.getUserID(),
+                                new java.sql.Date(startDate.getTime()), new java.sql.Date(endDate.getTime()));
+
+                        SwingUtilities.invokeLater(() -> {
+                            view.displayPieChart(costsBetweenChosenDates);
+                        });
+
+
+                    } else {
+                        SwingUtilities.invokeLater(() -> {
+                            view.displayMessageForAppSection(new Message(HandlingMessage.EMPTY_FIELDS.toString()));
+                        });
+                    }
+                } catch (CostManagerException ex) {
+                    //lambda expression because Runnable is a functional interface
+                    SwingUtilities.invokeLater(() -> {
+                        view.displayMessageForAppSection(new Message(ex.getMessage()));
+                    });
+                }
+            }
+        });
+    }
 
     /**
      * @param categorySelected

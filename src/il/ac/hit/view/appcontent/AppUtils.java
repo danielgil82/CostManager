@@ -13,4 +13,5 @@ public interface AppUtils {
     void removeCost(int categoryID);
     void getCostsID();
     void removeCostsThatReferToChosenCategory(String category);
+    void getCostsBetweenChosenDates(Date startDate, Date endDate);
 }

@@ -11,6 +11,7 @@ import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +23,6 @@ public class AppView extends JFrame {
     /**
      * List of all categories that belongs to a specific user.
      */
-    //private final List<String> categoriesListBySpecificUser = new ArrayList<>();
     private boolean isCategoryInputValid;
     private AppUtils appUtils;
     /*** Swing components. */
@@ -50,8 +50,7 @@ public class AppView extends JFrame {
 
     private ExpensesByCategory expensesByCategory;
     private CategoryAndExpenseOperations categoryAndExpenseOperations;
-
-//    private ReportPanel reportPanel;
+    private Report report;
 //    private CurrenciesPanel currenciesPanel;
 
 
@@ -75,6 +74,7 @@ public class AppView extends JFrame {
         expensesByCategory = new ExpensesByCategory();
         categoryAndExpenseOperations = new CategoryAndExpenseOperations();
         categoryAndExpenseOperations.setBounds(0, 0, 1300, 700);
+        report = new Report();
         buttonExpenses = new JButton("Expenses");
         buttonOperations = new JButton("Operations");
         buttonReport = new JButton("Report");
@@ -112,6 +112,10 @@ public class AppView extends JFrame {
         appUtils.getCategoriesThatBelongToSpecificUser();
 
         setSouthPanel();
+    }
+
+    public void initPieChart(List<Expense> expenses) {
+        report.setPanelChartReport(expenses);
     }
 
     /**
@@ -1084,5 +1088,158 @@ public class AppView extends JFrame {
                 });
             }
         }
+    }
+
+    private class Report extends JPanel {
+        /**
+         * Swing components
+         */
+        private GridLayout gridLayoutReportPanel;
+        private GridLayout gridLayoutCenterDatesPanel;
+        private JPanel panelSelectDatesReport;
+        private JPanel panelChartReport;
+        private JPanel panelNorthDatesReport;
+        private JPanel panelCenterDatesReport;
+        private JPanel panelSouthDatesReport;
+        private JLabel labelTitleSelectDates;
+        private JLabel labelStartDate;
+        private JLabel labelEndDate;
+        private JDateChooser dateChooserStart;
+        private JDateChooser dateChooserEnd;
+        private JButton buttonDisplayPieChart;
+
+        private Report() {
+            initReport();
+            startReport();
+        }
+
+        private void initReport() {
+            gridLayoutReportPanel = new GridLayout(2, 1, 0, 40);
+            gridLayoutCenterDatesPanel = new GridLayout(2, 2, 20, 20);
+            panelSelectDatesReport = new JPanel();
+            panelChartReport = new JPanel();
+            panelNorthDatesReport = new JPanel();
+            panelCenterDatesReport = new JPanel();
+            panelSouthDatesReport = new JPanel();
+            labelTitleSelectDates = new JLabel("Select Dates");
+            labelStartDate = new JLabel("Start Date:");
+            labelEndDate = new JLabel("End Date");
+            dateChooserStart = new JDateChooser();
+            dateChooserEnd = new JDateChooser();
+            buttonDisplayPieChart = new JButton("Display");
+        }
+
+        private void startReport() {
+            setPanelDatesReport();
+            locateComponentsOnReportPanel();
+            buttonDisplayPieChartSetOnClickListener();
+
+        }
+
+
+        private void setPanelDatesReport() {
+            setTitleSelectDatesAttributes();
+            setLabelStartAndEndDateAttributes();
+            setDateChooserStartAndEndDateAttributes();
+            setButtonDisplayChartAttributes();
+
+        }
+
+
+
+        private void setTitleSelectDatesAttributes() {
+            ComponentUtils.setComponentsAttributes(labelTitleSelectDates,
+                    new Font("Narkisim", Font.BOLD, 30),
+                    new Dimension(200, 30));
+        }
+
+
+        private void setLabelStartAndEndDateAttributes() {
+            ComponentUtils.setComponentsAttributes(labelStartDate,
+                    new Font("Narkisim", Font.BOLD, 30),
+                    new Dimension(100, 15));
+
+            ComponentUtils.setComponentsAttributes(labelEndDate,
+                    new Font("Narkisim", Font.BOLD, 20),
+                    new Dimension(100, 15));
+        }
+
+        private void setDateChooserStartAndEndDateAttributes() {
+            dateChooserStart.setDateFormatString("yyyy-MM-dd");
+            dateChooserEnd.setDateFormatString("yyyy-MM-dd");
+
+            ComponentUtils.setComponentsAttributes(dateChooserStart,
+                    new Font("Tahoma", Font.PLAIN, 20),
+                    new Dimension(100, 10));
+
+            ComponentUtils.setComponentsAttributes(dateChooserEnd,
+                    new Font("Tahoma", Font.PLAIN, 20),
+                    new Dimension(100, 10));
+        }
+
+        private void setButtonDisplayChartAttributes() {
+            ComponentUtils.setComponentsAttributes(buttonDisplayPieChart,
+                    new Font("Narkisim", Font.BOLD, 20),
+                    new Dimension(120, 40));
+        }
+
+        private void locateComponentsOnReportPanel() {
+            this.setLayout(gridLayoutReportPanel);
+            BorderLayout borderLayoutNorthReportPanel = new BorderLayout();
+            panelSelectDatesReport.setLayout(borderLayoutNorthReportPanel);
+            panelSelectDatesReport.setPreferredSize(new Dimension(450,400));
+            panelSelectDatesReport.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+            panelNorthDatesReport.add(labelTitleSelectDates);
+            panelSelectDatesReport.add(panelNorthDatesReport, BorderLayout.NORTH);
+            panelCenterDatesReport.setLayout(gridLayoutCenterDatesPanel);
+            panelCenterDatesReport.add(labelStartDate);
+            panelCenterDatesReport.add(dateChooserStart);
+            panelCenterDatesReport.add(labelEndDate);
+            panelCenterDatesReport.add(dateChooserEnd);
+            panelSelectDatesReport.add(panelCenterDatesReport, BorderLayout.CENTER);
+            panelSouthDatesReport.add(buttonDisplayPieChart);
+            panelSelectDatesReport.add(panelSouthDatesReport, BorderLayout.SOUTH);
+
+        }
+
+        private void buttonDisplayPieChartSetOnClickListener() {
+            buttonDisplayPieChart.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    Date firstDate = dateChooserStart.getDate();
+                    Date secondDate = dateChooserEnd.getDate();
+
+                    appUtils.getCostsBetweenChosenDates(firstDate, secondDate);
+                }
+            });
+        }
+
+        private void setPanelChartReport(List<Expense> costs) {
+            // initialize the dataset and add each and every given cost
+//            DefaultPieDataset pieDataset = new DefaultPieDataset();
+//            for(Cost cost : costs){
+//                pieDataset.setValue(cost.getDescription(),cost.getSum());
+//            }
+//            // create the chart with desired attributes and link the early created dataset
+//            JFreeChart chart = ChartFactory.createPieChart3D("Costs Pie Chart", pieDataset, true, true, false);
+//            PiePlot plot = (PiePlot) chart.getPlot();
+//            plot.setLabelFont(new Font("Narkisim", Font.BOLD, 16));
+//            PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator("{0} : {1}",
+//                    new DecimalFormat("0"),
+//                    new DecimalFormat("0%"));
+//            plot.setLabelGenerator(gen);
+//            ChartPanel chartPanel = new ChartPanel(chart);
+//            if(SwingUtilities.isEventDispatchThread()){
+//                FamillionView.this.applicationFrame.addNewCategory(chartPanel);
+//            }
+//            else{
+//                SwingUtilities.invokeLater(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        FamillionView.this.applicationFrame.addNewCategory(chartPanel);
+//                    }
+//                });
+//            }
+            }
     }
 }

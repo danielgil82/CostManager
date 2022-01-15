@@ -318,4 +318,24 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     public void updateCategoriesComboBoxes(String category) {
         appView.updateCategoriesComboBoxes(category);
     }
+
+    /**
+     * This method is responsible for calling another method in viewModel that has to bring back from the model
+     * all the costs that were made between the given date.
+     * @param startDate - start date.
+     * @param endDate - end date.
+     */
+    @Override
+    public void getCostsBetweenChosenDates(Date startDate, Date endDate) {
+        viewModel.getCostsBetweenGivenDates(startDate, endDate);
+    }
+
+    /**
+     * This method gets back a list of expenses between 2 chosen dates.
+     * @param costsBetweenGivenDates - list of expense between 2 dates.
+     */
+    @Override
+    public void displayPieChart(List<Expense> costsBetweenGivenDates) {
+        appView.initPieChart(costsBetweenGivenDates);
+    }
 }

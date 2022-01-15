@@ -28,4 +28,5 @@ public interface ViewModel
     void removeCost(int costID);
     void getCostsID();
     void removeCostsThatReferToSpecificCategory(String category);
+    void getCostsBetweenGivenDates(Date startDate, Date endDate);
 }

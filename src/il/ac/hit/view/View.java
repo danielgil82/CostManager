@@ -28,4 +28,5 @@ public interface View
     void setCostsID(List<Integer> costsID);
     void updateCategoriesComboBoxes(String category);
     void removeCostsFromCostIDComboBox(List<Integer> costsIDToRemove);
+    void displayPieChart(List<Expense> costsBetweenGivenDates);
 }

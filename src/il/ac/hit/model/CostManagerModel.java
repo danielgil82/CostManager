@@ -254,16 +254,19 @@ public class CostManagerModel implements Model {
      * @throws CostManagerException
      */
     @Override
-    public Collection<Expense> getReportByDates(int userID, Date startDate, Date endDate) throws CostManagerException {
-        String getReportByDatesQuery = "select * from costs WHERE userID = ? AND" +
-                " date BETWEEN ? AND ? ";
+    public List<Expense> getReportByDates(int userID, Date startDate, Date endDate) throws CostManagerException {
+
+        String getReportByDatesQuery = "select * from costs WHERE userID = ? AND date BETWEEN ? AND ? ";
+
         try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
              PreparedStatement prepareStatement = connection.prepareStatement(getReportByDatesQuery)) {
 
             prepareStatement.setInt(1, userID);
             prepareStatement.setDate(2, startDate);
             prepareStatement.setDate(3, endDate);
+
             ResultSet resultSet = prepareStatement.executeQuery();
+
             List<Expense> costExpensesList = new LinkedList<>();
 
             while (resultSet.next()) {
