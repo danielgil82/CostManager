@@ -193,10 +193,10 @@ public class CostManagerViewModel implements ViewModel {
         service.submit(new Runnable() {
             @Override
             public void run() {
-                try {
-                    //Validation that the dates aren't null
-                    if (startDate != null && endDate != null) {
 
+                //Validation that the dates aren't null
+                if (startDate != null && endDate != null) {
+                    try {
                         costsBetweenChosenDates = model.getReportByDates(user.getUserID(),
                                 new java.sql.Date(startDate.getTime()), new java.sql.Date(endDate.getTime()));
 
@@ -207,16 +207,16 @@ public class CostManagerViewModel implements ViewModel {
                         });
 
 
-                    } else {
+                    } catch (CostManagerException ex) {
+                        //lambda expression because Runnable is a functional interface
+                        SwingUtilities.invokeLater(() -> {
+                            view.displayMessageForAppSection(new Message(ex.getMessage()));
+                        });
+                    }
+                } else {
                         SwingUtilities.invokeLater(() -> {
                             view.displayMessageForAppSection(new Message(HandlingMessage.EMPTY_FIELDS.toString()));
                         });
-                    }
-                } catch (CostManagerException ex) {
-                    //lambda expression because Runnable is a functional interface
-                    SwingUtilities.invokeLater(() -> {
-                        view.displayMessageForAppSection(new Message(ex.getMessage()));
-                    });
                 }
             }
         });
@@ -226,7 +226,7 @@ public class CostManagerViewModel implements ViewModel {
      * Setting the hash table with a category ,and it's total sum of costs.
      */
     private void setCostsByCategory() {
-        for (Expense expense : expensesListByCategory) {
+        for (Expense expense : costsBetweenChosenDates) {
             String category = expense.getCategory();
             Float costSum = expense.getCostSum();
 

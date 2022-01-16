@@ -25,7 +25,7 @@ public class Expense {
      * @param purchaseDate - date of the expense.
      * @param userID - the user that made the purchase.
      */
-    public Expense(String category, int costSum,
+    public Expense(String category, float costSum,
                    String currency, String descriptionOfExpense,
                    Date purchaseDate, int userID) {
         setCategory(category);
@@ -48,7 +48,7 @@ public class Expense {
      * @param userID - the user that made the purchase.
      */
     public Expense(int expenseID, String category,
-                   int costSum, String currency,
+                   float costSum, String currency,
                    String descriptionOfExpense,
                    Date purchaseDate, int userID) {
         this(category, costSum, currency, descriptionOfExpense, purchaseDate, userID);
@@ -97,7 +97,7 @@ public class Expense {
         this.category = category;
     }
 
-    public void setCostSum(int cost_sum) {
+    public void setCostSum(float cost_sum) {
         this.costSum = cost_sum;
     }
 

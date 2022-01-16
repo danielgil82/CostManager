@@ -11,6 +11,7 @@ import org.jfree.chart.labels.PieSectionLabelGenerator;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.util.Rotation;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -47,6 +48,7 @@ public class AppView extends JFrame {
     private JPanel panelReport;
     private JPanel panelCurrencies;
     private JPanel panelSouthAppView;
+    private JPanel panelChartReport;
     private JLayeredPane layeredPaneCenterAppView;
     private JComboBox<String> comboBoxCategoriesAddCostPanel;
     private JComboBox<String> comboBoxCategoriesAllExpensesPanel;
@@ -54,7 +56,8 @@ public class AppView extends JFrame {
     private JComboBox<Integer> comboBoxCostID;
     private FlowLayout panelNorthFlowLayout;
     private BorderLayout borderLayoutPanelContent;
-
+    private DefaultPieDataset pieDataset = new DefaultPieDataset();
+    private JFreeChart chart;
     private ExpensesByCategory expensesByCategory;
     private CategoryAndExpenseOperations categoryAndExpenseOperations;
     private Report report;
@@ -81,7 +84,7 @@ public class AppView extends JFrame {
         expensesByCategory = new ExpensesByCategory();
         categoryAndExpenseOperations = new CategoryAndExpenseOperations();
         categoryAndExpenseOperations.setBounds(0, 0, 1300, 700);
-        report = new Report();
+
         buttonExpenses = new JButton("Expenses");
         buttonOperations = new JButton("Operations");
         buttonReport = new JButton("Report");
@@ -97,8 +100,10 @@ public class AppView extends JFrame {
         panelReport = new JPanel();
         panelCurrencies = new JPanel();
         panelSouthAppView = new JPanel();
+        panelChartReport = new JPanel();
         layeredPaneCenterAppView = new JLayeredPane();
         panelNorthFlowLayout = new FlowLayout(0, 25, 0);
+        report = new Report();
     }
 
 
@@ -122,7 +127,45 @@ public class AppView extends JFrame {
     }
 
     public void initPieChart(Hashtable<String,Float> expenses) {
-        report.setPanelChartReport(expenses);
+       // report.setPanelChartReport(expenses);
+        panelChartReport.removeAll();
+        if (pieDataset != null) {
+            pieDataset = null;
+
+        }
+        pieDataset = new DefaultPieDataset();
+        if (chart != null) {
+            chart = null;
+
+        }
+        chart = ChartFactory.createPieChart3D("Report By Category", pieDataset, true, true, false);
+
+        Set<String> setOfKeys = expenses.keySet();
+
+        // Iterating through the Hashtable
+        // object using for-Each loop
+        for (String key : setOfKeys) {
+            pieDataset.setValue(key, expenses.get(key));
+        }
+
+        PiePlot plot = (PiePlot) chart.getPlot();
+
+        plot.setDirection(Rotation.CLOCKWISE);
+        plot.setForegroundAlpha(0.5f);
+
+        plot.setLabelFont(new Font("Narkisim", Font.BOLD, 16));
+        PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator("{0} : {1}",
+                new DecimalFormat("0"),
+                new DecimalFormat("0%"));
+        plot.setLabelGenerator(gen);
+        ChartPanel chartPanel = new ChartPanel(chart);
+
+
+        panelChartReport.add(chartPanel);
+        panelChartReport.updateUI();
+       // report.getPanelChart().add(chartPanel);
+       // panelChartReport.add(chartPanel);
+
     }
 
     /**
@@ -264,7 +307,7 @@ public class AppView extends JFrame {
         layeredPaneCenterAppView.setLayout(new CardLayout(0, 0));
         setPanelAllExpensesPartOfTheLayeredPane();
         setPanelOperationsPartOfTheLayeredPane();
-        //    setPanelOperationsPartOfTheLayeredPane();
+        setPanelReportPartOfTheLayeredPane();
         panelAppContent.add(layeredPaneCenterAppView, BorderLayout.CENTER);
     }
 
@@ -282,6 +325,12 @@ public class AppView extends JFrame {
         panelOperations.setBackground(new Color(230, 230, 230));
         panelOperations.add(categoryAndExpenseOperations);
         layeredPaneCenterAppView.add(panelOperations);
+    }
+
+    private void setPanelReportPartOfTheLayeredPane(){
+        panelReport.setBackground(new Color(230, 230, 230));
+        panelReport.add(report);
+        layeredPaneCenterAppView.add(panelReport);
     }
 
     /**
@@ -361,6 +410,7 @@ public class AppView extends JFrame {
 
         //different action listener for the buttonLogout.
         buttonLogout.addActionListener(e -> {
+            panelChartReport.removeAll();
             appUtils.resetUser();
             appUtils.changeFrameFromAppViewToLoginView();
         });
@@ -1106,7 +1156,6 @@ public class AppView extends JFrame {
         private GridLayout gridLayoutReportPanel;
         private GridLayout gridLayoutCenterDatesPanel;
         private JPanel panelSelectDatesReport;
-        private JPanel panelChartReport;
         private JPanel panelNorthDatesReport;
         private JPanel panelCenterDatesReport;
         private JPanel panelSouthDatesReport;
@@ -1126,7 +1175,6 @@ public class AppView extends JFrame {
             gridLayoutReportPanel = new GridLayout(2, 1, 0, 40);
             gridLayoutCenterDatesPanel = new GridLayout(2, 2, 20, 20);
             panelSelectDatesReport = new JPanel();
-            panelChartReport = new JPanel();
             panelNorthDatesReport = new JPanel();
             panelCenterDatesReport = new JPanel();
             panelSouthDatesReport = new JPanel();
@@ -1150,9 +1198,7 @@ public class AppView extends JFrame {
             setLabelStartAndEndDateAttributes();
             setDateChooserStartAndEndDateAttributes();
             setButtonDisplayChartAttributes();
-
         }
-
 
         private void setTitleSelectDatesAttributes() {
             ComponentUtils.setComponentsAttributes(labelTitleSelectDates,
@@ -1163,11 +1209,11 @@ public class AppView extends JFrame {
 
         private void setLabelStartAndEndDateAttributes() {
             ComponentUtils.setComponentsAttributes(labelStartDate,
-                    new Font("Narkisim", Font.BOLD, 30),
+                    new Font("Narkisim", Font.BOLD, 25),
                     new Dimension(100, 15));
 
             ComponentUtils.setComponentsAttributes(labelEndDate,
-                    new Font("Narkisim", Font.BOLD, 20),
+                    new Font("Narkisim", Font.BOLD, 25),
                     new Dimension(100, 15));
         }
 
@@ -1187,14 +1233,14 @@ public class AppView extends JFrame {
         private void setButtonDisplayChartAttributes() {
             ComponentUtils.setComponentsAttributes(buttonDisplayPieChart,
                     new Font("Narkisim", Font.BOLD, 20),
-                    new Dimension(120, 40));
+                    new Dimension(120, 30));
         }
 
         private void locateComponentsOnReportPanel() {
             this.setLayout(gridLayoutReportPanel);
             BorderLayout borderLayoutNorthReportPanel = new BorderLayout();
             panelSelectDatesReport.setLayout(borderLayoutNorthReportPanel);
-            panelSelectDatesReport.setPreferredSize(new Dimension(450, 300));
+            panelSelectDatesReport.setPreferredSize(new Dimension(550, 300));
             panelSelectDatesReport.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
             panelNorthDatesReport.add(labelTitleSelectDates);
             panelSelectDatesReport.add(panelNorthDatesReport, BorderLayout.NORTH);
@@ -1207,7 +1253,7 @@ public class AppView extends JFrame {
             panelSouthDatesReport.add(buttonDisplayPieChart);
             panelSelectDatesReport.add(panelSouthDatesReport, BorderLayout.SOUTH);
             this.add(panelSelectDatesReport);
-            panelChartReport.setPreferredSize(new Dimension(450, 350));
+            panelChartReport.setPreferredSize(new Dimension(650, 400));
             this.add(panelChartReport);
         }
 
@@ -1221,33 +1267,6 @@ public class AppView extends JFrame {
                     appUtils.getCostsBetweenChosenDates(firstDate, secondDate);
                 }
             });
-        }
-
-        /**
-         *
-         * @param costs - Hashtable that contains categories and their expenses.
-         */
-        private void setPanelChartReport(Hashtable<String,Float> costs) {
-
-            DefaultPieDataset pieDataset = new DefaultPieDataset();
-            Set<String> setOfKeys = costs.keySet();
-
-            // Iterating through the Hashtable
-            // object using for-Each loop
-            for (String key : setOfKeys) {
-                pieDataset.setValue(key, costs.get(key));
-            }
-
-            JFreeChart chart = ChartFactory.createPieChart3D("Report By Category", pieDataset, true, true, false);
-            PiePlot plot = (PiePlot) chart.getPlot();
-            plot.setLabelFont(new Font("Narkisim", Font.BOLD, 16));
-            PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator("{0} : {1}",
-                    new DecimalFormat("0"),
-                    new DecimalFormat("0%"));
-            plot.setLabelGenerator(gen);
-            ChartPanel chartPanel = new ChartPanel(chart);
-
-            panelChartReport.add(chartPanel);
         }
     }
 }
