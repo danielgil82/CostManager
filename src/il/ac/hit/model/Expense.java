@@ -8,7 +8,7 @@ import java.sql.Date;
 public class Expense {
     /** Data members that represent the costs' table attributes. */
     private int expenseID;
-    private int costSum;
+    private float costSum;
     private String category;
     private String currency;
     private String expenseDescription;
@@ -68,7 +68,7 @@ public class Expense {
         return category;
     }
 
-    public int getCostSum() {
+    public float getCostSum() {
         return costSum;
     }
 

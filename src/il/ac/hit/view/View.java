@@ -4,6 +4,7 @@ import il.ac.hit.auxiliary.Message;
 import il.ac.hit.model.Expense;
 import il.ac.hit.viewmodel.ViewModel;
 
+import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -28,5 +29,5 @@ public interface View
     void setCostsID(List<Integer> costsID);
     void updateCategoriesComboBoxes(String category);
     void removeCostsFromCostIDComboBox(List<Integer> costsIDToRemove);
-    void displayPieChart(List<Expense> costsBetweenGivenDates);
+    void displayPieChart(Hashtable<String,Float> expensesBetweenGivenDates);
 }

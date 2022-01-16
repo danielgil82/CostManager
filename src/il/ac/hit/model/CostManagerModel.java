@@ -164,7 +164,7 @@ public class CostManagerModel implements Model {
 
             connection.setAutoCommit(false);
             prepareStatement.setString(1, cost.getCategory());
-            prepareStatement.setInt(2, cost.getCostSum());
+            prepareStatement.setFloat(2, cost.getCostSum());
             prepareStatement.setString(3, cost.getCurrency());
             prepareStatement.setString(4, cost.getExpenseDescription());
             prepareStatement.setDate(5, cost.getPurchaseDate());

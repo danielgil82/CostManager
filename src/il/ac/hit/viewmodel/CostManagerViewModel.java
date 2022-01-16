@@ -1,6 +1,5 @@
 package il.ac.hit.viewmodel;
 
-import com.sun.org.apache.xpath.internal.operations.Equals;
 import il.ac.hit.auxiliary.HandlingMessage;
 import il.ac.hit.model.*;
 import il.ac.hit.auxiliary.Message;
@@ -9,6 +8,7 @@ import il.ac.hit.view.View;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,11 +25,12 @@ public class CostManagerViewModel implements ViewModel {
     private View view;
     private Model model;
     private User user;
-    private ExecutorService service;
+    private final ExecutorService service;
     private List<String> categoriesOfTheUser = new ArrayList<>();
     private List<Expense> expensesListByCategory = new ArrayList<>();
     private List<Expense> allCosts = new ArrayList<>();
     private List<Expense> costsBetweenChosenDates = new ArrayList<>();
+    private Hashtable<String,Float> costsByCategoryHashTable = new Hashtable<>();
     /**
      * Ctor of the CostManagerViewModel, it constructs the number of the thread
      * that are going to be in the thread pool.
@@ -199,8 +200,10 @@ public class CostManagerViewModel implements ViewModel {
                         costsBetweenChosenDates = model.getReportByDates(user.getUserID(),
                                 new java.sql.Date(startDate.getTime()), new java.sql.Date(endDate.getTime()));
 
+                        setCostsByCategory();
+
                         SwingUtilities.invokeLater(() -> {
-                            view.displayPieChart(costsBetweenChosenDates);
+                            view.displayPieChart(costsByCategoryHashTable);
                         });
 
 
@@ -218,6 +221,24 @@ public class CostManagerViewModel implements ViewModel {
             }
         });
     }
+
+    /**
+     * Setting the hash table with a category ,and it's total sum of costs.
+     */
+    private void setCostsByCategory() {
+        for (Expense expense : expensesListByCategory) {
+            String category = expense.getCategory();
+            Float costSum = expense.getCostSum();
+
+            if(costsByCategoryHashTable.containsKey(category)){
+                float updatedSum  = costsByCategoryHashTable.get(category) + costSum;
+                costsByCategoryHashTable.put(category, updatedSum);
+            }else{
+                costsByCategoryHashTable.put(category, costSum);
+            }
+        }
+    }
+
 
     /**
      * @param categorySelected

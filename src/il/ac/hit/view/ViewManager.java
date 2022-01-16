@@ -10,6 +10,7 @@ import il.ac.hit.view.login.LoginView;
 import il.ac.hit.viewmodel.ViewModel;
 
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -332,10 +333,10 @@ public class ViewManager implements View , LoginUtils , AppUtils {
 
     /**
      * This method gets back a list of expenses between 2 chosen dates.
-     * @param costsBetweenGivenDates - list of expense between 2 dates.
+     * @param expensesBetweenGivenDates - list of expense between 2 dates.
      */
     @Override
-    public void displayPieChart(List<Expense> costsBetweenGivenDates) {
-        appView.initPieChart(costsBetweenGivenDates);
+    public void displayPieChart(Hashtable<String,Float> expensesBetweenGivenDates) {
+        appView.initPieChart(expensesBetweenGivenDates);
     }
 }

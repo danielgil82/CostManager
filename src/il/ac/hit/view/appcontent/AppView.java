@@ -4,6 +4,13 @@ import com.toedter.calendar.JDateChooser;
 import il.ac.hit.auxiliary.HandlingMessage;
 import il.ac.hit.model.Expense;
 import il.ac.hit.view.ComponentUtils;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.PieSectionLabelGenerator;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.general.DefaultPieDataset;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -12,7 +19,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -114,7 +121,7 @@ public class AppView extends JFrame {
         setSouthPanel();
     }
 
-    public void initPieChart(List<Expense> expenses) {
+    public void initPieChart(Hashtable<String,Float> expenses) {
         report.setPanelChartReport(expenses);
     }
 
@@ -140,6 +147,7 @@ public class AppView extends JFrame {
 
     /**
      * Updating the category combo boxes by deleting the given category.
+     *
      * @param categoryToRemove - the category that's going to be deleted.
      */
     public void updateCategoriesComboBoxes(String categoryToRemove) {
@@ -151,10 +159,11 @@ public class AppView extends JFrame {
     /**
      * This method is responsible for updating the combobox by removing a cost id that returned
      * from the costIDToRemove list.
+     *
      * @param costIDToRemove - list that have the costsID that must be removed from the comboBoxCostID.
      */
     public void updateCostIDComboBox(List<Integer> costIDToRemove) {
-        for (Integer costID: costIDToRemove) {
+        for (Integer costID : costIDToRemove) {
             comboBoxCostID.removeItem(costID);
         }
     }
@@ -663,7 +672,7 @@ public class AppView extends JFrame {
 
             private void locateComponentsOnAddCategoryPane() {
                 this.setLayout(new BorderLayout());
-                this.setPreferredSize(new Dimension(450,400));
+                this.setPreferredSize(new Dimension(450, 400));
                 panelNorthAddCategory.add(labelTitleAddCategory);
                 //panelNorthAddCategory.setBackground(new Color(207, 220, 218, 255));
                 this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
@@ -744,7 +753,7 @@ public class AppView extends JFrame {
             private void locateComponentsOnRemoveCategoryPane() {
                 this.setLayout(new BorderLayout());
                 panelNorthRemoveCategory.add(labelRemoveCategoryTitle);
-               // panelNorthRemoveCategory.setBackground(new Color(207, 220, 218, 255));
+                // panelNorthRemoveCategory.setBackground(new Color(207, 220, 218, 255));
                 this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
                 this.add(panelNorthRemoveCategory, BorderLayout.NORTH);
                 panelCenterRemoveCategory.setLayout(flowLayoutRemoveCategory);
@@ -786,7 +795,7 @@ public class AppView extends JFrame {
             private JTextArea textAreaDescription;
             private JDateChooser dateChooser;
 
-//            private JComboBox<> comboBoxCategory;
+            //            private JComboBox<> comboBoxCategory;
 //            private JComboBox<Currency> comboBoxCurrency;
             private JButton buttonClearInputsInAddCostPanel;
             private JButton buttonAddNewCost;
@@ -915,7 +924,7 @@ public class AppView extends JFrame {
 
             private void locateComponentsOnAddCostPanel() {
                 this.setLayout(new BorderLayout());
-                this.setPreferredSize(new Dimension(450,400));
+                this.setPreferredSize(new Dimension(450, 400));
 
                 panelNorthAddCost.add(labelAddCostTitle);
                 this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
@@ -1131,9 +1140,8 @@ public class AppView extends JFrame {
 
         private void startReport() {
             setPanelDatesReport();
-            locateComponentsOnReportPanel();
             buttonDisplayPieChartSetOnClickListener();
-
+            locateComponentsOnReportPanel();
         }
 
 
@@ -1144,7 +1152,6 @@ public class AppView extends JFrame {
             setButtonDisplayChartAttributes();
 
         }
-
 
 
         private void setTitleSelectDatesAttributes() {
@@ -1187,7 +1194,7 @@ public class AppView extends JFrame {
             this.setLayout(gridLayoutReportPanel);
             BorderLayout borderLayoutNorthReportPanel = new BorderLayout();
             panelSelectDatesReport.setLayout(borderLayoutNorthReportPanel);
-            panelSelectDatesReport.setPreferredSize(new Dimension(450,400));
+            panelSelectDatesReport.setPreferredSize(new Dimension(450, 300));
             panelSelectDatesReport.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
             panelNorthDatesReport.add(labelTitleSelectDates);
             panelSelectDatesReport.add(panelNorthDatesReport, BorderLayout.NORTH);
@@ -1199,7 +1206,9 @@ public class AppView extends JFrame {
             panelSelectDatesReport.add(panelCenterDatesReport, BorderLayout.CENTER);
             panelSouthDatesReport.add(buttonDisplayPieChart);
             panelSelectDatesReport.add(panelSouthDatesReport, BorderLayout.SOUTH);
-
+            this.add(panelSelectDatesReport);
+            panelChartReport.setPreferredSize(new Dimension(450, 350));
+            this.add(panelChartReport);
         }
 
         private void buttonDisplayPieChartSetOnClickListener() {
@@ -1214,32 +1223,31 @@ public class AppView extends JFrame {
             });
         }
 
-        private void setPanelChartReport(List<Expense> costs) {
-            // initialize the dataset and add each and every given cost
-//            DefaultPieDataset pieDataset = new DefaultPieDataset();
-//            for(Cost cost : costs){
-//                pieDataset.setValue(cost.getDescription(),cost.getSum());
-//            }
-//            // create the chart with desired attributes and link the early created dataset
-//            JFreeChart chart = ChartFactory.createPieChart3D("Costs Pie Chart", pieDataset, true, true, false);
-//            PiePlot plot = (PiePlot) chart.getPlot();
-//            plot.setLabelFont(new Font("Narkisim", Font.BOLD, 16));
-//            PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator("{0} : {1}",
-//                    new DecimalFormat("0"),
-//                    new DecimalFormat("0%"));
-//            plot.setLabelGenerator(gen);
-//            ChartPanel chartPanel = new ChartPanel(chart);
-//            if(SwingUtilities.isEventDispatchThread()){
-//                FamillionView.this.applicationFrame.addNewCategory(chartPanel);
-//            }
-//            else{
-//                SwingUtilities.invokeLater(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        FamillionView.this.applicationFrame.addNewCategory(chartPanel);
-//                    }
-//                });
-//            }
+        /**
+         *
+         * @param costs - Hashtable that contains categories and their expenses.
+         */
+        private void setPanelChartReport(Hashtable<String,Float> costs) {
+
+            DefaultPieDataset pieDataset = new DefaultPieDataset();
+            Set<String> setOfKeys = costs.keySet();
+
+            // Iterating through the Hashtable
+            // object using for-Each loop
+            for (String key : setOfKeys) {
+                pieDataset.setValue(key, costs.get(key));
             }
+
+            JFreeChart chart = ChartFactory.createPieChart3D("Report By Category", pieDataset, true, true, false);
+            PiePlot plot = (PiePlot) chart.getPlot();
+            plot.setLabelFont(new Font("Narkisim", Font.BOLD, 16));
+            PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator("{0} : {1}",
+                    new DecimalFormat("0"),
+                    new DecimalFormat("0%"));
+            plot.setLabelGenerator(gen);
+            ChartPanel chartPanel = new ChartPanel(chart);
+
+            panelChartReport.add(chartPanel);
+        }
     }
 }
