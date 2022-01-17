@@ -226,6 +226,10 @@ public class CostManagerViewModel implements ViewModel {
      * Setting the hash table with a category ,and it's total sum of costs.
      */
     private void setCostsByCategory() {
+        if (!costsByCategoryHashTable.isEmpty()) {
+            costsByCategoryHashTable.clear();
+        }
+
         for (Expense expense : costsBetweenChosenDates) {
             String category = expense.getCategory();
             Float costSum = expense.getCostSum();

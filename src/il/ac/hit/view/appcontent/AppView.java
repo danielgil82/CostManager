@@ -61,6 +61,7 @@ public class AppView extends JFrame {
     private ExpensesByCategory expensesByCategory;
     private CategoryAndExpenseOperations categoryAndExpenseOperations;
     private Report report;
+    private PieSectionLabelGenerator gen;
 //    private CurrenciesPanel currenciesPanel;
 
 
@@ -154,7 +155,7 @@ public class AppView extends JFrame {
         plot.setForegroundAlpha(0.5f);
 
         plot.setLabelFont(new Font("Narkisim", Font.BOLD, 16));
-        PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator("{0} : {1}",
+        gen = new StandardPieSectionLabelGenerator("{0} : {1}",
                 new DecimalFormat("0"),
                 new DecimalFormat("0%"));
         plot.setLabelGenerator(gen);
