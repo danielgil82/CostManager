@@ -258,7 +258,6 @@ public class CostManagerViewModel implements ViewModel {
             @Override
             public void run() {
                 try {
-
                     if (validateIfEmptyOrNull(sumCost, currency, description, date)) {
                         if (validateIfCorrectInputOrNot(sumCost, currency)) {
 
@@ -517,7 +516,6 @@ public class CostManagerViewModel implements ViewModel {
      */
     @Override
     public void validateUserCredentialsForSignUpPanel(String fullName, String password, String confirmedPassword) {
-
         if (SwingUtilities.isEventDispatchThread()) {
             signUpValidatorCredentials(fullName, password, confirmedPassword);
         } else {

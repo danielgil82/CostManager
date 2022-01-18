@@ -9,9 +9,11 @@ import il.ac.hit.view.login.LoginUtils;
 import il.ac.hit.view.login.LoginView;
 import il.ac.hit.viewmodel.ViewModel;
 
+import javax.swing.*;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.TimerTask;
 
 /**
  * An actual class that represents a concrete view.
@@ -111,6 +113,18 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     @Override
     public void displayMessageForLoginSection(Message message) {
         loginView.getLabelInvalidDescription().setText(message.getMessage());
+
+        new java.util.Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        loginView.getLabelInvalidDescription().setText(null);
+                    }
+                });
+            }
+        }, 4000);
     }
 
     /**
@@ -120,6 +134,18 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     @Override
     public void displayMessageForAppSection(Message message) {
         appView.getLabelFeedbackMessage().setText(message.getMessage());
+
+        new java.util.Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        appView.getLabelFeedbackMessage().setText(null);
+                    }
+                });
+            }
+        }, 4000);
     }
 
 

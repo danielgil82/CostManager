@@ -154,7 +154,7 @@ public class AppView extends JFrame {
         plot.setDirection(Rotation.CLOCKWISE);
         plot.setForegroundAlpha(0.5f);
 
-        plot.setLabelFont(new Font("Narkisim", Font.BOLD, 16));
+        plot.setLabelFont(new Font("Narkisim", Font.BOLD, 15));
         gen = new StandardPieSectionLabelGenerator("{0} : {1}",
                 new DecimalFormat("0"),
                 new DecimalFormat("0%"));
@@ -164,8 +164,6 @@ public class AppView extends JFrame {
 
         panelChartReport.add(chartPanel);
         panelChartReport.updateUI();
-       // report.getPanelChart().add(chartPanel);
-       // panelChartReport.add(chartPanel);
 
     }
 
@@ -1173,8 +1171,8 @@ public class AppView extends JFrame {
         }
 
         private void initReport() {
-            gridLayoutReportPanel = new GridLayout(2, 1, 0, 40);
-            gridLayoutCenterDatesPanel = new GridLayout(2, 2, 20, 20);
+            gridLayoutReportPanel = new GridLayout(2, 1, 0, 20);
+            gridLayoutCenterDatesPanel = new GridLayout(2, 2, 20, 15);
             panelSelectDatesReport = new JPanel();
             panelNorthDatesReport = new JPanel();
             panelCenterDatesReport = new JPanel();
@@ -1192,7 +1190,6 @@ public class AppView extends JFrame {
             buttonDisplayPieChartSetOnClickListener();
             locateComponentsOnReportPanel();
         }
-
 
         private void setPanelDatesReport() {
             setTitleSelectDatesAttributes();
@@ -1224,11 +1221,11 @@ public class AppView extends JFrame {
 
             ComponentUtils.setComponentsAttributes(dateChooserStart,
                     new Font("Tahoma", Font.PLAIN, 20),
-                    new Dimension(100, 10));
+                    new Dimension(70, 10));
 
             ComponentUtils.setComponentsAttributes(dateChooserEnd,
                     new Font("Tahoma", Font.PLAIN, 20),
-                    new Dimension(100, 10));
+                    new Dimension(70, 10));
         }
 
         private void setButtonDisplayChartAttributes() {
@@ -1241,7 +1238,7 @@ public class AppView extends JFrame {
             this.setLayout(gridLayoutReportPanel);
             BorderLayout borderLayoutNorthReportPanel = new BorderLayout();
             panelSelectDatesReport.setLayout(borderLayoutNorthReportPanel);
-            panelSelectDatesReport.setPreferredSize(new Dimension(550, 300));
+            panelSelectDatesReport.setPreferredSize(new Dimension(600, 200));
             panelSelectDatesReport.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
             panelNorthDatesReport.add(labelTitleSelectDates);
             panelSelectDatesReport.add(panelNorthDatesReport, BorderLayout.NORTH);
@@ -1254,7 +1251,7 @@ public class AppView extends JFrame {
             panelSouthDatesReport.add(buttonDisplayPieChart);
             panelSelectDatesReport.add(panelSouthDatesReport, BorderLayout.SOUTH);
             this.add(panelSelectDatesReport);
-            panelChartReport.setPreferredSize(new Dimension(650, 400));
+            panelChartReport.setPreferredSize(new Dimension(600, 360));
             this.add(panelChartReport);
         }
 
