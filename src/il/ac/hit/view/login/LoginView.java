@@ -2,8 +2,11 @@ package il.ac.hit.view.login;
 
 import il.ac.hit.model.User;
 import il.ac.hit.view.ComponentUtils;
+import javafx.scene.layout.BorderStrokeStyle;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.StrokeBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +23,7 @@ public class LoginView extends JFrame {
     private JPanel panelNorthLoginFrame;
     private JPanel panelWestLoginFrame;
     private JPanel panelSouthLoginFrame;
+    private JPanel panelContainer;
     private JPanel loginPanelPartOfTheLayeredPane;
     private JPanel signUPPanelPartOfTheLayeredPane;
     private JLabel labelCostManagerTitle;
@@ -27,7 +31,7 @@ public class LoginView extends JFrame {
     private JButton loginButton;
     private JButton signUpButton;
     private JLabel labelInvalidDescription;
-
+    private FlowLayout flowLayoutContainerPanel;
     /**
      * objects that represent the login an signUp panel
      */
@@ -106,8 +110,12 @@ public class LoginView extends JFrame {
      * this method initialize the swing components
      */
     public void initLoginView() {
-        gridLayoutWestPanel = new GridLayout(2, 1, 0, 300);
+
+        gridLayoutWestPanel = new GridLayout(2, 1, 5, 30);
         layeredPaneCenter = new JLayeredPane();
+        panelContainer = new JPanel();
+        flowLayoutContainerPanel = new FlowLayout(4,30,130);
+        panelContainer.setLayout(flowLayoutContainerPanel);
         loginPanelPartOfTheLayeredPane = new JPanel();
         signUPPanelPartOfTheLayeredPane = new JPanel();
         panelNorthLoginFrame = new JPanel();
@@ -126,18 +134,20 @@ public class LoginView extends JFrame {
      */
     public void startLoginView() {
         //North Panel
-        panelNorthLoginFrame.setBackground(Color.PINK);
+        panelNorthLoginFrame.setBackground(new Color(128,0,0));
         panelNorthLoginFrame.add(labelCostManagerTitle);
         ComponentUtils.setComponentsAttributes(labelCostManagerTitle, new Font("Narkisim", Font.BOLD, 40), new Dimension(700, 70));
+        labelCostManagerTitle.setForeground(Color.WHITE);
         //West Panel
         panelWestLoginFrame.setLayout(gridLayoutWestPanel);
         panelWestLoginFrame.add(loginButton);
         panelWestLoginFrame.add(signUpButton);
-        panelWestLoginFrame.setBackground(Color.red);
+        panelContainer.add(panelWestLoginFrame);
         //South Panel
         ComponentUtils.setComponentsAttributes(labelInvalidDescription, new Font("Narkisim", Font.BOLD, 20), new Dimension(700, 50));
+        labelInvalidDescription.setForeground(Color.WHITE);
         panelSouthLoginFrame.add(labelInvalidDescription);
-        panelSouthLoginFrame.setBackground(Color.cyan);
+        panelSouthLoginFrame.setBackground(new Color(105,105,105));
         //Center Panel
         this.setLayout(new BorderLayout());
 
@@ -146,7 +156,7 @@ public class LoginView extends JFrame {
 
         //Adding all panels to "this" object which is a JFrame
         this.add(panelNorthLoginFrame, BorderLayout.NORTH);
-        this.add(panelWestLoginFrame, BorderLayout.WEST);
+        this.add(panelContainer, BorderLayout.WEST);
         this.add(panelSouthLoginFrame, BorderLayout.SOUTH);
 
         // setting "this" attributes
@@ -193,9 +203,16 @@ public class LoginView extends JFrame {
      * adding attributes to each of the buttons in the west panel of the login frame.
      */
     public void setButtonAttributes() {
-//        loginButton.setBounds(0, 500, 180, 20);
-        ComponentUtils.setComponentsAttributes(signUpButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(120, 20 ));
-        ComponentUtils.setComponentsAttributes(loginButton, new Font("Narkisim", Font.BOLD, 20), new Dimension(150, 20));
+        ComponentUtils.setComponentsAttributes(signUpButton,
+                new Font("Narkisim", Font.BOLD, 20),
+                new Dimension(110, 30 ));
+        signUpButton.setBorder(new StrokeBorder(new BasicStroke(3), new Color(128,0,0)));
+
+
+        ComponentUtils.setComponentsAttributes(loginButton,
+                new Font("Narkisim", Font.BOLD, 20),
+                new Dimension(110, 30));
+        loginButton.setBorder(new StrokeBorder(new BasicStroke(3),  new Color(128,0,0)));
     }
 
     /**

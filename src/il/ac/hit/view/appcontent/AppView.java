@@ -38,7 +38,7 @@ public class AppView extends JFrame {
     private JButton buttonOperations;
     private JButton buttonReport;
     private JButton buttonLogout;
-    private JButton buttonCurrencies;
+    //private JButton buttonCurrencies;
     private JLabel labelExpenseManagerTitle;
     private JLabel labelFeedbackMessage;
     private JPanel panelAppContent;
@@ -46,7 +46,7 @@ public class AppView extends JFrame {
     private JPanel panelAllExpenses;
     private JPanel panelOperations;
     private JPanel panelReport;
-    private JPanel panelCurrencies;
+    //private JPanel panelCurrencies;
     private JPanel panelSouthAppView;
     private JPanel panelChartReport;
     private JLayeredPane layeredPaneCenterAppView;
@@ -62,8 +62,6 @@ public class AppView extends JFrame {
     private CategoryAndExpenseOperations categoryAndExpenseOperations;
     private Report report;
     private PieSectionLabelGenerator gen;
-//    private CurrenciesPanel currenciesPanel;
-
 
     /**
      * Ctor that receives an appUtils object which is implemented by ViewManager.
@@ -85,12 +83,10 @@ public class AppView extends JFrame {
         expensesByCategory = new ExpensesByCategory();
         categoryAndExpenseOperations = new CategoryAndExpenseOperations();
         categoryAndExpenseOperations.setBounds(0, 0, 1300, 700);
-
         buttonExpenses = new JButton("Expenses");
         buttonOperations = new JButton("Operations");
         buttonReport = new JButton("Report");
         buttonLogout = new JButton("LogOut");
-        buttonCurrencies = new JButton("Currencies");
         labelExpenseManagerTitle = new JLabel("Cost Manager");
         labelFeedbackMessage = new JLabel();
         borderLayoutPanelContent = new BorderLayout();
@@ -99,11 +95,10 @@ public class AppView extends JFrame {
         panelAllExpenses = new JPanel();
         panelOperations = new JPanel();
         panelReport = new JPanel();
-        panelCurrencies = new JPanel();
         panelSouthAppView = new JPanel();
         panelChartReport = new JPanel();
         layeredPaneCenterAppView = new JLayeredPane();
-        panelNorthFlowLayout = new FlowLayout(0, 25, 0);
+        panelNorthFlowLayout = new FlowLayout(0, 60, 0);
         report = new Report();
     }
 
@@ -370,12 +365,13 @@ public class AppView extends JFrame {
      * This method settings the south panel of the application and defined the relevant text.
      */
     private void setSouthPanel() {
-        panelSouthAppView.setBackground(new Color(190, 190, 230, 255));
+        panelSouthAppView.setBackground(new Color(105,105,105));
         panelSouthAppView.setBounds(0, 900, 1400, 100);
 
         ComponentUtils.setComponentsAttributes(labelFeedbackMessage,
                 new Font("Narkisim", Font.BOLD, 30),
                 new Dimension(1350, 50));
+        labelFeedbackMessage.setForeground(Color.WHITE);
 
         panelSouthAppView.add(labelFeedbackMessage);
         panelAppContent.add(panelSouthAppView, BorderLayout.SOUTH);
@@ -386,15 +382,15 @@ public class AppView extends JFrame {
      */
     private void setNorthPanel() {
         panelNorthAppView.setLayout(panelNorthFlowLayout);
-        panelNorthAppView.setBackground(new Color(190, 190, 230, 155));
+        panelNorthAppView.setBackground(new Color(120,0,0));
         panelNorthAppView.setBounds(0, 0, 1400, 200);
         panelNorthAppView.add(buttonExpenses);
         panelNorthAppView.add(buttonOperations);
-        panelNorthAppView.add(buttonReport);
-        panelNorthAppView.add(buttonCurrencies);
         panelNorthAppView.add(labelExpenseManagerTitle);
+        panelNorthAppView.add(buttonReport);
         panelNorthAppView.add(buttonLogout);
         panelAppContent.add(panelNorthAppView, BorderLayout.NORTH);
+        labelExpenseManagerTitle.setForeground(Color.WHITE);
     }
 
     /**
@@ -405,7 +401,6 @@ public class AppView extends JFrame {
         ComponentUtils.setActionListenersToChangePanelsOnLayeredPane(layeredPaneCenterAppView, buttonExpenses, panelAllExpenses);
         ComponentUtils.setActionListenersToChangePanelsOnLayeredPane(layeredPaneCenterAppView, buttonOperations, panelOperations);
         ComponentUtils.setActionListenersToChangePanelsOnLayeredPane(layeredPaneCenterAppView, buttonReport, panelReport);
-        ComponentUtils.setActionListenersToChangePanelsOnLayeredPane(layeredPaneCenterAppView, buttonCurrencies, panelCurrencies);
 
         //different action listener for the buttonLogout.
         buttonLogout.addActionListener(e -> {
@@ -434,7 +429,7 @@ public class AppView extends JFrame {
 
         labelExpenseManagerTitle.setFont(new Font("Narkisim", Font.BOLD, 55));
         labelExpenseManagerTitle.setBounds(1000, 0, 200, 100);
-        labelExpenseManagerTitle.setForeground(Color.red);
+
     }
 
     /**

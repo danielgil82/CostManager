@@ -16,6 +16,16 @@ public class CostManagerModel implements Model {
     private final String driverFullQualifiedName = "com.mysql.jdbc.Driver";
 
     /**
+     * This String represents the user name of the db.
+     */
+    private final String user = "sigalit";
+
+    /**
+     * This String represents the password of the db.
+     */
+    private final String password = "leybman";
+
+    /**
      * This string represents the connection to the database.
      */
     private final String connectionStringToDB = "jdbc:mysql://localhost:3306/costmanagerproj";
@@ -48,7 +58,7 @@ public class CostManagerModel implements Model {
         //query to select all the rows from the user table
         String getAllUsersQuery = "SELECT * from users";
 
-        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              Statement statement = connection.createStatement()) {
 
             ResultSet resultSet = statement.executeQuery(getAllUsersQuery);
@@ -78,7 +88,7 @@ public class CostManagerModel implements Model {
         String addNewCategoryQuery = "insert into categories (category, user_id)"
                 + "value(?,?)";
 
-        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              PreparedStatement addNewCategory = connection.prepareStatement(addNewCategoryQuery)) {
 
             connection.setAutoCommit(false);
@@ -108,7 +118,7 @@ public class CostManagerModel implements Model {
         String removeExistingCategoryQuery = "delete from categories where category = ? AND " +
                 "user_id = ?";
 
-        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              PreparedStatement prepareStatement = connection.prepareStatement(removeExistingCategoryQuery);) {
 
             connection.setAutoCommit(false);
@@ -138,7 +148,7 @@ public class CostManagerModel implements Model {
     public void removeCostsBySpecificCategory(Category category) throws CostManagerException {
         String removeExpensesQuery = "delete from costs where category = ? AND user_id = ?";
 
-        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              PreparedStatement prepareStatement = connection.prepareStatement(removeExpensesQuery);) {
 
             connection.setAutoCommit(false);
@@ -159,7 +169,7 @@ public class CostManagerModel implements Model {
         String addNewExpenseQuery = "insert into costs (category, sum_cost, currency, description, date, user_id)"
                 + "value(?, ?, ?, ?, ?, ?)";
 
-        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              PreparedStatement prepareStatement = connection.prepareStatement(addNewExpenseQuery);) {
 
             connection.setAutoCommit(false);
@@ -230,7 +240,7 @@ public class CostManagerModel implements Model {
     public void removeExistingCost(int costID) throws CostManagerException {
         String removeExistingExpenseQuery = "delete from costs where cost_id = ? ";
 
-        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              PreparedStatement prepareStatement = connection.prepareStatement(removeExistingExpenseQuery);) {
             connection.setAutoCommit(false);
             prepareStatement.setInt(1, costID);
@@ -258,7 +268,7 @@ public class CostManagerModel implements Model {
 
         String getReportByDatesQuery = "select * from costs WHERE user_id = ? AND date BETWEEN ? AND ? ";
 
-        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              PreparedStatement prepareStatement = connection.prepareStatement(getReportByDatesQuery)) {
 
             prepareStatement.setInt(1, userID);
@@ -347,7 +357,7 @@ public class CostManagerModel implements Model {
         String addNewUserQuery = "insert into users (full_name, password)"
                 + "value(?, ?)";
 
-        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              PreparedStatement preparedStatement = connection.prepareStatement(addNewUserQuery)) {
             connection.setAutoCommit(false);
             preparedStatement.setString(1, userToAdd.getFullName());
@@ -388,7 +398,7 @@ public class CostManagerModel implements Model {
                     "where user_id = ? and category = ? ";
         }
 
-        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              PreparedStatement preparedStatement = connection.prepareStatement(getExpensesQuery)) {
 
             preparedStatement.setInt(1, userID);
@@ -431,7 +441,7 @@ public class CostManagerModel implements Model {
         //query that gets all the categories that belong to a specific user
         String getCategoriesByUserQuery = "SELECT category FROM categories where user_id = ?";
 
-        try (Connection connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
+        try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              PreparedStatement preparedStatement = connection.prepareStatement(getCategoriesByUserQuery)) {
 
             preparedStatement.setInt(1, userId);
