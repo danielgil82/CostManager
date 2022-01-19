@@ -47,10 +47,10 @@ public class CostManagerModel implements Model {
 
     /**
      * Getter.
-     * @return listOfCategories.
+     * @return listOfUsers.
      */
-    public List<Category> getListOfCategories() {
-        return listOfCategories;
+    public List<User> getListOfUsers() {
+        return listOfUsers;
     }
 
     /**
@@ -434,7 +434,7 @@ public class CostManagerModel implements Model {
                 costExpensesList.add(new Expense
                         (resultSet.getInt("cost_id"),
                                 resultSet.getString("category"),
-                                resultSet.getInt("sum_cost"),
+                                resultSet.getFloat("sum_cost"),
                                 resultSet.getString("currency"),
                                 resultSet.getString("description"),
                                 resultSet.getDate("date"),

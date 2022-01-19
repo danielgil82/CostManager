@@ -1,31 +1,31 @@
 package il.ac.hit.model;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Date;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class CostManagerModelTest {
+class CostManagerModelTest {
     private CostManagerModel costManagerModel;
 
-    @Before
-    public void setUp() throws CostManagerException {
+    @BeforeEach
+    void setUp() throws CostManagerException {
         costManagerModel = new CostManagerModel();
     }
 
-    @After
-    public void tearDown() throws CostManagerException {
+    @AfterEach
+    void tearDown() throws CostManagerException {
         costManagerModel = null;
     }
 
     @Test
-    public void addNewCategory() throws CostManagerException {
+    void addNewCategory()throws CostManagerException {
         List<String> listOfCategories;
         Category categoryTest = new Category("test_name_2", 12);
         listOfCategories = costManagerModel.getCategoriesNamesBySpecificUser(12);
@@ -37,7 +37,7 @@ public class CostManagerModelTest {
     }
 
     @Test
-    public void removeExistingCategory() throws CostManagerException {
+    void removeExistingCategory()throws CostManagerException {
         List<String> listOfCategories;
         Category categoryTest = new Category("test_name_2", 12);
         listOfCategories = costManagerModel.getCategoriesNamesBySpecificUser(12);
@@ -49,7 +49,7 @@ public class CostManagerModelTest {
     }
 
     @Test
-    public void removeCostsBySpecificCategory()throws CostManagerException  {
+    void removeCostsBySpecificCategory()throws CostManagerException {
         List<Expense> listOfExpenses;
         Category category = new Category("food", 12);
         listOfExpenses = costManagerModel.getExpensesByCategory(12, category.getCategoryName());
@@ -62,7 +62,7 @@ public class CostManagerModelTest {
     }
 
     @Test
-    public void addNewCost()throws CostManagerException  {
+    void addNewCost() throws CostManagerException{
         List<Expense> listOfExpenses;
         Expense expense = new Expense("food", 12.5f, "nis",  "pizza",
                 new java.sql.Date(new java.util.Date().getTime()),12 );
@@ -76,7 +76,7 @@ public class CostManagerModelTest {
     }
 
     @Test
-    public void removeExistingCost() throws CostManagerException {
+    void removeExistingCost()throws CostManagerException {
         List<Expense> listOfExpenses;
         Expense expense = new Expense("food", 12.5f, "nis",  "pizza",
                 new java.sql.Date(new java.util.Date().getTime()),12 );
@@ -90,7 +90,7 @@ public class CostManagerModelTest {
     }
 
     @Test
-    public void getReportByDates()throws CostManagerException  {
+    void getReportByDates() throws CostManagerException{
         String firstDate = "2022-01-18";
         String secondDate = "2022-01-19";
         Date dateOne = Date.valueOf(firstDate);//converting string into sql date
@@ -112,32 +112,52 @@ public class CostManagerModelTest {
     }
 
     @Test
-    public void getUser() throws CostManagerException  {
+    void getUser()throws CostManagerException {
         User expected = new User(12, "marina", "1234");
         User actual = costManagerModel.getUser("marina", "1234");
         assertEquals(expected.getUserID(), actual.getUserID());
         assertEquals(expected.getFullName(), actual.getFullName());
         assertEquals(expected.getUsersPassword(), actual.getUsersPassword());
-
     }
 
     @Test
-    public void checkIfTheUserExists() throws CostManagerException  {
+    void checkIfTheUserExists() throws CostManagerException {
         User user = new User(12, "marina", "1234");
-        boolean expected = true;
-        boolean actual = costManagerModel.checkIfTheUserExists(user);
-//        assertThrows(expected, actual);
+        assertThrows(CostManagerException.class, () -> costManagerModel.checkIfTheUserExists(user));
     }
 
     @Test
-    public void addNewUserToDBAndUpdateTheListOfUsers() throws CostManagerException {
+    void addNewUserToDBAndUpdateTheListOfUsers()throws CostManagerException {
+        User testUser = new User("shimi", "1234");
+        int expected = costManagerModel.getListOfUsers().size() + 1;
+        costManagerModel.addNewUserToDBAndUpdateTheListOfUsers(testUser);
+        int actual  = costManagerModel.getListOfUsers().size();
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void getExpensesByCategory()throws CostManagerException  {
+    void getExpensesByCategory() throws CostManagerException{
+        String purchaseDate = "2022-01-19";
+        Date date = Date.valueOf(purchaseDate);
+        Expense expected = new Expense(21,"food", 12.5f,
+                "nis", "pizza", date ,12);
+        List<Expense> actual = costManagerModel.getExpensesByCategory(12, expected.getCategory());
+
+        assertEquals(expected.getExpenseID(), actual.get(0).getExpenseID());
+        assertEquals(expected.getCategory(), actual.get(0).getCategory());
+        assertEquals(expected.getCostSum(), actual.get(0).getCostSum());
+        assertEquals(expected.getCurrency(), actual.get(0).getCurrency());
+        assertEquals(expected.getExpenseDescription(), actual.get(0).getExpenseDescription());
+        assertEquals(expected.getPurchaseDate(), actual.get(0).getPurchaseDate());
+        assertEquals(expected.getUserID(), actual.get(0).getUserID());
     }
 
     @Test
-    public void getCategoriesBySpecificUser() throws CostManagerException {
+    void getCategoriesNamesBySpecificUser() throws CostManagerException{
+        List<String> expected = Arrays.asList("electricty", "food");
+        List<String> actual = costManagerModel.getCategoriesNamesBySpecificUser(12);
+        for (int i = 0; i < expected.size(); i++) {
+            assertEquals(expected.get(i), actual.get(i));
+        }
     }
 }
