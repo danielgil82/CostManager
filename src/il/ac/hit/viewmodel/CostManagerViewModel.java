@@ -78,8 +78,11 @@ public class CostManagerViewModel implements ViewModel {
 
                 model.addNewUserToDBAndUpdateTheListOfUsers(user);
 
+                this.user = user;
+
                 SwingUtilities.invokeLater(() ->
                         view.displayMessageForLoginSection(new Message(HandlingMessage.SIGNED_UP_SUCCESSFULLY.toString())));
+
 
             } catch (CostManagerException ex) {
                 //lambda expression because Runnable is a functional interface
@@ -94,7 +97,7 @@ public class CostManagerViewModel implements ViewModel {
             @Override
             public void run() {
                 try {
-                    categoriesOfTheUser = model.getCategoriesBySpecificUser(user.getUserID());
+                    categoriesOfTheUser = model.getCategoriesNamesBySpecificUser(user.getUserID());
 
                     SwingUtilities.invokeLater(() -> view.setCategories(categoriesOfTheUser));
 
@@ -586,7 +589,6 @@ public class CostManagerViewModel implements ViewModel {
 
     /**
      * This method use the functional interface as BiPredicate inorder to test if the 2 passwords are equal.
-     *
      * @param firstPassword      - first password.
      * @param secondPassword     - second password.
      * @param passwordsMatchTest - functional interface which gets the lambda function and uses the test abstract function.
@@ -599,7 +601,6 @@ public class CostManagerViewModel implements ViewModel {
 
     /**
      * This method ...
-     *
      * @param fullName - users input for full name.
      * @return checks if the full name consists of letters and spaces.
      */

@@ -1,6 +1,5 @@
 package il.ac.hit.model;
 
-import java.util.Collection;
 import java.util.List;
 import java.sql.Date;
 /**
@@ -17,6 +16,6 @@ public interface Model
      void removeExistingCost(int costID) throws CostManagerException;
      List<Expense> getReportByDates(int userID, Date startDate, Date endDate) throws CostManagerException;
      List<Expense> getExpensesByCategory(int userID, String categoryType) throws CostManagerException;
-     List<String> getCategoriesBySpecificUser(int userId) throws CostManagerException;
+     List<String> getCategoriesNamesBySpecificUser(int userId) throws CostManagerException;
      boolean checkIfTheUserExists(User user) throws CostManagerException;
 }

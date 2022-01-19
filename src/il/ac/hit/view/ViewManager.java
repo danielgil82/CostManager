@@ -201,6 +201,7 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     @Override
     public void changeFrameFromAppViewToLoginView() {
         appView.dispose();
+        appView = null;
         loginView.setVisible(true);
     }
 

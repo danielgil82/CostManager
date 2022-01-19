@@ -12,7 +12,6 @@ import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.util.Rotation;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
@@ -404,9 +403,17 @@ public class AppView extends JFrame {
 
         //different action listener for the buttonLogout.
         buttonLogout.addActionListener(e -> {
-            panelChartReport.removeAll();
-            appUtils.resetUser();
-            appUtils.changeFrameFromAppViewToLoginView();
+        System.exit(0);
+////            for (Component component : this.getComponents()) {
+////                if (component != null) {
+////                    component ;
+////                }
+////            }
+//            this.getContentPane().removeAll();
+//            this.repaint();
+//            panelChartReport.removeAll();
+//            appUtils.resetUser();
+//            appUtils.changeFrameFromAppViewToLoginView();
         });
     }
 

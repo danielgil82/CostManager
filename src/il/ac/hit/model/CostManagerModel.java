@@ -36,8 +36,25 @@ public class CostManagerModel implements Model {
     private final List<User> listOfUsers = new ArrayList<>();
 
     /**
+     * Categories name that belong to the signed in user.
+     */
+    private final List<String> listOfCategoriesNames = new ArrayList<>();
+
+    /**
+     * Categories that belong to the signed in user.
+     */
+    private final List<Category> listOfCategories = new ArrayList<>();
+
+    /**
+     * Getter.
+     * @return listOfCategories.
+     */
+    public List<Category> getListOfCategories() {
+        return listOfCategories;
+    }
+
+    /**
      * Ctor of the CostManagerModel.
-     *
      * @throws CostManagerException - the exception we defined to our application.
      */
     public CostManagerModel() throws CostManagerException {
@@ -95,11 +112,14 @@ public class CostManagerModel implements Model {
             addNewCategory.setString(1, category.getCategoryName());
             addNewCategory.setInt(2, category.getUserID());
             int numberOfRowsAffected = addNewCategory.executeUpdate();
+
             connection.commit();
 
             if (numberOfRowsAffected != 1) {
                 throw new CostManagerException(HandlingMessage.PROBLEM_WITH_ADDING_NEW_CATEGORY);
             }
+
+            listOfCategories.add(category);
 
         } catch (SQLException exception) {
             throw new CostManagerException(HandlingMessage.SOMETHING_WENT_WRONG, exception);
@@ -131,6 +151,8 @@ public class CostManagerModel implements Model {
                 throw new CostManagerException(HandlingMessage.PROBLEM_WITH_REMOVING_AN_EXISTING_CATEGORY);
             }
 
+            listOfCategoriesNames.remove(categoryToDelete.getCategoryName());
+
         } catch (SQLException exception) {
             throw new CostManagerException(HandlingMessage.SOMETHING_WENT_WRONG, exception);
         }
@@ -156,7 +178,6 @@ public class CostManagerModel implements Model {
             prepareStatement.setInt(2, category.getUserID());
             prepareStatement.executeUpdate();
             connection.commit();
-
 
         } catch (SQLException exception) {
             throw new CostManagerException(HandlingMessage.SOMETHING_WENT_WRONG, exception);
@@ -321,8 +342,7 @@ public class CostManagerModel implements Model {
 
     /**
      * CheckIfTheUserExists method checks if the user already exists,
-     * using Optional that gives the opportunity to return true or false according to it.
-     *
+     * using Optional that gives you the opportunity to return true or false according to it.
      * @param user - is the user we want to check about if he exists or not.
      * @return true if exists else throws exception that the user already exists.
      * @throws CostManagerException - the exception we defined to our application.
@@ -437,7 +457,7 @@ public class CostManagerModel implements Model {
      * @throws CostManagerException - the exception we defined to our application.
      */
     @Override
-    public List<String> getCategoriesBySpecificUser(int userId) throws CostManagerException {
+    public List<String> getCategoriesNamesBySpecificUser(int userId) throws CostManagerException {
         //query that gets all the categories that belong to a specific user
         String getCategoriesByUserQuery = "SELECT category FROM categories where user_id = ?";
 
@@ -445,14 +465,18 @@ public class CostManagerModel implements Model {
              PreparedStatement preparedStatement = connection.prepareStatement(getCategoriesByUserQuery)) {
 
             preparedStatement.setInt(1, userId);
-            List<String> listOfCategories = new ArrayList<>();
+           // List<String> listOfCategories = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
-                listOfCategories.add(resultSet.getString("category"));
+            if (listOfCategoriesNames.size() > 0) {
+                listOfCategoriesNames.clear();
             }
 
-            return listOfCategories;
+            while (resultSet.next()) {
+                listOfCategoriesNames.add(resultSet.getString("category"));
+            }
+
+            return listOfCategoriesNames;
 
         } catch (SQLException exception) {
             throw new CostManagerException(HandlingMessage.COULD_NOT_GET_THE_CATEGORIES);

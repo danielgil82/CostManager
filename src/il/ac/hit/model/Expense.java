@@ -25,8 +25,7 @@ public class Expense {
      * @param purchaseDate - date of the expense.
      * @param userID - the user that made the purchase.
      */
-    public Expense(String category, float costSum,
-                   String currency, String descriptionOfExpense,
+    public Expense(String category, float costSum, String currency, String descriptionOfExpense,
                    Date purchaseDate, int userID) {
         setCategory(category);
         setCostSum(costSum);
