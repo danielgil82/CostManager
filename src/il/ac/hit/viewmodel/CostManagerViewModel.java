@@ -206,7 +206,8 @@ public class CostManagerViewModel implements ViewModel {
                         setCostsByCategory();
 
                         SwingUtilities.invokeLater(() -> {
-                            view.displayPieChart(costsByCategoryHashTable);
+                            view.setPieChart(costsByCategoryHashTable);
+                            view.setCostsTableInReportPanel(costsBetweenChosenDates);
                         });
 
 

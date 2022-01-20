@@ -359,11 +359,20 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     }
 
     /**
-     * This method gets back a list of expenses between 2 chosen dates.
-     * @param expensesBetweenGivenDates - list of expense between 2 dates.
+     * This method gets back a list of expenses between 2 chosen dates and sends it to initPieChart.
+     * @param expensesBetweenGivenDates - list of expense between chosen dates.
      */
     @Override
-    public void displayPieChart(Hashtable<String,Float> expensesBetweenGivenDates) {
+    public void setPieChart(Hashtable<String,Float> expensesBetweenGivenDates) {
         appView.initPieChart(expensesBetweenGivenDates);
+    }
+
+    /**
+     * This method gets back a list of expenses between 2 chosen dates and sends it to initTableReportPanel.
+     * @param expensesBetweenChosenDates - list of expense between chosen dates.
+     */
+    @Override
+    public void setCostsTableInReportPanel(List<Expense> expensesBetweenChosenDates) {
+        appView.initTableReportPanel(expensesBetweenChosenDates);
     }
 }

@@ -67,8 +67,7 @@ public class CostManagerModel implements Model {
     }
 
     /**
-     * This method add a new user when he signed up, to the listOfUsers we defined.
-     *
+     * This method add a new user when he signed up, to the listOfUsers we defined
      * @throws CostManagerException - the exception we defined to our application.
      */
     private void getAllUsersFromTheDB() throws CostManagerException {

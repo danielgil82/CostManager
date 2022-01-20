@@ -23,11 +23,11 @@ public interface View
     void changeFrameFromLoginViewToAppView();
     void setCategories(List<String> listOfCategories);
     void setExpensesTableByCategoryInAppView(List<Expense> listOfExpenses);
-   // void isTheCategoryNameInputValid(boolean isValid);
     void addNewCategoryToComboBox(String category);
     void removeCategoryFromComboBox(String category);
     void setCostsID(List<Integer> costsID);
     void updateCategoriesComboBoxes(String category);
     void removeCostsFromCostIDComboBox(List<Integer> costsIDToRemove);
-    void displayPieChart(Hashtable<String,Float> expensesBetweenGivenDates);
+    void setPieChart(Hashtable<String,Float> expensesBetweenGivenDates);
+    void setCostsTableInReportPanel(List<Expense> expensesBetweenChosenDates);
 }

@@ -12,6 +12,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CostManagerModelTest {
+
     private CostManagerModel costManagerModel;
 
     @BeforeEach
@@ -33,6 +34,7 @@ class CostManagerModelTest {
         costManagerModel.addNewCategory(categoryTest);
         listOfCategories = costManagerModel.getCategoriesNamesBySpecificUser(12);
         int actual = listOfCategories.size();
+
         assertEquals(expected, actual);
     }
 
@@ -45,6 +47,7 @@ class CostManagerModelTest {
         costManagerModel.removeExistingCategory(categoryTest);
         listOfCategories = costManagerModel.getCategoriesNamesBySpecificUser(12);
         int actual = listOfCategories.size();
+
         assertEquals(expected, actual);
     }
 
@@ -115,6 +118,7 @@ class CostManagerModelTest {
     void getUser()throws CostManagerException {
         User expected = new User(12, "marina", "1234");
         User actual = costManagerModel.getUser("marina", "1234");
+
         assertEquals(expected.getUserID(), actual.getUserID());
         assertEquals(expected.getFullName(), actual.getFullName());
         assertEquals(expected.getUsersPassword(), actual.getUsersPassword());
@@ -123,6 +127,7 @@ class CostManagerModelTest {
     @Test
     void checkIfTheUserExists() throws CostManagerException {
         User user = new User(12, "marina", "1234");
+
         assertThrows(CostManagerException.class, () -> costManagerModel.checkIfTheUserExists(user));
     }
 
@@ -132,6 +137,7 @@ class CostManagerModelTest {
         int expected = costManagerModel.getListOfUsers().size() + 1;
         costManagerModel.addNewUserToDBAndUpdateTheListOfUsers(testUser);
         int actual  = costManagerModel.getListOfUsers().size();
+
         assertEquals(expected, actual);
     }
 

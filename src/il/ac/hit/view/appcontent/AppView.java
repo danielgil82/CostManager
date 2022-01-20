@@ -126,13 +126,13 @@ public class AppView extends JFrame {
         panelChartReport.removeAll();
         if (pieDataset != null) {
             pieDataset = null;
-
         }
+
         pieDataset = new DefaultPieDataset();
         if (chart != null) {
             chart = null;
-
         }
+
         chart = ChartFactory.createPieChart3D("Report By Category", pieDataset, true, true, false);
 
         Set<String> setOfKeys = expenses.keySet();
@@ -155,10 +155,17 @@ public class AppView extends JFrame {
         plot.setLabelGenerator(gen);
         ChartPanel chartPanel = new ChartPanel(chart);
 
-
         panelChartReport.add(chartPanel);
         panelChartReport.updateUI();
+    }
 
+    /**
+     * This method init the report table in Report panel.
+     * @param expenses - list of expenses.
+     */
+    public void initTableReportPanel(List<Expense> expenses){
+        DefaultTableModel defaultTableModel = setTableCosts(expenses);
+        this.report.tableDataReport.setModel(defaultTableModel);
     }
 
     /**
@@ -258,17 +265,26 @@ public class AppView extends JFrame {
 
     /**
      * This method builds the expenses' table of the user that logged in.
-     *
-     * @param expensesByCategory - list of the expenses according to the chosen category.
+     * But first, it calls setTable to create the columns names for the table.
+     * @param expenses - list of the expenses according to the chosen category.
      */
-    public void setTableInAllExpensesPanel(List<Expense> expensesByCategory) {
-        // create the titles for the tables
+    public void setTableInAllExpensesPanel(List<Expense> expenses) {
+        // link the model and the table
+        this.expensesByCategory.tableData.setModel(setTableCosts(expenses));
+    }
+
+    /**
+     * This method responsible for setting a table of costs.
+     * @return table of costs.
+     */
+    public DefaultTableModel setTableCosts(List<Expense> expenses){
+        // create the columns names for the table
         DefaultTableModel tableDataModel = new DefaultTableModel(new String[]{
                 "cost_id", "category", "sum_cost", "currency", "description", "date", "user_id"},
                 0);
 
         // add each cost to the table model
-        for (Expense expense : expensesByCategory) {
+        for (Expense expense : expenses) {
             tableDataModel.addRow(new Object[]{
                     expense.getExpenseID(),
                     expense.getCategory(),
@@ -279,8 +295,8 @@ public class AppView extends JFrame {
                     expense.getUserID()
             });
         }
-        // link the model and the table
-        this.expensesByCategory.tableData.setModel(tableDataModel);
+
+        return tableDataModel;
     }
 
     /**
@@ -845,9 +861,6 @@ public class AppView extends JFrame {
             private JTextField textFieldCurrency;
             private JTextArea textAreaDescription;
             private JDateChooser dateChooser;
-
-            //            private JComboBox<> comboBoxCategory;
-//            private JComboBox<Currency> comboBoxCurrency;
             private JButton buttonClearInputsInAddCostPanel;
             private JButton buttonAddNewCost;
             private JPanel panelNorthAddCost;
@@ -1154,18 +1167,25 @@ public class AppView extends JFrame {
         /**
          * Swing components
          */
-        private GridLayout gridLayoutReportPanel;
+        private GridLayout gridLayoutLeftReportPanel;
         private GridLayout gridLayoutCenterDatesPanel;
+        private FlowLayout flowLayoutReportPanel;
         private JPanel panelSelectDatesReport;
         private JPanel panelNorthDatesReport;
         private JPanel panelCenterDatesReport;
         private JPanel panelSouthDatesReport;
+        private JPanel panelLeftReport;
+        private JPanel panelRightReport;
         private JLabel labelTitleSelectDates;
         private JLabel labelStartDate;
         private JLabel labelEndDate;
         private JDateChooser dateChooserStart;
         private JDateChooser dateChooserEnd;
-        private JButton buttonDisplayPieChart;
+        private JButton buttonDisplayChartAndTable;
+
+        private JPanel panelTableDataReport;
+        private JScrollPane scrollPaneTableReport;
+        private JTable tableDataReport;
 
         private Report() {
             initReport();
@@ -1173,23 +1193,31 @@ public class AppView extends JFrame {
         }
 
         private void initReport() {
-            gridLayoutReportPanel = new GridLayout(2, 1, 0, 20);
+            gridLayoutLeftReportPanel = new GridLayout(2, 1, 0, 20);
             gridLayoutCenterDatesPanel = new GridLayout(2, 2, 20, 15);
+            flowLayoutReportPanel = new FlowLayout(5, 20, 10);
             panelSelectDatesReport = new JPanel();
             panelNorthDatesReport = new JPanel();
             panelCenterDatesReport = new JPanel();
             panelSouthDatesReport = new JPanel();
+            panelLeftReport = new JPanel();
+            panelRightReport = new JPanel();
             labelTitleSelectDates = new JLabel("Select Dates");
             labelStartDate = new JLabel("Start Date:");
             labelEndDate = new JLabel("End Date");
             dateChooserStart = new JDateChooser();
             dateChooserEnd = new JDateChooser();
-            buttonDisplayPieChart = new JButton("Display");
+            buttonDisplayChartAndTable = new JButton("Display");
+
+            panelTableDataReport = new JPanel();
+            scrollPaneTableReport = new JScrollPane();
+            tableDataReport = new JTable();
         }
 
         private void startReport() {
             setPanelDatesReport();
             buttonDisplayPieChartSetOnClickListener();
+            setExpensesTableReport();
             locateComponentsOnReportPanel();
         }
 
@@ -1231,13 +1259,29 @@ public class AppView extends JFrame {
         }
 
         private void setButtonDisplayChartAttributes() {
-            ComponentUtils.setComponentsAttributes(buttonDisplayPieChart,
+            ComponentUtils.setComponentsAttributes(buttonDisplayChartAndTable,
                     new Font("Narkisim", Font.BOLD, 20),
                     new Dimension(120, 30));
         }
 
+        /**
+         * This method builds the expenses table in Report panel.
+         */
+        private void setExpensesTableReport() {
+            panelTableDataReport.setLayout(new BorderLayout());
+            panelTableDataReport.add(scrollPaneTableReport);
+            tableDataReport.setFont(new Font("Narkisim", Font.PLAIN, 20));
+            tableDataReport.setRowHeight(30);
+            tableDataReport.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            scrollPaneTableReport.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            scrollPaneTableReport.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            scrollPaneTableReport.setViewportView(tableDataReport);
+            panelTableDataReport.setPreferredSize(new Dimension(300, 270));
+        }
+
         private void locateComponentsOnReportPanel() {
-            this.setLayout(gridLayoutReportPanel);
+            this.setLayout(flowLayoutReportPanel);
+            panelLeftReport.setLayout(gridLayoutLeftReportPanel);
             BorderLayout borderLayoutNorthReportPanel = new BorderLayout();
             panelSelectDatesReport.setLayout(borderLayoutNorthReportPanel);
             panelSelectDatesReport.setPreferredSize(new Dimension(600, 200));
@@ -1250,15 +1294,17 @@ public class AppView extends JFrame {
             panelCenterDatesReport.add(labelEndDate);
             panelCenterDatesReport.add(dateChooserEnd);
             panelSelectDatesReport.add(panelCenterDatesReport, BorderLayout.CENTER);
-            panelSouthDatesReport.add(buttonDisplayPieChart);
+            panelSouthDatesReport.add(buttonDisplayChartAndTable);
             panelSelectDatesReport.add(panelSouthDatesReport, BorderLayout.SOUTH);
-            this.add(panelSelectDatesReport);
-            panelChartReport.setPreferredSize(new Dimension(600, 360));
+            panelLeftReport.add(panelSelectDatesReport);
+            panelLeftReport.add(panelTableDataReport);
+            this.add(panelLeftReport);
+            panelChartReport.setPreferredSize(new Dimension(600, 500));
             this.add(panelChartReport);
         }
 
         private void buttonDisplayPieChartSetOnClickListener() {
-            buttonDisplayPieChart.addActionListener(new ActionListener() {
+            buttonDisplayChartAndTable.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     Date firstDate = dateChooserStart.getDate();
