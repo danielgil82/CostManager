@@ -27,6 +27,7 @@ import java.util.List;
  */
 public class AppView extends JFrame {
 
+
     /**
      * List of all categories that belongs to a specific user.
      */
@@ -62,6 +63,9 @@ public class AppView extends JFrame {
     private Report report;
     private PieSectionLabelGenerator gen;
 
+
+    private final Color colorForButtons = new Color(220,220,220);
+    private final Color colorForTitles = new Color(247, 221, 194);
     /**
      * Ctor that receives an appUtils object which is implemented by ViewManager.
      *
@@ -113,6 +117,7 @@ public class AppView extends JFrame {
         setComboBoxAttributes(comboBoxCategoriesAddCostPanel);
         setComboBoxAttributes(comboBoxCategoriesAllExpensesPanel);
         setComboBoxAttributes(comboBoxCategoriesRemoveCategoryPanel);
+
         setLayeredPane();
 
         //get all the categories that belong to the loggedIn user.
@@ -312,7 +317,7 @@ public class AppView extends JFrame {
      * Setting the layered pane.
      */
     private void setLayeredPane() {
-        layeredPaneCenterAppView.setBounds(0, 200, 1300, 700);
+        layeredPaneCenterAppView.setBounds(0, 400, 1300, 700);
         layeredPaneCenterAppView.setLayout(new CardLayout(0, 0));
         setPanelAllExpensesPartOfTheLayeredPane();
         setPanelOperationsPartOfTheLayeredPane();
@@ -406,6 +411,10 @@ public class AppView extends JFrame {
         panelNorthAppView.add(buttonLogout);
         panelAppContent.add(panelNorthAppView, BorderLayout.NORTH);
         labelExpenseManagerTitle.setForeground(Color.WHITE);
+        setComponentBackAndForeGround(buttonLogout, Color.BLACK , colorForButtons);
+        setComponentBackAndForeGround(buttonExpenses, Color.BLACK , colorForButtons);
+        setComponentBackAndForeGround(buttonOperations, Color.BLACK , colorForButtons);
+        setComponentBackAndForeGround(buttonReport, Color.BLACK , colorForButtons);
     }
 
     /**
@@ -419,19 +428,14 @@ public class AppView extends JFrame {
 
         //different action listener for the buttonLogout.
         buttonLogout.addActionListener(e -> {
-        System.exit(0);
-////            for (Component component : this.getComponents()) {
-////                if (component != null) {
-////                    component ;
-////                }
-////            }
-//            this.getContentPane().removeAll();
-//            this.repaint();
-//            panelChartReport.removeAll();
-//            appUtils.resetUser();
-//            appUtils.changeFrameFromAppViewToLoginView();
+            System.exit(0);
         });
     }
+    private void setComponentBackAndForeGround(Component component, Color foreGroundColor, Color backGroundColor){
+        component.setForeground(foreGroundColor);
+        component.setBackground(backGroundColor);
+    }
+
 
     /**
      * This method sets each of the north's panel components attributes
@@ -606,7 +610,7 @@ public class AppView extends JFrame {
             private void locateComponentsOnTheCategorySelectorPanel() {
                 this.setLayout(new BorderLayout());
                 panelNorthTitleCategorySelector.add(labelFilterExpensesByCategoryTitle);
-                panelNorthTitleCategorySelector.setBackground(new Color(207, 220, 218, 255));
+                panelNorthTitleCategorySelector.setBackground(new Color(247, 221, 194));
                 this.add(panelNorthTitleCategorySelector, BorderLayout.NORTH);
                 panelCenterLabelAndComboBox.add(labelCategorySelector);
                 panelCenterLabelAndComboBox.add(comboBoxCategoriesAllExpensesPanel);
@@ -741,7 +745,7 @@ public class AppView extends JFrame {
                 this.setLayout(new BorderLayout());
                 this.setPreferredSize(new Dimension(450, 400));
                 panelNorthAddCategory.add(labelTitleAddCategory);
-                //panelNorthAddCategory.setBackground(new Color(207, 220, 218, 255));
+                panelNorthAddCategory.setBackground(colorForTitles);
                 this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
                 this.add(panelNorthAddCategory, BorderLayout.NORTH);
                 panelCenterAddCategory.setLayout(flowLayoutAddCategory);
@@ -820,7 +824,7 @@ public class AppView extends JFrame {
             private void locateComponentsOnRemoveCategoryPane() {
                 this.setLayout(new BorderLayout());
                 panelNorthRemoveCategory.add(labelRemoveCategoryTitle);
-                // panelNorthRemoveCategory.setBackground(new Color(207, 220, 218, 255));
+                panelNorthRemoveCategory.setBackground(colorForTitles);
                 this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
                 this.add(panelNorthRemoveCategory, BorderLayout.NORTH);
                 panelCenterRemoveCategory.setLayout(flowLayoutRemoveCategory);
@@ -989,7 +993,7 @@ public class AppView extends JFrame {
             private void locateComponentsOnAddCostPanel() {
                 this.setLayout(new BorderLayout());
                 this.setPreferredSize(new Dimension(450, 400));
-
+                panelNorthAddCost.setBackground(colorForTitles);
                 panelNorthAddCost.add(labelAddCostTitle);
                 this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
                 this.add(panelNorthAddCost, BorderLayout.NORTH);
@@ -1109,7 +1113,7 @@ public class AppView extends JFrame {
             private void setLabelTitleRemoveCostAttributes() {
                 ComponentUtils.setComponentsAttributes(labelRemoveCostTitle,
                         new Font("Narkisim", Font.BOLD, 30),
-                        new Dimension(200, 30));
+                        new Dimension(200, 50));
             }
 
             private void setLabelCostIDAttributes() {
@@ -1136,6 +1140,7 @@ public class AppView extends JFrame {
             private void locateComponentsOnRemoveCostPanel() {
                 this.setLayout(new BorderLayout());
                 this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+                panelNorthRemoveCost.setBackground(colorForTitles);
                 panelNorthRemoveCost.add(labelRemoveCostTitle);
                 this.add(panelNorthRemoveCost, BorderLayout.NORTH);
 
@@ -1286,6 +1291,7 @@ public class AppView extends JFrame {
             panelSelectDatesReport.setLayout(borderLayoutNorthReportPanel);
             panelSelectDatesReport.setPreferredSize(new Dimension(600, 200));
             panelSelectDatesReport.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+            panelNorthDatesReport.setBackground(colorForTitles);
             panelNorthDatesReport.add(labelTitleSelectDates);
             panelSelectDatesReport.add(panelNorthDatesReport, BorderLayout.NORTH);
             panelCenterDatesReport.setLayout(gridLayoutCenterDatesPanel);

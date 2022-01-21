@@ -6,7 +6,7 @@ package il.ac.hit.auxiliary;
 public enum HandlingMessage
 {
    /**
-    *
+    * Handling message that relate to duplicated rows.
     */
    DUPLICATED_ROW("Oops seems like this row is already defined"),
 
@@ -21,16 +21,11 @@ public enum HandlingMessage
    PASSWORDS_DO_NOT_MATCH ( "The passwords you entered don't match"),
    SIGNED_UP_SUCCESSFULLY ("You signed up successfully"),
 
-
    /**
     * handling messages that relate to database
     */
    PROBLEM_WITH_THE_CONNECTION ("problems with the connection"),
-   PROBLEM_WITH_CLOSING_THE_CONNECTION ("problems with closing the connection"),
    PROBLEM_WITH_REGISTERING_THE_DRIVER("Problem with registering driver to the driver manager"),
-   PROBLEM_WITH_THE_RESULT_SET("problems with the result set"),
-   PROBLEM_WITH_THE_STATEMENT ("problems with the prepared statement"),
-   PROBLEM_WITH_ROLLING_BACK ("problem with rolling back"),
 
    /**
     * handling messages that relate to the categories table
