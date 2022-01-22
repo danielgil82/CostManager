@@ -7,7 +7,8 @@ import java.sql.Date;
 import java.util.*;
 
 /**
- * This class represents the interaction with the database and the logic behind that.
+ * This class represents the interaction with the database and the logic behind that,
+ * and the concrete model object of the project.
  */
 public class CostManagerModel implements Model {
     /**
@@ -16,7 +17,7 @@ public class CostManagerModel implements Model {
     private final String driverFullQualifiedName = "com.mysql.jdbc.Driver";
 
     /**
-     * This String represents the user name of the db.
+     * This String represents the user's name of the db.
      */
     private final String user = "sigalit";
 
@@ -36,25 +37,20 @@ public class CostManagerModel implements Model {
     private final List<User> listOfUsers = new ArrayList<>();
 
     /**
-     * Categories name that belong to the signed in user.
+     * Categories name that belong to the signed-in user.
      */
     private final List<String> listOfCategoriesNames = new ArrayList<>();
 
     /**
-     * Categories that belong to the signed in user.
+     * Categories that belong to the signed-in user.
      */
     private final List<Category> listOfCategories = new ArrayList<>();
 
     /**
-     * Getter.
-     * @return listOfUsers.
-     */
-    public List<User> getListOfUsers() {
-        return listOfUsers;
-    }
-
-    /**
      * Ctor of the CostManagerModel.
+     * The constructor sets the list of users list.
+     * A CostManagerException might be thrown from getAllUsersFromTheDB
+     * and that's why there is a signature around the method declaration.
      * @throws CostManagerException - the exception we defined to our application.
      */
     public CostManagerModel() throws CostManagerException {
@@ -67,18 +63,28 @@ public class CostManagerModel implements Model {
     }
 
     /**
-     * This method add a new user when he signed up, to the listOfUsers we defined
+     * Getter.
+     * @return listOfUsers.
+     */
+    public List<User> getListOfUsers() {
+        return listOfUsers;
+    }
+
+    /**
+     * This method add a new user when he signed up, to the listOfUsers we defined.
      * @throws CostManagerException - the exception we defined to our application.
      */
     private void getAllUsersFromTheDB() throws CostManagerException {
         //query to select all the rows from the user table
         String getAllUsersQuery = "SELECT * from users";
 
+        // we've used try with resources because it manages the release of the allocated resources.
         try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              Statement statement = connection.createStatement()) {
 
             ResultSet resultSet = statement.executeQuery(getAllUsersQuery);
 
+            // extracting all data from the resultSet
             while (resultSet.next()) {
                 listOfUsers.add
                         (new User(resultSet.getInt("user_id"),
@@ -93,7 +99,6 @@ public class CostManagerModel implements Model {
 
     /**
      * This method add new category to the categories' table in the database.
-     *
      * @param category - the category that the user choose to add to the database.
      * @return the number of rows were affected.
      * @throws CostManagerException - the exception we defined to our application.
@@ -104,6 +109,7 @@ public class CostManagerModel implements Model {
         String addNewCategoryQuery = "insert into categories (category, user_id)"
                 + "value(?,?)";
 
+        // we've used try with resources because it manages the release of the allocated resources.
         try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              PreparedStatement addNewCategory = connection.prepareStatement(addNewCategoryQuery)) {
 
@@ -128,7 +134,6 @@ public class CostManagerModel implements Model {
 
     /**
      * This method deletes a category from the database.
-     *
      * @param categoryToDelete - the category that is going to be deleted.
      * @throws CostManagerException - the exception we defined to our application.
      */
@@ -137,6 +142,7 @@ public class CostManagerModel implements Model {
         String removeExistingCategoryQuery = "delete from categories where category = ? AND " +
                 "user_id = ?";
 
+        // we've used try with resources because it manages the release of the allocated resources.
         try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              PreparedStatement prepareStatement = connection.prepareStatement(removeExistingCategoryQuery);) {
 
@@ -160,8 +166,8 @@ public class CostManagerModel implements Model {
 
     /**
      * This method responsible for removing costs that belong to a specific category.
-     * There is no need for checking the number of rows that was affected, because there might be 0 or
-     * more rows that were affected.
+     * There is no need for checking the number of rows that was affected, because there
+     * might be 0 or more rows that were affected.
      * @param category - the category which belong to some costs.
      * @throws CostManagerException - the exception we defined to our application.
      */
@@ -169,6 +175,7 @@ public class CostManagerModel implements Model {
     public void removeCostsBySpecificCategory(Category category) throws CostManagerException {
         String removeExpensesQuery = "delete from costs where category = ? AND user_id = ?";
 
+        // we've used try with resources because it manages the release of the allocated resources.
         try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              PreparedStatement prepareStatement = connection.prepareStatement(removeExpensesQuery);) {
 
@@ -183,12 +190,18 @@ public class CostManagerModel implements Model {
         }
     }
 
+    /***
+     * This method responsible for add new cost to the database.
+     * @param cost - the cost that should be added to the database.
+     * @throws CostManagerException - the exception we defined to our application.
+     */
     @Override
     public void addNewCost(Expense cost) throws CostManagerException {
 
         String addNewExpenseQuery = "insert into costs (category, sum_cost, currency, description, date, user_id)"
                 + "value(?, ?, ?, ?, ?, ?)";
 
+        // we've used try with resources because it manages the release of the allocated resources.
         try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              PreparedStatement prepareStatement = connection.prepareStatement(addNewExpenseQuery);) {
 
@@ -211,55 +224,18 @@ public class CostManagerModel implements Model {
         } catch (SQLException exception) {
             throw new CostManagerException(HandlingMessage.SOMETHING_WENT_WRONG, exception);
         }
-
-//        try {
-//            connection = DriverManager.getConnection(connectionStringToDB, "sigalit", "leybman");
-//            addNewExpense = connection.prepareStatement(addNewExpenseQuery);
-//            connection.setAutoCommit(false);
-//            addNewExpense.setString(1, cost.getCategory());
-//            addNewExpense.setInt(2, cost.getCostSum());
-//            addNewExpense.setString(3, cost.getCurrency());
-//            addNewExpense.setString(4, cost.getExpenseDescription());
-//            addNewExpense.setDate(5, cost.getPurchaseDate());
-//            addNewExpense.setInt(6, cost.getUserID());
-//            int numberOfRowsAffected = addNewExpense.executeUpdate();
-//            connection.commit();
-//            if (numberOfRowsAffected != 1) {
-//                throw new CostManagerException(HandlingMessage.SOMETHING_WENT_WRONG);
-//            }
-//            return numberOfRowsAffected;
-//        } catch (SQLException exception) {
-//            if (exception instanceof SQLIntegrityConstraintViolationException) {
-//                throw new CostManagerException(HandlingMessage.EXPENSE_ALREADY_EXISTS, exception);
-//            } else if (connection != null) {
-//                // System.err.print("Transaction is being rolled back");
-//                try {
-//                    connection.rollback();
-//                    return 0;
-//                } catch (SQLException ex) {
-//                    throw new CostManagerException(HandlingMessage.PROBLEM_WITH_ROLLING_BACK, ex);
-//                }
-//            } else {
-//                throw new CostManagerException(HandlingMessage.PROBLEM_WITH_ADDING_NEW_EXPENSE,
-//                        exception);
-//            }
-//        } finally {
-//            try {
-//                connection.close();
-//            } catch (SQLException ex) {
-//                throw new CostManagerException(HandlingMessage.PROBLEM_WITH_CLOSING_THE_CONNECTION);
-//            }
-//        }
     }
 
     /**
-     * @param costID
-     * @throws CostManagerException
+     * This method responsible for removing the chosen cost.
+     * @param costID - the cost that should be removed.
+     * @throws CostManagerException - the exception we defined to our application.
      */
     @Override
     public void removeExistingCost(int costID) throws CostManagerException {
         String removeExistingExpenseQuery = "delete from costs where cost_id = ? ";
 
+        // we've used try with resources because it manages the release of the allocated resources.
         try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              PreparedStatement prepareStatement = connection.prepareStatement(removeExistingExpenseQuery);) {
             connection.setAutoCommit(false);
@@ -277,17 +253,20 @@ public class CostManagerModel implements Model {
     }
 
     /**
-     * @param userID
-     * @param startDate
-     * @param endDate
-     * @return
-     * @throws CostManagerException
+     * This method responsible for get all costs between two chosen
+     * dates and return list that contains them.
+     * @param userID - the user that we want to get his all costs between those two dates.
+     * @param startDate - first date.
+     * @param endDate - second date.
+     * @return list of all costs between two dates.
+     * @throws CostManagerException - the exception we defined to our application.
      */
     @Override
     public List<Expense> getReportByDates(int userID, Date startDate, Date endDate) throws CostManagerException {
 
         String getReportByDatesQuery = "select * from costs WHERE user_id = ? AND date BETWEEN ? AND ? ";
 
+        // we've used try with resources because it manages the release of the allocated resources.
         try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              PreparedStatement prepareStatement = connection.prepareStatement(getReportByDatesQuery)) {
 
@@ -319,7 +298,6 @@ public class CostManagerModel implements Model {
 
     /**
      * Optional gives the opportunity to return an "Optional" user or empty one.
-     *
      * @param userFullName - represent the name of the user.
      * @param userPassword - represent the password of the user.
      * @return the user if the there is one.
@@ -361,12 +339,10 @@ public class CostManagerModel implements Model {
     }
 
     /**
-     * This function adding new user to the database by
-     * checking the number of rows that were affected.
-     * If the number of rows that affected is not 1,
-     * it means there was a problem with adding this user.
-     * Otherwise, everything gone okay.
-     *
+     * This function adding new user to the database by checking the number of rows
+     * that were affected.
+     * If the number of rows that affected is not 1, it means there was a problem
+     * with adding this user otherwise, everything gone okay.
      * @param userToAdd - is the new user we want to add to the database.
      * @throws CostManagerException - the exception we defined to our application.
      */
@@ -376,6 +352,7 @@ public class CostManagerModel implements Model {
         String addNewUserQuery = "insert into users (full_name, password)"
                 + "value(?, ?)";
 
+        // we've used try with resources because it manages the release of the allocated resources.
         try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              PreparedStatement preparedStatement = connection.prepareStatement(addNewUserQuery)) {
             connection.setAutoCommit(false);
@@ -398,10 +375,11 @@ public class CostManagerModel implements Model {
 
 
     /**
-     * @param userID
-     * @param categoryType
-     * @return
-     * @throws CostManagerException
+     * This method responsible for get all costs that belong to a specific category.
+     * @param userID - the user id we want to get all his costs by chosen category.
+     * @param categoryType - the chosen category.
+     * @return list of all costs that belong to a specific user and category.
+     * @throws CostManagerException - the exception we defined to our application.
      */
     @Override
     public List<Expense> getExpensesByCategory(int userID, String categoryType) throws CostManagerException {
@@ -417,6 +395,7 @@ public class CostManagerModel implements Model {
                     "where user_id = ? and category = ? ";
         }
 
+        // we've used try with resources because it manages the release of the allocated resources.
         try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              PreparedStatement preparedStatement = connection.prepareStatement(getExpensesQuery)) {
 
@@ -450,7 +429,6 @@ public class CostManagerModel implements Model {
 
     /**
      * This method recieves a user id and by it gets the categories that belong him.
-     *
      * @param userId - identifies the user, thus we can get the categories according to that user.
      * @return all categories of a specific user.
      * @throws CostManagerException - the exception we defined to our application.
@@ -460,6 +438,7 @@ public class CostManagerModel implements Model {
         //query that gets all the categories that belong to a specific user
         String getCategoriesByUserQuery = "SELECT category FROM categories where user_id = ?";
 
+        // we've used try with resources because it manages the release of the allocated resources.
         try (Connection connection = DriverManager.getConnection(connectionStringToDB, user, password);
              PreparedStatement preparedStatement = connection.prepareStatement(getCategoriesByUserQuery)) {
 

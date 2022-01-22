@@ -55,6 +55,10 @@ public class User {
         this.usersPassword = usersPassword;
     }
 
+    /**
+     * This method returns the presentation of an object of this class via String.
+     * @return string of an object of the class.
+     */
     @Override
     public String toString() {
         return "User{" +

@@ -11,54 +11,52 @@ public class Category
 
     /**
      * Ctor that gets the name of the category, and the id of the user.
-     * @param categoryName - category's name
-     * @param userID - user id
+     * @param categoryName - category's name.
+     * @param userID - user id.
      */
-    public Category(String categoryName, int userID)
-    {
+    public Category(String categoryName, int userID) {
         setCategoryName(categoryName);
         setUserID(userID);
     }
 
     /**
      * Get the category name.
-     * @return categoryName - category name
+     * @return categoryName - category name.
      */
-    public String getCategoryName()
-    {
+    public String getCategoryName() {
         return categoryName;
     }
 
     /**
      * Get the user id.
-     * @return userID - the user id
+     * @return userID - the user id.
      */
-    public int getUserID()
-    {
+    public int getUserID() {
         return userID;
     }
 
     /**
      * Set the category name.
-     * @param categoryName - the category name
+     * @param categoryName - the category name.
      */
-    public void setCategoryName(String categoryName)
-    {
+    public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
 
     /**
      * Set the user id.
-     * @param userID - the user id
+     * @param userID - the user id.
      */
-    public void setUserID(int userID)
-    {
+    public void setUserID(int userID) {
         this.userID = userID;
     }
 
+    /**
+     * Override for toString method.
+     * @return - representation of the data members through String.
+     */
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Category{" +
                 "categoryName='" + categoryName + '\'' +
                 ", UserID= " + userID +

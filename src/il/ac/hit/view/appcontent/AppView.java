@@ -31,14 +31,16 @@ public class AppView extends JFrame {
     /**
      * List of all categories that belongs to a specific user.
      */
+
+
     private boolean isCategoryInputValid;
     private AppUtils appUtils;
+
     /*** Swing components. */
     private JButton buttonExpenses;
     private JButton buttonOperations;
     private JButton buttonReport;
     private JButton buttonLogout;
-    //private JButton buttonCurrencies;
     private JLabel labelExpenseManagerTitle;
     private JLabel labelFeedbackMessage;
     private JPanel panelAppContent;
@@ -46,7 +48,6 @@ public class AppView extends JFrame {
     private JPanel panelAllExpenses;
     private JPanel panelOperations;
     private JPanel panelReport;
-    //private JPanel panelCurrencies;
     private JPanel panelSouthAppView;
     private JPanel panelChartReport;
     private JLayeredPane layeredPaneCenterAppView;
@@ -63,13 +64,13 @@ public class AppView extends JFrame {
     private Report report;
     private PieSectionLabelGenerator gen;
 
-
+    //colors we will use in this class
     private final Color colorForButtons = new Color(220,220,220);
     private final Color colorForTitles = new Color(247, 221, 194);
+
     /**
      * Ctor that receives an appUtils object which is implemented by ViewManager.
-     *
-     * @param appUtils - ...
+     * @param appUtils - an auxiliary class that have methods that be executed from this class.
      */
     public AppView(AppUtils appUtils) {
         setAppUtils(appUtils);
@@ -107,7 +108,7 @@ public class AppView extends JFrame {
 
 
     /**
-     * This method settings the panels, buttons and their attributes.
+     * This method settings the component's attributes.
      */
     private void startAppView() {
         setApplicationFrame();
@@ -117,7 +118,6 @@ public class AppView extends JFrame {
         setComboBoxAttributes(comboBoxCategoriesAddCostPanel);
         setComboBoxAttributes(comboBoxCategoriesAllExpensesPanel);
         setComboBoxAttributes(comboBoxCategoriesRemoveCategoryPanel);
-
         setLayeredPane();
 
         //get all the categories that belong to the loggedIn user.
@@ -126,8 +126,12 @@ public class AppView extends JFrame {
         setSouthPanel();
     }
 
+    /**
+     * This method responsible for initialize the pie chart who will represent the costs.
+     * @param expenses - Hashtable that contains from the category and the amount of money
+     *                   that was spent in this category.
+     */
     public void initPieChart(Hashtable<String,Float> expenses) {
-       // report.setPanelChartReport(expenses);
         panelChartReport.removeAll();
         if (pieDataset != null) {
             pieDataset = null;
@@ -175,7 +179,6 @@ public class AppView extends JFrame {
 
     /**
      * This method removes the selected category from the combobox.
-     *
      * @param category - to be removed.
      */
     public void removeChosenCategoryFromComboBox(String category) {
@@ -184,7 +187,6 @@ public class AppView extends JFrame {
 
     /**
      * This method adds a new category to the combobox.
-     *
      * @param category - the chosen category.
      */
     public void addCategoryToComboBox(String category) {
@@ -195,7 +197,6 @@ public class AppView extends JFrame {
 
     /**
      * Updating the category combo boxes by deleting the given category.
-     *
      * @param categoryToRemove - the category that's going to be deleted.
      */
     public void updateCategoriesComboBoxes(String categoryToRemove) {
@@ -205,9 +206,8 @@ public class AppView extends JFrame {
     }
 
     /**
-     * This method is responsible for updating the combobox by removing a cost id that returned
-     * from the costIDToRemove list.
-     *
+     * This method is responsible for updating the combobox by removing
+     * a cost id that returned from the costIDToRemove list.
      * @param costIDToRemove - list that have the costsID that must be removed from the comboBoxCostID.
      */
     public void updateCostIDComboBox(List<Integer> costIDToRemove) {
@@ -217,9 +217,8 @@ public class AppView extends JFrame {
     }
 
     /**
-     * setter for categoryInput
-     *
-     * @param categoryInputValid indicates if the category name is valid or not
+     * Setter for categoryInput.
+     * @param categoryInputValid indicates if the category name is valid or not.
      */
     public void setCategoryInputValid(boolean categoryInputValid) {
         isCategoryInputValid = categoryInputValid;
@@ -227,7 +226,6 @@ public class AppView extends JFrame {
 
     /**
      * This method returns the labelFeedbackMessage.
-     *
      * @return a label that shows the description
      */
     public JLabel getLabelFeedbackMessage() {
@@ -235,9 +233,8 @@ public class AppView extends JFrame {
     }
 
     /**
-     * This method recieves the categories that belong to the loggedIn user , and then
-     * calls to a method that sets the categories to the combobox.
-     *
+     * This method recieves the categories that belong to the loggedIn user,
+     * and then calls to a method that sets the categories to the combobox.
      * @param listOfCategories - that are going to be added to the categoriesListBySpecificUser.
      */
     public void setTheCategoriesToCategoriesComboBox(List<String> listOfCategories) {
@@ -247,9 +244,8 @@ public class AppView extends JFrame {
     }
 
     /**
-     * This method recieves the costs' id's that belong to the loggedIn user costs , and then
-     * calls to a method that sets the costs' id to the combobox.
-     *
+     * This method recieves the costs' id's that belong to the loggedIn user costs,
+     * and then calls to a method that sets the costs' id to the combobox.
      * @param listOfCostsID - that are going to be added to the categoriesListBySpecificUser.
      */
     public void setTheCostsIDToCostIDComboBox(List<Integer> listOfCostsID) {
@@ -258,7 +254,8 @@ public class AppView extends JFrame {
     }
 
     /**
-     * @param listOfCostsID
+     * This method responsible for insert all cost's id to the IDComboBox.
+     * @param listOfCostsID - list of all cost's id that belong to a specific user.
      */
     private void insertCostsToCostsIDComboBox(List<Integer> listOfCostsID) {
         clearComboBoxesItems(comboBoxCostID);
@@ -306,7 +303,6 @@ public class AppView extends JFrame {
 
     /**
      * This method set the viewManager data member.
-     *
      * @param appUtils - viewManager that mediate between the view and the  model.
      */
     public void setAppUtils(AppUtils appUtils) {
@@ -335,12 +331,18 @@ public class AppView extends JFrame {
         layeredPaneCenterAppView.add(panelAllExpenses);
     }
 
+    /**
+     * This method responsible for setting the panel Operation on the layered pane.
+     */
     private void setPanelOperationsPartOfTheLayeredPane() {
         panelOperations.setBackground(new Color(230, 230, 230));
         panelOperations.add(categoryAndExpenseOperations);
         layeredPaneCenterAppView.add(panelOperations);
     }
 
+    /**
+     * This method responsible for setting the panel Report on the layered pane.
+     */
     private void setPanelReportPartOfTheLayeredPane(){
         panelReport.setBackground(new Color(230, 230, 230));
         panelReport.add(report);
@@ -364,7 +366,7 @@ public class AppView extends JFrame {
         }
     }
 
-    /*** Setting the combo box. */
+    /*** Setting the combo boxes that contain only Strings. */
     private void setComboBoxAttributes(JComboBox<String> comboBox) {
         ComponentUtils.setComponentsAttributes(
                 comboBox,
@@ -373,7 +375,7 @@ public class AppView extends JFrame {
     }
 
     /**
-     * Clear the given combo box  .
+     * Clear the given combo box.
      */
     private void clearComboBoxesItems(JComboBox comboBox) {
         if (comboBox.getItemCount() > 0) {
@@ -431,6 +433,13 @@ public class AppView extends JFrame {
             System.exit(0);
         });
     }
+
+    /**
+     * This method responsible for setting the background and the foreground of the given component.
+     * @param component - the given component to set its background and the foreground.
+     * @param foreGroundColor - color for the foreGround.
+     * @param backGroundColor - color for the backGround.
+     */
     private void setComponentBackAndForeGround(Component component, Color foreGroundColor, Color backGroundColor){
         component.setForeground(foreGroundColor);
         component.setBackground(backGroundColor);
@@ -438,9 +447,9 @@ public class AppView extends JFrame {
 
 
     /**
-     * This method sets each of the north's panel components attributes
-     * by first extracting all the buttons from the northPanel
-     * and then their attributes, and separately set the labelCostManagerTitle attributes.
+     * This method sets each of the north's panel components attributes by first
+     * extracting all the buttons from the northPanel and then their attributes,
+     * and separately set the labelCostManagerTitle attributes.
      */
     private void setNorthPanelComponentAttributes() {
 
@@ -456,7 +465,6 @@ public class AppView extends JFrame {
 
         labelExpenseManagerTitle.setFont(new Font("Narkisim", Font.BOLD, 55));
         labelExpenseManagerTitle.setBounds(1000, 0, 200, 100);
-
     }
 
     /**
@@ -485,7 +493,7 @@ public class AppView extends JFrame {
         private JTable tableData;
         private GridLayout gridLayoutExpensesPanel;
 
-        /*** Ctor*/
+        /*** Ctor */
         public ExpensesByCategory() {
             initExpensesPanel();
             startExpensesPanel();
@@ -529,8 +537,8 @@ public class AppView extends JFrame {
         }
 
         /**
-         * CategorySelectorPanel class allows the user to choose the category in order to display
-         * the expenses according to the chosen category.
+         * CategorySelectorPanel class allows the user to choose the category in order to
+         * display the expenses according to the chosen category.
          */
         private class CategorySelectorPanel extends JPanel {
             private JLabel labelFilterExpensesByCategoryTitle;
@@ -631,7 +639,7 @@ public class AppView extends JFrame {
 
     private class CategoryAndExpenseOperations extends JPanel {
         /**
-         * Swing components
+         * Swing components.
          */
         private JPanel panelLeftCategories;
         private JPanel panelRightCost;
@@ -644,25 +652,32 @@ public class AppView extends JFrame {
         private AddCostPanel addCostPanel;
         private RemoveCostPanel removeCostPanel;
 
-
+        /**
+         * Ctor.
+         */
         public CategoryAndExpenseOperations() {
             initOperationsPanel();
             startOperationsPanel();
         }
 
+        /**
+         * This class responsible for initialize the OperationsPanel components.
+         */
         private void initOperationsPanel() {
             panelLeftCategories = new JPanel();
             panelRightCost = new JPanel();
             operationsGrid = new GridLayout(1, 2, 10, 0);
             leftGridLayout = new GridLayout(2, 1, 0, 10);
             rightGridLayout = new GridLayout(2, 1, 0, 10);
-//            flowLayoutOperationsPanel = new FlowLayout(0, 35, 10);
             addCategory = new AddCategoryPanel();
             removeCategory = new RemoveCategoryPanel();
             addCostPanel = new AddCostPanel();
             removeCostPanel = new RemoveCostPanel();
         }
 
+        /**
+         * This class responsible for set the frame and the panels of this class.
+         */
         private void startOperationsPanel() {
 //            this.setLayout(flowLayoutOperationsPanel);
             this.setLayout(operationsGrid);
@@ -677,12 +692,12 @@ public class AppView extends JFrame {
             this.add(panelRightCost);
         }
 
-        /*** add category panel class represents adding new category operation as a panel.*/
+        /**
+         * Add category panel class represents adding new category operation as a panel.
+         */
         private class AddCategoryPanel extends JPanel {
 
-            /**
-             * Swing components
-             */
+            /** Swing components. */
             private JLabel labelTitleAddCategory;
             private JLabel labelAddCategoryName;
             private JTextField textFieldAddCategory;
@@ -692,11 +707,17 @@ public class AppView extends JFrame {
             private JPanel panelSouthAddCategory;
             private FlowLayout flowLayoutAddCategory;
 
+            /**
+             * Ctor.
+             */
             private AddCategoryPanel() {
                 initAddCategory();
                 startAddCategory();
             }
 
+            /**
+             * This class responsible for initialize the all components of this class.
+             */
             private void initAddCategory() {
                 labelTitleAddCategory = new JLabel("Add Category");
                 labelAddCategoryName = new JLabel("Category name:");
@@ -708,6 +729,9 @@ public class AppView extends JFrame {
                 flowLayoutAddCategory = new FlowLayout(0, 25, 25);
             }
 
+            /**
+             * This method responsible for setting the components of this class.
+             */
             private void startAddCategory() {
                 setLabelTitleAddCategoryAttributes();
                 setLabelAddCategoryAttributes();
@@ -717,30 +741,45 @@ public class AppView extends JFrame {
                 setButtonAddActionListener();
             }
 
+            /**
+             * This method responsible for setting the title "Add Category" attributes.
+             */
             private void setLabelTitleAddCategoryAttributes() {
                 ComponentUtils.setComponentsAttributes(labelTitleAddCategory,
                         new Font("Narkisim", Font.BOLD, 30),
                         new Dimension(500, 50));
             }
 
+            /**
+             * This method responsible for setting the "Category name" label attributes.
+             */
             private void setLabelAddCategoryAttributes() {
                 ComponentUtils.setComponentsAttributes(labelAddCategoryName,
                         new Font("Narkisim", Font.BOLD, 20),
                         new Dimension(250, 50));
             }
 
+            /**
+             * This method responsible for setting the category textfield attributes.
+             */
             private void setTextFieldAddCategoryAttributes() {
                 ComponentUtils.setComponentsAttributes(textFieldAddCategory,
                         new Font("Narkisim", Font.BOLD, 30),
                         new Dimension(200, 40));
             }
 
+            /**
+             * This method responsible for setting the add category button attributes.
+             */
             private void setBtnAddCategoryAttributes() {
                 ComponentUtils.setComponentsAttributes(buttonAddNewCategory,
                         new Font("Narkisim", Font.BOLD, 20),
                         new Dimension(100, 40));
             }
 
+            /**
+             * This method responsible for locating the components on AddCategoryPane.
+             */
             private void locateComponentsOnAddCategoryPane() {
                 this.setLayout(new BorderLayout());
                 this.setPreferredSize(new Dimension(450, 400));
@@ -756,6 +795,9 @@ public class AppView extends JFrame {
                 this.add(panelSouthAddCategory, BorderLayout.SOUTH);
             }
 
+            /**
+             * This method responsible for setting the action listener of the buttons.
+             */
             private void setButtonAddActionListener() {
                 buttonAddNewCategory.addActionListener(new ActionListener() {
                     @Override
@@ -767,11 +809,12 @@ public class AppView extends JFrame {
             }
         }
 
+        /**
+         * Class that responsible for removing a specific category.
+         */
         private class RemoveCategoryPanel extends JPanel {
 
-            /**
-             * swing components
-             */
+            /** Swing components. */
             private JLabel labelRemoveCategoryTitle;
             private JLabel labelRemoveCategory;
             private JButton buttonRemoveCategory;
@@ -780,11 +823,17 @@ public class AppView extends JFrame {
             private JPanel panelSouthRemoveCategory;
             private FlowLayout flowLayoutRemoveCategory;
 
+            /**
+             * Ctor.
+             */
             private RemoveCategoryPanel() {
                 initRemoveCategory();
                 startRemoveCategory();
             }
 
+            /**
+             * This method responsible for initialize all the components of this class.
+             */
             private void initRemoveCategory() {
                 labelRemoveCategoryTitle = new JLabel("Remove Category");
                 labelRemoveCategory = new JLabel("Select category:");
@@ -795,6 +844,9 @@ public class AppView extends JFrame {
                 flowLayoutRemoveCategory = new FlowLayout(0, 25, 25);
             }
 
+            /**
+             * This method responsible for setting the components of this clas.
+             */
             private void startRemoveCategory() {
                 setLabelTitleRemoveCategoryAttributes();
                 setLabelRemoveCategoryAttributes();
@@ -803,24 +855,38 @@ public class AppView extends JFrame {
                 setButtonRemoveCategoryActionListener();
             }
 
+            /**
+             * This method responsible for setting the title "Remove Category" attributes.
+             */
             private void setLabelTitleRemoveCategoryAttributes() {
                 ComponentUtils.setComponentsAttributes(labelRemoveCategoryTitle,
                         new Font("Narkisim", Font.BOLD, 30),
                         new Dimension(500, 50));
             }
 
+            /**
+             * This method responsible for setting the "Select category" label attributes
+             * on Remove Category panel.
+             */
             private void setLabelRemoveCategoryAttributes() {
                 ComponentUtils.setComponentsAttributes(labelRemoveCategory,
                         new Font("Narkisim", Font.BOLD, 20),
                         new Dimension(250, 50));
             }
 
+            /**
+             * This method responsible for setting the button "Remove" attributes
+             * on Remove Category panel.
+             */
             private void setButtonRemoveAttributes() {
                 ComponentUtils.setComponentsAttributes(buttonRemoveCategory,
                         new Font("Narkisim", Font.BOLD, 20),
                         new Dimension(140, 40));
             }
 
+            /***
+             * This method responsible for locating all the components on RemoveCategoryPane.
+             */
             private void locateComponentsOnRemoveCategoryPane() {
                 this.setLayout(new BorderLayout());
                 panelNorthRemoveCategory.add(labelRemoveCategoryTitle);
@@ -835,6 +901,9 @@ public class AppView extends JFrame {
                 this.add(panelSouthRemoveCategory, BorderLayout.SOUTH);
             }
 
+            /**
+             * This method responsible for setting the action listener for Remove button on RemoveCategory panel.
+             */
             private void setButtonRemoveCategoryActionListener() {
                 buttonRemoveCategory.addActionListener(new ActionListener() {
                     @Override
@@ -852,9 +921,7 @@ public class AppView extends JFrame {
          */
         private class AddCostPanel extends JPanel {
 
-            /**
-             * Swing components
-             */
+            /** Swing components. */
             private JLabel labelAddCostTitle;
             private JLabel labelCategoryInAddCostPanel;
             private JLabel labelSumCost;
@@ -873,11 +940,17 @@ public class AppView extends JFrame {
             private GridLayout gridLayoutCenterPanelAddCost;
             private FlowLayout flowLayoutSouthPanelAddCost;
 
+            /**
+             * Ctor.
+             */
             private AddCostPanel() {
                 initAddCost();
                 startAddCost();
             }
 
+            /**
+             * This class responsible for initialize all the components of this class.
+             */
             private void initAddCost() {
                 labelAddCostTitle = new JLabel("Add Cost");
                 labelCategoryInAddCostPanel = new JLabel("Category:");
@@ -898,6 +971,9 @@ public class AppView extends JFrame {
                 flowLayoutSouthPanelAddCost = new FlowLayout(0, 135, 25);
             }
 
+            /**
+             * This class responsible for setting the components of this class.
+             */
             private void startAddCost() {
                 setLabelTitleAddCostAttributes();
                 setLabelCategoryAddCostPanelAttributes();
@@ -915,54 +991,80 @@ public class AppView extends JFrame {
                 setButtonsAddCostPanelActionListeners();
             }
 
+            /**
+             * This method responsible for setting title "Add Cost" attributes in AddCost panel.
+             */
             private void setLabelTitleAddCostAttributes() {
                 ComponentUtils.setComponentsAttributes(labelAddCostTitle,
                         new Font("Narkisim", Font.BOLD, 30),
                         new Dimension(500, 50));
             }
 
+            /**
+             * This method responsible for setting Category label attributes in AddCost panel.
+             */
             private void setLabelCategoryAddCostPanelAttributes() {
                 ComponentUtils.setComponentsAttributes(labelCategoryInAddCostPanel,
                         new Font("Narkisim", Font.BOLD, 20),
                         new Dimension(50, 10));
             }
 
+            /**
+             * This method responsible for setting sumCost label attributes in AddCost panel.
+             */
             private void setLabelSumCostAttributes() {
                 ComponentUtils.setComponentsAttributes(labelSumCost,
                         new Font("Narkisim", Font.BOLD, 20),
                         new Dimension(50, 10));
             }
 
+            /**
+             * This method responsible for setting Currency label attributes in AddCost panel.
+             */
             private void setLabelCurrencyAttributes() {
                 ComponentUtils.setComponentsAttributes(labelCurrency,
                         new Font("Narkisim", Font.BOLD, 20),
                         new Dimension(50, 10));
             }
 
-
+            /**
+             * This method responsible for setting Description label attributes in AddCost panel.
+             */
             private void setLabelDescriptionAttributes() {
                 ComponentUtils.setComponentsAttributes(labelDescription,
                         new Font("Narkisim", Font.BOLD, 20),
                         new Dimension(50, 10));
             }
 
+            /**
+             * This method responsible for setting Date label attributes in AddCost panel.
+             */
             private void setLabelDateAttributes() {
                 ComponentUtils.setComponentsAttributes(labelDate,
                         new Font("Narkisim", Font.BOLD, 20),
                         new Dimension(50, 10));
             }
 
+            /**
+             * This method responsible for setting sumCost textField attributes in AddCost panel.
+             */
             private void setTextFieldSumCost() {
                 ComponentUtils.setComponentsAttributes(textFieldSumCost,
                         new Font("Narkisim", Font.BOLD, 30),
                         new Dimension(50, 10));
             }
 
+            /**
+             * This method responsible for setting Currency textField attributes in AddCost panel.
+             */
             private void setTextFieldCurrency() {
                 ComponentUtils.setComponentsAttributes(textFieldCurrency,
                         new Font("Narkisim", Font.BOLD, 30),
                         new Dimension(50, 10));
             }
+            /**
+             * This method responsible for setting description textField attributes in AddCost panel.
+             */
 
             private void setTextFieldDescription() {
                 ComponentUtils.setComponentsAttributes(textAreaDescription,
@@ -970,6 +1072,9 @@ public class AppView extends JFrame {
                         new Dimension(45, 10));
             }
 
+            /**
+             * This method responsible for setting DateChooserField attributes in AddCost panel.
+             */
             private void setDateChooserFieldAttributes() {
                 dateChooser.setDateFormatString("yyyy-MM-dd");
 
@@ -978,18 +1083,27 @@ public class AppView extends JFrame {
                         new Dimension(50, 10));
             }
 
+            /**
+             * This method responsible for setting Clear button attributes in AddCost panel.
+             */
             private void setButtonClearAddCostPanelAttributes() {
                 ComponentUtils.setComponentsAttributes(buttonClearInputsInAddCostPanel,
                         new Font("Narkisim", Font.BOLD, 20),
                         new Dimension(120, 40));
             }
 
+            /**
+             * This method responsible for setting Add button attributes in AddCost panel.
+             */
             private void setButtonAddInAddCostPanelAttributes() {
                 ComponentUtils.setComponentsAttributes(buttonAddNewCost,
                         new Font("Narkisim", Font.BOLD, 20),
                         new Dimension(100, 40));
             }
 
+            /**
+             * This method responsible for locating all components of this class.
+             */
             private void locateComponentsOnAddCostPanel() {
                 this.setLayout(new BorderLayout());
                 this.setPreferredSize(new Dimension(450, 400));
@@ -1014,10 +1128,11 @@ public class AppView extends JFrame {
                 panelSouthAddCost.add(buttonClearInputsInAddCostPanel);
                 panelSouthAddCost.add(buttonAddNewCost);
                 this.add(panelSouthAddCost, BorderLayout.SOUTH);
-
             }
 
-
+            /**
+             * This method responsible for setting the action listener of Clear and Add buttons.
+             */
             private void setButtonsAddCostPanelActionListeners() {
                 setButtonClearActionListener();
                 setButtonAddActionListener();
@@ -1052,6 +1167,9 @@ public class AppView extends JFrame {
                 comboBoxCategoriesAddCostPanel.setSelectedIndex(0);
             }
 
+            /**
+             * Setting the buttonAdd action listener.
+             */
             private void setButtonAddActionListener() {
                 buttonAddNewCost.addActionListener(new ActionListener() {
                     @Override
@@ -1062,6 +1180,9 @@ public class AppView extends JFrame {
                 });
             }
 
+            /**
+             * This method responsible for adding the new cost.
+             */
             private void addNewCost() {
                 String categorySelected = comboBoxCategoriesAddCostPanel.getSelectedItem().toString();
                 String sumCost = textFieldSumCost.getText();
@@ -1073,24 +1194,28 @@ public class AppView extends JFrame {
             }
         }
 
+        /** This class responsible for removing a specific costID. */
         private class RemoveCostPanel extends JPanel {
-            /**
-             * Swing components
-             */
+            /** Swing components. */
             private JLabel labelRemoveCostTitle;
             private JLabel labelCostID;
-
             private JButton buttonRemoveCost;
             private JPanel panelNorthRemoveCost;
             private JPanel panelCenterRemoveCost;
             private JPanel panelSouthRemoveCost;
             private FlowLayout flowLayoutCenterRemoveCost;
 
+            /**
+             * Ctor.
+             */
             private RemoveCostPanel() {
                 initRemoveCost();
                 startRemoveCost();
             }
 
+            /**
+             * This method responsible for initialize all components of RemoveCost panel.
+             */
             private void initRemoveCost() {
                 labelRemoveCostTitle = new JLabel("Remove Cost");
                 labelCostID = new JLabel("Cost ID:");
@@ -1101,6 +1226,9 @@ public class AppView extends JFrame {
                 flowLayoutCenterRemoveCost = new FlowLayout(0, 120, 25);
             }
 
+            /**
+             * This method responsible for setting all components of RemoveCost panel.
+             */
             private void startRemoveCost() {
                 setLabelTitleRemoveCostAttributes();
                 setLabelCostIDAttributes();
@@ -1110,18 +1238,27 @@ public class AppView extends JFrame {
                 setButtonRemoveCostActionListener();
             }
 
+            /**
+             * This method responsible for setting the title "Remove Cost" attributes of RemoveCost panel.
+             */
             private void setLabelTitleRemoveCostAttributes() {
                 ComponentUtils.setComponentsAttributes(labelRemoveCostTitle,
                         new Font("Narkisim", Font.BOLD, 30),
                         new Dimension(200, 50));
             }
 
+            /**
+             * This method responsible for setting the CostID label attributes of RemoveCost panel.
+             */
             private void setLabelCostIDAttributes() {
                 ComponentUtils.setComponentsAttributes(labelCostID,
                         new Font("Narkisim", Font.BOLD, 20),
                         new Dimension(120, 30));
             }
 
+            /**
+             * This method responsible for setting the combobox of costsID attributes of RemoveCost panel.
+             */
             private void setComboboxCostIDAttributes() {
                 ComponentUtils.setComponentsAttributes(
                         comboBoxCostID,
@@ -1131,12 +1268,18 @@ public class AppView extends JFrame {
                 appUtils.getCostsID();
             }
 
+            /**
+             * This method responsible for setting the Remove button attributes of RemoveCost panel.
+             */
             private void setButtonRemoveCostAttributes() {
                 ComponentUtils.setComponentsAttributes(buttonRemoveCost,
                         new Font("Narkisim", Font.BOLD, 20),
                         new Dimension(140, 40));
             }
 
+            /**
+             * This method responsible for locating the components of RemoveCost panel.
+             */
             private void locateComponentsOnRemoveCostPanel() {
                 this.setLayout(new BorderLayout());
                 this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
@@ -1153,6 +1296,9 @@ public class AppView extends JFrame {
                 this.add(panelSouthRemoveCost, BorderLayout.SOUTH);
             }
 
+            /**
+             * This method responsible for setting the action listener of button remove in RemoveCost panel.
+             */
             private void setButtonRemoveCostActionListener() {
                 buttonRemoveCost.addActionListener(new ActionListener() {
                     @Override
@@ -1168,10 +1314,9 @@ public class AppView extends JFrame {
         }
     }
 
+    /** This class responsible for displaying the costs by two chosen dates. */
     private class Report extends JPanel {
-        /**
-         * Swing components
-         */
+        /** Swing components. */
         private GridLayout gridLayoutLeftReportPanel;
         private GridLayout gridLayoutCenterDatesPanel;
         private FlowLayout flowLayoutReportPanel;
@@ -1187,16 +1332,21 @@ public class AppView extends JFrame {
         private JDateChooser dateChooserStart;
         private JDateChooser dateChooserEnd;
         private JButton buttonDisplayChartAndTable;
-
         private JPanel panelTableDataReport;
         private JScrollPane scrollPaneTableReport;
         private JTable tableDataReport;
 
+        /**
+         * Ctor.
+         */
         private Report() {
             initReport();
             startReport();
         }
 
+        /**
+         * This class responsible for initialize all components of this class.
+         */
         private void initReport() {
             gridLayoutLeftReportPanel = new GridLayout(2, 1, 0, 20);
             gridLayoutCenterDatesPanel = new GridLayout(2, 2, 20, 15);
@@ -1213,12 +1363,14 @@ public class AppView extends JFrame {
             dateChooserStart = new JDateChooser();
             dateChooserEnd = new JDateChooser();
             buttonDisplayChartAndTable = new JButton("Display");
-
             panelTableDataReport = new JPanel();
             scrollPaneTableReport = new JScrollPane();
             tableDataReport = new JTable();
         }
 
+        /**
+         * This class responsible for setting all components of this class.
+         */
         private void startReport() {
             setPanelDatesReport();
             buttonDisplayPieChartSetOnClickListener();
@@ -1226,6 +1378,9 @@ public class AppView extends JFrame {
             locateComponentsOnReportPanel();
         }
 
+        /**
+         * This method responsible for setting the PanelDatesReport.
+         */
         private void setPanelDatesReport() {
             setTitleSelectDatesAttributes();
             setLabelStartAndEndDateAttributes();
@@ -1233,13 +1388,18 @@ public class AppView extends JFrame {
             setButtonDisplayChartAttributes();
         }
 
+        /**
+         * This method responsible for setting the title "Select dates" attributes in DatesReport panel.
+         */
         private void setTitleSelectDatesAttributes() {
             ComponentUtils.setComponentsAttributes(labelTitleSelectDates,
                     new Font("Narkisim", Font.BOLD, 30),
                     new Dimension(200, 30));
         }
 
-
+        /**
+         * This method responsible for setting the startDate and endDate labels attributes in DatesReport panel.
+         */
         private void setLabelStartAndEndDateAttributes() {
             ComponentUtils.setComponentsAttributes(labelStartDate,
                     new Font("Narkisim", Font.BOLD, 25),
@@ -1250,6 +1410,9 @@ public class AppView extends JFrame {
                     new Dimension(100, 15));
         }
 
+        /**
+         * This method responsible for setting the DateChooserStart and DateChooserEnd attributes in DatesReport panel.
+         */
         private void setDateChooserStartAndEndDateAttributes() {
             dateChooserStart.setDateFormatString("yyyy-MM-dd");
             dateChooserEnd.setDateFormatString("yyyy-MM-dd");
@@ -1263,6 +1426,9 @@ public class AppView extends JFrame {
                     new Dimension(70, 10));
         }
 
+        /**
+         * This method responsible for setting the button display in DatesReport panel.
+         */
         private void setButtonDisplayChartAttributes() {
             ComponentUtils.setComponentsAttributes(buttonDisplayChartAndTable,
                     new Font("Narkisim", Font.BOLD, 20),
@@ -1284,6 +1450,9 @@ public class AppView extends JFrame {
             panelTableDataReport.setPreferredSize(new Dimension(300, 270));
         }
 
+        /**
+         * This method responsible for locating all components in Report panel.
+         */
         private void locateComponentsOnReportPanel() {
             this.setLayout(flowLayoutReportPanel);
             panelLeftReport.setLayout(gridLayoutLeftReportPanel);
@@ -1309,6 +1478,9 @@ public class AppView extends JFrame {
             this.add(panelChartReport);
         }
 
+        /**
+         * This method responsible for setting the action listener for button display.
+         */
         private void buttonDisplayPieChartSetOnClickListener() {
             buttonDisplayChartAndTable.addActionListener(new ActionListener() {
                 @Override

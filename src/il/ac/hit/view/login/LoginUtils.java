@@ -3,7 +3,7 @@ package il.ac.hit.view.login;
 import il.ac.hit.model.User;
 
 /**
- * this interface has the methods that will be invoked by the okButton and submitButton in
+ * This interface has the methods that will be invoked by the okButton and submitButton in
  * LoginPanel and SignUpPanel respectively
  */
 public interface LoginUtils {

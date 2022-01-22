@@ -37,7 +37,6 @@ public enum HandlingMessage
    PROBLEM_WITH_ADDING_NEW_CATEGORY ("problem with adding new category"),
    EXISTING_CATEGORY_REMOVED_SUCCESSFULLY("The category removed successfully"),
 
-
    /**
     * handling messages that relate to the costs table.
     */
@@ -53,9 +52,6 @@ public enum HandlingMessage
    INVALID_SUM_COST("Use only digits in the sum cost field."),
    INVALID_CURRENCY("Use only letters in the currency field."),
 
-
-
-
    /**
     * handling messages that relate to general usage
     */
@@ -64,11 +60,10 @@ public enum HandlingMessage
    INVALID_STRING_INPUT("Please use only letters"),
    INVALID_INTEGER_INPUT("Please use only digits");
 
-
    /**
     * message that represents the handling message
     */
-   private String message;
+   private final String message;
 
    /**
     * ctor that receives the message
@@ -79,7 +74,7 @@ public enum HandlingMessage
    }
 
    /**
-    * getter that return the message
+    * Getter that return the message
     * @return the message
     */
    public String getMessage() {

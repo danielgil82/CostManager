@@ -38,6 +38,8 @@ public class LoginView extends JFrame {
     private LoginPanel loginPanel;
     private SignUpPanel signUpPanel;
 
+    private final Color colorForTitles = new Color(247, 221, 194);
+
     /**
      * layout components
      */

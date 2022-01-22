@@ -2,6 +2,9 @@ package il.ac.hit.view.appcontent;
 
 import java.util.Date;
 
+/**
+ * An auxiliary class that have methods that be executed from the AppView class.
+ */
 public interface AppUtils {
     void resetUser();
     void changeFrameFromAppViewToLoginView();

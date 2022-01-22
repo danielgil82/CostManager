@@ -6,8 +6,7 @@ import il.ac.hit.auxiliary.HandlingMessage;
  * This class represents our specific exception that can be thrown in our application.
  * A "CostManagerException" is a type of Exception.
  */
-public class CostManagerException extends Exception
-{
+public class CostManagerException extends Exception {
     /**
      * Ctor that receives the enum type of message.
      * @param exceptionsHandlingStrings - specific exception from type HandlingMessage.
