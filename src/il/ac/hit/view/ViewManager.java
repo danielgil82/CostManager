@@ -2,7 +2,6 @@ package il.ac.hit.view;
 
 import il.ac.hit.auxiliary.Message;
 import il.ac.hit.model.Expense;
-import il.ac.hit.model.User;
 import il.ac.hit.view.appcontent.AppUtils;
 import il.ac.hit.view.appcontent.AppView;
 import il.ac.hit.view.login.LoginUtils;
@@ -16,9 +15,10 @@ import java.util.List;
 import java.util.TimerTask;
 
 /**
+ * The purpose of this class is the manage all the traffic between the gui components and the viewModel.
  * An actual class that represents a concrete view.
- * And also this class is a kind of LoginUtils interface because it has a methods that are going to be used in the
- * LoginView Class.
+ * And also this class is a kind of LoginUtils interface and AppUtils interface, since it implements them both,
+ * and it has a methods that are going to be used within the LoginView and AppView classes respectively.
  */
 public class ViewManager implements View , LoginUtils , AppUtils {
 
@@ -26,27 +26,15 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     private LoginView loginView;
     private AppView appView;
 
-
     /** ViewModel mediates between the view and model parts. */
     private ViewModel viewModel;
 
-
     /*** Constructor that inits the loginView member. */
-    public ViewManager() {
-
-    }
-
-    /** Getters. */
-    public ViewModel getViewModel() {
-        return viewModel;
-    }
-
-    public LoginView getLoginView() {
-        return loginView;
-    }
+    public ViewManager() {}
 
     /**
      * Here we set the view model.
+     *
      * @param vm - the view model.
      */
     @Override
@@ -59,6 +47,7 @@ public class ViewManager implements View , LoginUtils , AppUtils {
      *  to the viewModel, because of a reuse thinking, because if the in the future
      *  we'd change the gui part to another one, the logic of validating users credentials
      *  will still be relevant.
+     *
      * @param fullName - of the user.
      * @param password - of the user.
      */
@@ -68,8 +57,8 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     }
 
     /**
-     * This method will get invoked when the button ok in the loginPanel will get clicked
-     * the method that will get invoked when the ok button in loginPanel clicked.
+     * This method will be invoked when the buttonOk in the loginPanel will be clicked
+     *
      * @param fullName - users name.
      * @param password - users password.
      */
@@ -78,98 +67,84 @@ public class ViewManager implements View , LoginUtils , AppUtils {
         viewModel.validateUserExistence(fullName, password);
     }
 
-    /** This method adds new user to database.
-     * @param userToAdd - to the database.
+    /**
+     * This method adds sends the fullName and the password to the viewModel.
+     *
+     * @param fullName - user's full name.
+     * @param password - user's password.
      */
     @Override
-    public void addNewUser(User userToAdd){
-        viewModel.addNewUser(userToAdd);
+    public void addNewUser(String fullName, String password){
+        viewModel.addNewUser(fullName, password);
     }
 
-    /**This method...
+    /**
+     * This method is responsible for moving the fullName and the password to the viewModel.
+     *
      * @param fullName - of the user.
      * @param password - password the user choose.
-     * @param confirmedPassword - confirmation of the users password.
+     * @param confirmedPassword - confirmation of the users' password.
      */
     @Override
     public void validateUsersFullNameAndPasswords(String fullName, String password, String confirmedPassword) {
         viewModel.validateUserCredentialsForSignUpPanel(fullName, password, confirmedPassword);
     }
 
+    /**
+     * Init method creates the loginView part of the app and displays it.
+     */
     @Override
     public void init() {
         loginView = new LoginView(this);
-        loginView.setVisible(true);
-    }
-
-    @Override
-    public void start() {
     }
 
     /**
-     * This method receives message and displays it to the user via the loginView.
+     * Displaying the loginView part of the app by setting its visibility to true.
+     */
+    @Override
+    public void start() {
+        loginView.setVisible(true);
+    }
+
+    /**
+     * This method receives message and displays it to the user via the *loginView*.
+     * and also sets a timer for displaying a message for a specific period of time.
+     *
      * @param message - the relevant message to display.
      */
     @Override
     public void displayMessageForLoginSection(Message message) {
         loginView.getLabelInvalidDescription().setText(message.getMessage());
 
+        // creating a timer for the display message to appear for a specific period of time.
         new java.util.Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        loginView.getLabelInvalidDescription().setText(null);
-                    }
-                });
+                SwingUtilities.invokeLater(() -> loginView.getLabelInvalidDescription().setText(null));
             }
         }, 4000);
     }
 
-    /**
-     * This method receives message and displays it to the user via the appView.
-     * @param message - the relevant message to display.
-     */
-    @Override
-    public void displayMessageForAppSection(Message message) {
-        appView.getLabelFeedbackMessage().setText(message.getMessage());
-
-        new java.util.Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        appView.getLabelFeedbackMessage().setText(null);
-                    }
-                });
-            }
-        }, 4000);
-    }
-
-
-    /**
-     * This method receives a category and then calls for
-     * removeChosenCategoryFromComboBox that responsible for removing the category
-     * from the combobox.
-     *
-     * @param category - to remove from combobox.
-     */
-    @Override
-    public void removeCategoryFromComboBox(String category) {
-        appView.removeChosenCategoryFromComboBox(category);
-    }
-
-
-    //    @Override
-//    public void isTheCategoryNameInputValid(boolean isValid) {
-//        appView.setCategoryInputValid(isValid);
+//    /**
+//     * This method receives a category and then calls for
+//     * removeChosenCategoryFromComboBox that responsible for removing the category
+//     * from the combobox.
+//     *
+//     * @param category - to remove from combobox.
+//     */
+//    @Override
+//    public void removeCategoryFromComboBox(String category) {
+//        appView.removeChosenCategoryFromComboBox(category);
 //    }
 
+    /**
+     * Receiving a category from view model, and sending it to the AppView.
+     *
+     * @param category - the category that should be added to the CategoryComboBox
+     */
     @Override
     public void addNewCategoryToComboBox(String category) {
-        appView.addCategoryToComboBox(category);
+        appView.addCategoryToComboBoxes(category);
     }
 
     /**
@@ -188,6 +163,7 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     /**
      * This method receives message and displays it to the user via the loginView
      * and updates the flag that indicates the validity of the user's credentials.
+     *
      * @param message - the relevant message to display.
      * @param flag - that indicates if the credentials of the user are valid.
      */
@@ -197,7 +173,32 @@ public class ViewManager implements View , LoginUtils , AppUtils {
         loginView.getLabelInvalidDescription().setText(message.getMessage());
     }
 
-    /*** This method changes the frame from app page to the login page. */
+    /**
+     * This method receives message and displays it to the user via the *appView*.
+     *
+     * @param message - the relevant message to display.
+     */
+    @Override
+    public void displayMessageForAppSection(Message message) {
+        appView.getLabelFeedbackMessage().setText(message.getMessage());
+
+        // creating a timer for the display message to appear for a specific period of time.
+        new java.util.Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        appView.getLabelFeedbackMessage().setText(null);
+                    }
+                });
+            }
+        }, 4000);
+    }
+
+    /**
+     * This method changes the frame from app page to the login page.
+     */
     @Override
     public void changeFrameFromAppViewToLoginView() {
         appView.dispose();
@@ -205,13 +206,17 @@ public class ViewManager implements View , LoginUtils , AppUtils {
         loginView.setVisible(true);
     }
 
-    /** This method resets the user. */
+    /**
+     * This method resets the user.
+     */
     @Override
     public void resetUser() {
         viewModel.resetUser();
     }
 
-    /*** This method changes the frame from the login page to the app page. */
+    /**
+     * Changing the frame from the login page to the app page.
+     */
     @Override
     public void changeFrameFromLoginViewToAppView() {
         loginView.setVisible(false);
@@ -231,6 +236,7 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     /**
      * This method call the setTheCategoriesList in appView
      * that responsible for setting the categories to the combobox.
+     *
      * @param listOfCategories - category list.
      */
     @Override
@@ -241,6 +247,7 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     /**
      * This method call the getExpensesBySpecificCategory in viewModel
      * that responsible for getting expenses by given category.
+     *
      * @param categoryType - the expenses that would return are going to be based on the categoryType we receive here.
      */
     @Override
@@ -249,8 +256,9 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     }
 
     /**
-     *This method call the setExpensesTableByCategoryInAppView in appView
+     * This method calls the setExpensesTableByCategoryInAppView in appView
      * that responsible for setting the expense table.
+     *
      * @param listOfExpenses - expenses list.
      */
     @Override
@@ -259,8 +267,10 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     }
 
     /**
-     * This method call the validateAndAddNewCategory in viewModel
-     * that responsible for validating and adding a new category to the database and to the list of categories.
+     * This method calls the validateAndAddNewCategory in viewModel
+     * that responsible for validating and adding a new category to the database and to the
+     * list of categories.
+     *
      * @param categoryName - category's name.
      */
     @Override
@@ -271,6 +281,7 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     /**
      * This method calls the removeCategory in viewModel
      * that responsible for remove the selected category from the database and from the list of categories.
+     *
      * @param categoryName - selected category to remove.
      */
     @Override
@@ -278,8 +289,12 @@ public class ViewManager implements View , LoginUtils , AppUtils {
         viewModel.removeSpecificCategory(categoryName);
     }
 
+
     /**
-     * This method calls to
+     * This method calls to removeCostsThatReferToSpecificCategory in the viewModel and sends it the chosen category.
+     *
+     * @param category - the costs are going to be deleted according to
+     *                 this category.
      */
     @Override
     public void removeCostsThatReferToChosenCategory(String category) {
@@ -288,8 +303,9 @@ public class ViewManager implements View , LoginUtils , AppUtils {
 
 
     /**
+     * Getting a list of costs that suppose to be removed from the CostIDComboBox.
      *
-     * @param costsIDToRemove
+     * @param costsIDToRemove - list of costs id's to be removed
      */
     @Override
     public void removeCostsFromCostIDComboBox(List<Integer> costsIDToRemove) {
@@ -307,14 +323,13 @@ public class ViewManager implements View , LoginUtils , AppUtils {
      * @param date - the date the cost was made.
      */
     @Override
-    public void validateAndAddNewCost(String categorySelected, String sumCost,
-                                      String currency, String description, Date date) {
-
+    public void validateAndAddNewCost(String categorySelected, String sumCost, String currency,
+                                      String description, Date date) {
         viewModel.validateAndAddNewCost(categorySelected, sumCost, currency,description ,date);
     }
 
     /**
-     *
+     * asking from the view model the cost's id's of the loggedIn user.
      */
     @Override
     public void getCostsID() {
@@ -322,23 +337,29 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     }
 
     /**
+     * Getting the cost's id's from the view model and moving to forward to the appView.
      *
-     * @param costsID
+     * @param costsID list of cost id's
      */
     @Override
     public void setCostsID(List<Integer> costsID) {
         appView.setTheCostsIDToCostIDComboBox(costsID);
     }
 
+    /**
+     * Giving the view model the costID that suppose to be removed.
+     *
+     * @param costID - the id of a cost that suppose to be removed.
+     */
     @Override
     public void removeCost(int costID) {
         viewModel.removeCost(costID);
     }
 
-
     /**
      * This method is responsible for calling methods in AppView,
      * that responsible for updating the category combo boxes and cost id combo box.
+     *
      * @param category - category to remove from category combo boxes, and the related cost id's that relate to that
      *                   category in the cost id combo box.
      */
@@ -350,6 +371,7 @@ public class ViewManager implements View , LoginUtils , AppUtils {
     /**
      * This method is responsible for calling another method in viewModel that has to bring back from the model
      * all the costs that were made between the given date.
+     *
      * @param startDate - start date.
      * @param endDate - end date.
      */
@@ -360,6 +382,7 @@ public class ViewManager implements View , LoginUtils , AppUtils {
 
     /**
      * This method gets back a list of expenses between 2 chosen dates and sends it to initPieChart.
+     *
      * @param expensesBetweenGivenDates - list of expense between chosen dates.
      */
     @Override
@@ -369,6 +392,7 @@ public class ViewManager implements View , LoginUtils , AppUtils {
 
     /**
      * This method gets back a list of expenses between 2 chosen dates and sends it to initTableReportPanel.
+     *
      * @param expensesBetweenChosenDates - list of expense between chosen dates.
      */
     @Override

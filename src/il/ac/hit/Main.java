@@ -12,27 +12,19 @@ import javax.swing.*;
 
 public class Main
 {
-    private static final String dataBaseUserName = "sigalit";
-    private static final String dataBasePassword= "leybman";
-    private static final String driverFullQualifiedName = "com.mysql.jdbc.Driver";
-    private static final String connectionStringToDB = "jdbc:mysql://localhost:3306/costmanagerproj";
-
     public static void main(String args[]) throws CostManagerException
     {
+        //construct the MVVM parts of the project.
         Model model = new CostManagerModel();
         ViewModel viewModel = new CostManagerViewModel();
         View view = new ViewManager();
 
-        SwingUtilities.invokeLater(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                view.init();
-                view.start();
-            }
+        SwingUtilities.invokeLater(() -> {
+            view.init();
+            view.start();
         });
 
+        //set the different parts of MVVM to the according place.
         viewModel.setModel(model);
         viewModel.setView(view);
         view.setIViewModel(viewModel);

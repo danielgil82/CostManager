@@ -17,6 +17,7 @@ public class Expense {
 
     /**
      * Ctor that receives parameter of an Expense excluded the expenseID.
+     *
      * @param category - category of the expense.
      * @param costSum - sum of the expense.
      * @param currency - currency of the expense.
@@ -36,6 +37,7 @@ public class Expense {
 
     /**
      * Ctor that receives parameter of an Expense included the expenseID.
+     *
      * @param expenseID - the id of the expense.
      * @param category - category of the expense.
      * @param costSum - sum of the expense.
@@ -81,7 +83,7 @@ public class Expense {
         return purchaseDate;
     }
 
-    /** Setter */
+    /** Setters*/
     public void setUserID(int userID) {
         this.userID = userID;
     }
@@ -111,7 +113,8 @@ public class Expense {
     }
 
     /**
-     * This method returns the presention of an object of this class via String.
+     * This method returns the presentation of an object of this class via String.
+     *
      * @return string of an object of the class.
      */
     @Override

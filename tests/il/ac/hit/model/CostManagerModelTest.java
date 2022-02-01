@@ -15,16 +15,31 @@ class CostManagerModelTest {
 
     private CostManagerModel costManagerModel;
 
+    /**
+     * This test will happen before all tests every time we run the test.
+     *
+     * @throws CostManagerException - custom exception of our project.
+     */
     @BeforeEach
     void setUp() throws CostManagerException {
         costManagerModel = new CostManagerModel();
     }
 
+    /**
+     * This test will happen after all tests and realise the allocated memory.
+     *
+     * @throws CostManagerException - - custom exception of our project.
+     */
     @AfterEach
     void tearDown() throws CostManagerException {
         costManagerModel = null;
     }
 
+    /**
+     * Testing the add new category action - should work.
+     *
+     * @throws CostManagerException - custom exception of our project.
+     */
     @Test
     void addNewCategory()throws CostManagerException {
         List<String> listOfCategories;
@@ -38,6 +53,11 @@ class CostManagerModelTest {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Testing the remove existing category action - should work.
+     *
+     * @throws CostManagerException - custom exception of our project.
+     */
     @Test
     void removeExistingCategory()throws CostManagerException {
         List<String> listOfCategories;
@@ -51,6 +71,11 @@ class CostManagerModelTest {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Testing the remove costs by specific category - should work.
+     *
+     * @throws CostManagerException - custom exception of our project.
+     */
     @Test
     void removeCostsBySpecificCategory()throws CostManagerException {
         List<Expense> listOfExpenses;
@@ -64,6 +89,11 @@ class CostManagerModelTest {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Test add new cost - should work.
+     *
+     * @throws CostManagerException - custom exception of our project.
+     */
     @Test
     void addNewCost() throws CostManagerException{
         List<Expense> listOfExpenses;
@@ -78,6 +108,11 @@ class CostManagerModelTest {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Testing if remove exiting cost works - should work.
+     *
+     * @throws CostManagerException - custom exception of our project.
+     */
     @Test
     void removeExistingCost()throws CostManagerException {
         List<Expense> listOfExpenses;
@@ -92,6 +127,11 @@ class CostManagerModelTest {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Testing if we get the right costs between 2 given dates - should work.
+     *
+     * @throws CostManagerException - custom exception of our project.
+     */
     @Test
     void getReportByDates() throws CostManagerException{
         String firstDate = "2022-01-18";
@@ -114,6 +154,11 @@ class CostManagerModelTest {
         assertEquals(expected.getUserID(), actual.get(0).getUserID());
     }
 
+    /**
+     * Testing the get user action - should work.
+     *
+     * @throws CostManagerException - custom exception of our project.
+     */
     @Test
     void getUser()throws CostManagerException {
         User expected = new User(12, "marina", "1234");
@@ -124,6 +169,11 @@ class CostManagerModelTest {
         assertEquals(expected.getUsersPassword(), actual.getUsersPassword());
     }
 
+    /**
+     * This test tests if we receive CostManagerException type of exception.
+     *
+     * @throws CostManagerException - custom exception of our project.
+     */
     @Test
     void checkIfTheUserExists() throws CostManagerException {
         User user = new User(12, "marina", "1234");
@@ -131,6 +181,11 @@ class CostManagerModelTest {
         assertThrows(CostManagerException.class, () -> costManagerModel.checkIfTheUserExists(user));
     }
 
+    /**
+     * Testing that a new user was added to the DB - should work.
+     *
+     * @throws CostManagerException - custom exception of our project.
+     */
     @Test
     void addNewUserToDBAndUpdateTheListOfUsers()throws CostManagerException {
         User testUser = new User("shimi", "1234");
@@ -141,6 +196,11 @@ class CostManagerModelTest {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Testing the get expenses by a specific category - should work.
+     *
+     * @throws CostManagerException - custom exception of our project.
+     */
     @Test
     void getExpensesByCategory() throws CostManagerException{
         String purchaseDate = "2022-01-19";
@@ -158,8 +218,13 @@ class CostManagerModelTest {
         assertEquals(expected.getUserID(), actual.get(0).getUserID());
     }
 
+    /**
+     * Testing the get categories action by specific user - should work.
+     *
+     * @throws CostManagerException - custom exception of our project.
+     */
     @Test
-    void getCategoriesNamesBySpecificUser() throws CostManagerException{
+    void getCategoriesNamesBySpecificUser() throws CostManagerException {
         List<String> expected = Arrays.asList("electricty", "food");
         List<String> actual = costManagerModel.getCategoriesNamesBySpecificUser(12);
         for (int i = 0; i < expected.size(); i++) {

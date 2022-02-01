@@ -6,11 +6,6 @@ package il.ac.hit.auxiliary;
 public enum HandlingMessage
 {
    /**
-    * Handling message that relate to duplicated rows.
-    */
-   DUPLICATED_ROW("Oops seems like this row is already defined"),
-
-   /**
     * Handling messages that relate to user.
     */
    USER_DOES_NOT_EXISTS ("User doesn't exist, try again or sign up"),
@@ -24,7 +19,6 @@ public enum HandlingMessage
    /**
     * handling messages that relate to database
     */
-   PROBLEM_WITH_THE_CONNECTION ("problems with the connection"),
    PROBLEM_WITH_REGISTERING_THE_DRIVER("Problem with registering driver to the driver manager"),
 
    /**
@@ -42,13 +36,11 @@ public enum HandlingMessage
     */
    NEW_COST_ADDED_SUCCESSFULLY("The cost added successfully"),
    COST_REMOVED_SUCCESSFULLY("The cost removed successfully"),
-   PROBLEM_WITH_REMOVING_SPECIFIC_EXPENSES_BY_SPECIFIC_CATEGORY ("problem with removing expenses by specific category."),
    COULD_NOT_GET_ALL_EXPENSES ("Couldn't get all expenses"),
-   EXPENSE_ALREADY_EXISTS ("Oops seems like this expense already exists, try another one"),
    PROBLEM_WITH_ADDING_NEW_EXPENSE ("problem with adding new expense"),
    PROBLEM_WITH_REMOVING_EXISTING_EXPENSE ("problem with removing an existing expense"),
    COULD_NOT_FIND_EXPENSES_BETWEEN_THESE_DATES ("Couldn't find any expenses between these two dates"),
-   CANT_REMOVE_NO_COST ("You don't have cost to remove"),
+   NO_COST_TO_REMOVE("You don't have cost to remove"),
    INVALID_SUM_COST("Use only digits in the sum cost field."),
    INVALID_CURRENCY("Use only letters in the currency field."),
 
@@ -57,8 +49,7 @@ public enum HandlingMessage
     */
    SOMETHING_WENT_WRONG ("Something went wrong"),
    EMPTY_FIELDS ("One or more of the fields are empty"),
-   INVALID_STRING_INPUT("Please use only letters"),
-   INVALID_INTEGER_INPUT("Please use only digits");
+   INVALID_STRING_INPUT("Please use only letters");
 
    /**
     * message that represents the handling message
@@ -67,6 +58,7 @@ public enum HandlingMessage
 
    /**
     * ctor that receives the message
+    *
     * @param message the message we received
     */
    HandlingMessage(String message) {
@@ -75,6 +67,7 @@ public enum HandlingMessage
 
    /**
     * Getter that return the message
+    *
     * @return the message
     */
    public String getMessage() {
@@ -83,6 +76,7 @@ public enum HandlingMessage
 
    /**
     * Override to the toString.
+    *
     * @return message.
     */
    @Override

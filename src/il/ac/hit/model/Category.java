@@ -11,6 +11,7 @@ public class Category
 
     /**
      * Ctor that gets the name of the category, and the id of the user.
+     *
      * @param categoryName - category's name.
      * @param userID - user id.
      */
@@ -21,6 +22,7 @@ public class Category
 
     /**
      * Get the category name.
+     *
      * @return categoryName - category name.
      */
     public String getCategoryName() {
@@ -29,6 +31,7 @@ public class Category
 
     /**
      * Get the user id.
+     *
      * @return userID - the user id.
      */
     public int getUserID() {
@@ -37,6 +40,7 @@ public class Category
 
     /**
      * Set the category name.
+     *
      * @param categoryName - the category name.
      */
     public void setCategoryName(String categoryName) {
@@ -45,6 +49,7 @@ public class Category
 
     /**
      * Set the user id.
+     *
      * @param userID - the user id.
      */
     public void setUserID(int userID) {
@@ -53,6 +58,7 @@ public class Category
 
     /**
      * Override for toString method.
+     *
      * @return - representation of the data members through String.
      */
     @Override

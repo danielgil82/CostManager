@@ -13,13 +13,9 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * this class represents the loginView frame
- */
+/** This class represents the loginView frame. */
 public class LoginView extends JFrame {
-    /**
-     * swing components
-     */
+    /** Swing components. */
     private JPanel panelNorthLoginFrame;
     private JPanel panelWestLoginFrame;
     private JPanel panelSouthLoginFrame;
@@ -32,18 +28,14 @@ public class LoginView extends JFrame {
     private JButton signUpButton;
     private JLabel labelInvalidDescription;
     private FlowLayout flowLayoutContainerPanel;
+    private GridLayout gridLayoutWestPanel;
+
     /**
-     * objects that represent the login an signUp panel
+     * Objects that represent the login an signUp panel
      */
     private LoginPanel loginPanel;
     private SignUpPanel signUpPanel;
 
-    private final Color colorForTitles = new Color(247, 221, 194);
-
-    /**
-     * layout components
-     */
-    private GridLayout gridLayoutWestPanel;
 
     /**
      * Interface that has the methods that are going to be invoked on action from different buttons.
@@ -57,13 +49,13 @@ public class LoginView extends JFrame {
     private LoginUtils loginUtils;
 
     /**
-     * boolean that represent if the user credentials are valid or not
+     * Boolean that represent if the user credentials are valid or not.
      */
     private boolean areUserCredentialsValidInSignUpPanel = true;
     private boolean areUserCredentialsValidInLoginPanel = true;
 
     /**
-     * ctor that receives the loginUtils parameter
+     * Ctor that receives the loginUtils parameter.
      *
      * @param loginUtils an interface that has the methods that are going to be invoked by okButton and submitButton
      */
@@ -73,46 +65,45 @@ public class LoginView extends JFrame {
         startLoginView();
     }
 
-    /** setter for loginUtils */
+    /** Setter for loginUtils. */
     public void setLoginUtils(LoginUtils loginUtils) {
         this.loginUtils = loginUtils;
     }
 
     /**
-     * this method sets the flag for LoginPanel.
+     * This method sets the flag for LoginPanel.
      *
-     * @param areUserCredentialsValidInLoginPanel this boolean represents if the credentials of the user
-     *                                            are valid in LoginPanel
+     * @param areUserCredentialsValidInLoginPanel - this boolean represents if the credentials of the
+     *                                              user are valid in LoginPanel
      */
     public void setAreUserCredentialsValidInLoginPanel(boolean areUserCredentialsValidInLoginPanel) {
         this.areUserCredentialsValidInLoginPanel = areUserCredentialsValidInLoginPanel;
     }
 
     /**
-     * this method sets the flag for signUpPanel.
+     * This method sets the flag for signUpPanel.
      *
-     * @param areUserCredentialsValidInSignUpPanel this boolean represents if the credentials of the user
-     *                                             are valid in SignUpPanel
+     * @param areUserCredentialsValidInSignUpPanel - this boolean represents if the credentials of
+     *                                             the user are valid in SignUpPanel
      */
     public void setAreUserCredentialsValidInSignUpPanel(boolean areUserCredentialsValidInSignUpPanel) {
         this.areUserCredentialsValidInSignUpPanel = areUserCredentialsValidInSignUpPanel;
     }
 
     /**
-     * this method returns the labelInvalidDescription
+     * This method returns the labelInvalidDescription.
      *
-     * @return a label that shows the description
+     * @return a label that shows the description.
      */
     public JLabel getLabelInvalidDescription() {
-
         return labelInvalidDescription;
     }
 
     /**
-     * this method initialize the swing components
+     * Initializing the data members of the "this" class.
      */
     public void initLoginView() {
-
+        //initialize the swing components.
         gridLayoutWestPanel = new GridLayout(2, 1, 5, 30);
         layeredPaneCenter = new JLayeredPane();
         panelContainer = new JPanel();
@@ -127,12 +118,14 @@ public class LoginView extends JFrame {
         loginButton = new JButton("Login");
         signUpButton = new JButton("Sign Up");
         labelInvalidDescription = new JLabel();
+
+        //initialize the objects that represent the login an signUp panel
         loginPanel = new LoginPanel();
         signUpPanel = new SignUpPanel();
     }
 
     /**
-     * adding components to the panels
+     * Adding components to the panels
      */
     public void startLoginView() {
         //North Panel
@@ -176,7 +169,7 @@ public class LoginView extends JFrame {
     }
 
     /**
-     * setting the layered pane.
+     * Setting the layered pane.
      */
     private void setLayeredPane() {
         layeredPaneCenter.setLayout(new CardLayout(0, 0));
@@ -186,7 +179,7 @@ public class LoginView extends JFrame {
     }
 
     /**
-     * adding the loginPanel object into the layeredPane.
+     * Adding the loginPanel object into the layeredPane.
      */
     private void setLoginPanelPartOfTheLayeredPane() {
         loginPanelPartOfTheLayeredPane.add(loginPanel);
@@ -194,7 +187,7 @@ public class LoginView extends JFrame {
     }
 
     /**
-     * adding the signUpPanel object into the layeredPane.
+     * Adding the signUpPanel object into the layeredPane.
      */
     private void setSignUpPanelPartOfTheLayeredPane() {
         signUPPanelPartOfTheLayeredPane.add(signUpPanel);
@@ -202,7 +195,7 @@ public class LoginView extends JFrame {
     }
 
     /**
-     * adding attributes to each of the buttons in the west panel of the login frame.
+     * Adding attributes to each of the buttons in the west panel of the login frame.
      */
     public void setButtonAttributes() {
         ComponentUtils.setComponentsAttributes(signUpButton,
@@ -218,7 +211,7 @@ public class LoginView extends JFrame {
     }
 
     /**
-     * this method adds buttons actionListeners
+     * This method adds buttons actionListeners.
      */
     private void setButtonsActionListeners() {
         //loginButton
@@ -235,9 +228,7 @@ public class LoginView extends JFrame {
      * and he is kind of a JPanel.
      */
     private class LoginPanel extends JPanel {
-        /**
-         * Swing components
-         */
+        /** Swing components. */
         private JLabel labelLoginTitle;
         private JLabel labelFullNameLoginPanel;
         private JLabel labelPasswordLoginPanel;
@@ -249,7 +240,7 @@ public class LoginView extends JFrame {
         private JPanel panelLoginSouth;
 
         /**
-         * LoginPanel Constructor
+         * LoginPanel Constructor.
          */
         private LoginPanel() {
             LoginPanelInit();
@@ -257,9 +248,10 @@ public class LoginView extends JFrame {
         }
 
         /**
-         * this method initialize login's panel components
+         * This method initialize login's panel components.
          */
         private void LoginPanelInit() {
+            //initializing the swing components
             labelLoginTitle = new JLabel("Login");
             labelFullNameLoginPanel = new JLabel("Full Name:");
             labelPasswordLoginPanel = new JLabel("Password:");
@@ -272,17 +264,20 @@ public class LoginView extends JFrame {
         }
 
         /**
-         * this method sets the gui components
+         * This method sets the gui components.
          */
         private void LoginPanelStart() {
+            //setting different attributes to the loginPanelStart.
             this.setPreferredSize(new Dimension(500, 300));
             setLoginPanelComponentsAttributes();
             BorderLayout borderLayout = new BorderLayout();
             borderLayout.setVgap(30);
             this.setLayout(borderLayout);
+
             //LoginPanelNorth
             panelLoginNorth.add(labelLoginTitle);
             this.add(panelLoginNorth, BorderLayout.NORTH);
+
             //LoginPanelCenter
             GridLayout gridLayout = new GridLayout(2, 2, 20, 10);
             gridLayout.setVgap(25);
@@ -292,8 +287,12 @@ public class LoginView extends JFrame {
             panelLoginCenter.add(labelPasswordLoginPanel);
             panelLoginCenter.add(textFieldPasswordLoginPanel);
             this.add(panelLoginCenter, BorderLayout.CENTER);
-            //LoginPanelSouth
+
+
+            //Here is a use of a static method of the ComponentUtils class
             ComponentUtils.setComponentsAttributes(buttonOkLoginPanel, new Font("Narkisim", Font.BOLD, 20), new Dimension(70, 30));
+
+            //LoginPanelSouth
             panelLoginSouth.add(buttonOkLoginPanel);
             this.add(panelLoginSouth, BorderLayout.SOUTH);
 
@@ -302,41 +301,52 @@ public class LoginView extends JFrame {
         }
 
         /**
-         * Action listener for the buttonOk
+         * Action listener for the buttonOk.
          */
         private void setButtonOkActionListener() {
-            buttonOkLoginPanel.addActionListener(new ActionListener() {
+            /*
+             * first we take out the inputs out of the textFields,
+             * then we clear the textFields,
+             * and then send the inputs for validation in the viewModel part,
+             * lastly, if and only if the credentials are valid we change the frames to the app itself.
+             */
+            buttonOkLoginPanel.addActionListener(e -> {
+                String userFullName = textFieldFullNameLoginPanel.getText();
+                String userPassword = textFieldPasswordLoginPanel.getText();
 
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String userFullName = textFieldFullNameLoginPanel.getText();
-                    String userPassword = textFieldPasswordLoginPanel.getText();
+                if (!userFullName.equals("") || !userPassword.equals("")) {
+                    ComponentUtils.clearComponents(panelLoginCenter.getComponents());
+                }
 
-                    loginUtils.validateUserCredentials(userFullName, userPassword);
-                    if (areUserCredentialsValidInLoginPanel) {
-                        loginUtils.validateUserExistence(userFullName, userPassword);
-                    }
+                loginUtils.validateUserCredentials(userFullName, userPassword);
+
+                if (areUserCredentialsValidInLoginPanel) {
+                    loginUtils.validateUserExistence(userFullName, userPassword);
                 }
             });
         }
 
         /**
-         * this method sets the attributes of the login panel
+         * This method sets the attributes of the login panel.
          */
         private void setLoginPanelComponentsAttributes() {
+           //adding all the components to a list and traverse through it and init the attributes of each of the objects.
             List<JComponent> componentsList = new ArrayList<>();
 
             Font font = new Font("Narkisim", Font.BOLD, 20);
+
             Dimension dimension = new Dimension(new Dimension(0, 0));
 
-            //Here there is a use of a static method of the ComponentUtils class
-            ComponentUtils.setComponentsAttributes(labelLoginTitle, new Font("Narkisim", Font.BOLD, 40), new Dimension(150, 70));
+            //Here is a use of a static method of the ComponentUtils class
+            ComponentUtils.setComponentsAttributes(labelLoginTitle,
+                    new Font("Narkisim", Font.BOLD, 40), new Dimension(150, 70));
 
             componentsList.add(labelFullNameLoginPanel);
             componentsList.add(labelPasswordLoginPanel);
             componentsList.add(textFieldFullNameLoginPanel);
             componentsList.add(textFieldPasswordLoginPanel);
 
+            //Here is a use of a static method of the ComponentUtils class
             for (JComponent component : componentsList) {
                 ComponentUtils.setComponentsAttributes(component, font, dimension);
             }
@@ -349,9 +359,7 @@ public class LoginView extends JFrame {
      * and he is kind of a JPanel.
      */
     private class SignUpPanel extends JPanel {
-        /**
-         * Swing components
-         */
+        /** Swing components. */
         private JLabel labelSignUpTitle;
         private JLabel labelFullNameSignUp;
         private JLabel labelPasswordSignUp;
@@ -365,7 +373,8 @@ public class LoginView extends JFrame {
         private JPanel panelSouthSignUp;
 
         /**
-         * Ctor that call the init and start methods that build and set the attributes of the SignUpPanel
+         * Ctor that call the init and start methods that build and set the attributes
+         * of the SignUpPanel.
          */
         private SignUpPanel() {
             SignUpInit();
@@ -373,9 +382,10 @@ public class LoginView extends JFrame {
         }
 
         /**
-         * this method initializes the gui components
+         * This method initializes the gui components.
          */
         private void SignUpInit() {
+            //initializing the swing components
             labelSignUpTitle = new JLabel("Sign Up");
             labelFullNameSignUp = new JLabel("Full Name:");
             labelPasswordSignUp = new JLabel("Password:");
@@ -390,18 +400,23 @@ public class LoginView extends JFrame {
         }
 
         /**
-         * this method sets the gui components attributes
+         * This method sets the gui components attributes.
          */
         private void SignUpStart() {
+            // setting different attributes to the swing components
             this.setPreferredSize(new Dimension(500, 400));
             setSignsUpPanelComponents();
             BorderLayout borderLayout = new BorderLayout();
             borderLayout.setVgap(20);
             this.setLayout(borderLayout);
+
+            //panel North
             panelNorthSignUp.add(labelSignUpTitle);
             this.add(panelNorthSignUp, BorderLayout.NORTH);
+
             GridLayout gridLayout = new GridLayout(3, 2, 20, 10);
-//            gridLayout.setVgap(20);
+
+            //panel Center
             panelCenterSignUp.setLayout(gridLayout);
             panelCenterSignUp.add((labelFullNameSignUp));
             panelCenterSignUp.add(textFieldFullNameSignUp);
@@ -410,45 +425,61 @@ public class LoginView extends JFrame {
             panelCenterSignUp.add((labelConfirmPasswordSignUp));
             panelCenterSignUp.add(textFieldConfirmPasswordSignUp);
             this.add(panelCenterSignUp, BorderLayout.CENTER);
-            ComponentUtils.setComponentsAttributes(buttonSubmitSignUp, new Font("Narkisim", Font.BOLD, 20), new Dimension(110, 30));
+
+            //setting the attributes of button submitSinUp.
+            ComponentUtils.setComponentsAttributes(buttonSubmitSignUp,
+                    new Font("Narkisim", Font.BOLD, 20), new Dimension(110, 30));
+
+            //panel South
             panelSouthSignUp.add(buttonSubmitSignUp);
             this.add(panelSouthSignUp, BorderLayout.SOUTH);
+
             //Setting the action listener to the button
             setButtonSubmitActionListener();
         }
 
         /**
-         * using methods from the loginUtils interface, to validate users credentials
-         * and if and only if the credentials are valid, we're going to add this new user to the
-         * database.
+         * Using methods from the loginUtils interface, to validate users credentials
+         * and if and only if the credentials are valid, we're going to add this new
+         * user to the database.
          */
         private void setButtonSubmitActionListener() {
-            buttonSubmitSignUp.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String fullName = textFieldFullNameSignUp.getText();
-                    String password = textFieldPasswordSignUp.getText();
-                    String confirmPassword = textFieldConfirmPasswordSignUp.getText();
+            /*
+             * first we take out the inputs out of the textFields,
+             * and then send the inputs for validation in the viewModel part,
+             * then we clear the textFields,
+             * lastly, if and only if the credentials are valid we add the user to the db.
+             */
+            buttonSubmitSignUp.addActionListener(e -> {
+                String fullName = textFieldFullNameSignUp.getText();
+                String password = textFieldPasswordSignUp.getText();
+                String confirmPassword = textFieldConfirmPasswordSignUp.getText();
 
-                    loginUtils.validateUsersFullNameAndPasswords(fullName, password, confirmPassword);
+                loginUtils.validateUsersFullNameAndPasswords(fullName, password, confirmPassword);
 
-                    if (areUserCredentialsValidInSignUpPanel) {
-                        loginUtils.addNewUser(new User(fullName, password));
-                    }
+                if (!fullName.equals("") || !password.equals("") || !confirmPassword.equals("")) {
+                    ComponentUtils.clearComponents(panelCenterSignUp.getComponents());
+                }
+
+                if (areUserCredentialsValidInSignUpPanel) {
+                    loginUtils.addNewUser(fullName, password);
                 }
             });
         }
 
         /**
-         * Setting the components of the SignUpPanel GUI part
+         * Setting the components of the SignUpPanel GUI part.
          */
         private void setSignsUpPanelComponents() {
+            //adding all the components to a list and traverse through it and init the attributes of each of the objects.
             List<JComponent> componentsList = new ArrayList<>();
 
             Font font = new Font("Narkisim", Font.BOLD, 20);
             Dimension dimension = new Dimension(new Dimension(250, 50));
 
-            ComponentUtils.setComponentsAttributes(labelSignUpTitle, new Font("Narkisim", Font.BOLD, 35), new Dimension(200, 70));
+            //Here is a use of a static method of the ComponentUtils class
+            ComponentUtils.setComponentsAttributes(labelSignUpTitle,
+                    new Font("Narkisim", Font.BOLD, 35), new Dimension(200, 70));
 
             componentsList.add(labelFullNameSignUp);
             componentsList.add(labelPasswordSignUp);
@@ -456,6 +487,8 @@ public class LoginView extends JFrame {
             componentsList.add(textFieldFullNameSignUp);
             componentsList.add(textFieldPasswordSignUp);
             componentsList.add(textFieldConfirmPasswordSignUp);
+
+            //Here is a use of a static method of the ComponentUtils class
             for (JComponent component : componentsList) {
                 ComponentUtils.setComponentsAttributes(component, font, dimension);
             }

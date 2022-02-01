@@ -7,8 +7,10 @@ import il.ac.hit.auxiliary.HandlingMessage;
  * A "CostManagerException" is a type of Exception.
  */
 public class CostManagerException extends Exception {
+
     /**
      * Ctor that receives the enum type of message.
+     *
      * @param exceptionsHandlingStrings - specific exception from type HandlingMessage.
      */
     public CostManagerException(HandlingMessage exceptionsHandlingStrings) {
@@ -17,6 +19,7 @@ public class CostManagerException extends Exception {
 
     /**
      * Ctor that receives the enum type of message and the cause of another exception.
+     *
      * @param exceptionsHandlingStrings - specific exception from type HandlingMessage.
      * @param cause - the cause of the exception.
      */

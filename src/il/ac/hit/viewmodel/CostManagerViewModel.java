@@ -21,16 +21,27 @@ import java.util.function.Predicate;
  * A prat of these methods we have a private methods that do some logic.
  */
 public class CostManagerViewModel implements ViewModel {
-
+    // view
     private View view;
+
+    //model
     private Model model;
+
+    //logged in user
     private User user;
+
+    // ExecutorService is a thread pool
     private final ExecutorService service;
+
+    // different lists including categories , expensesByCategory , allExpenses, costsBetweenDates
     private List<String> categoriesOfTheUser = new ArrayList<>();
     private List<Expense> expensesListByCategory = new ArrayList<>();
     private List<Expense> allCosts = new ArrayList<>();
     private List<Expense> costsBetweenChosenDates = new ArrayList<>();
-    private Hashtable<String,Float> costsByCategoryHashTable = new Hashtable<>();
+
+    //HashTable that holds categories and their total amount of money spend on.
+    private Hashtable<String, Float> costsByCategoryHashTable = new Hashtable<>();
+
     /**
      * Ctor of the CostManagerViewModel, it constructs the number of the thread
      * that are going to be in the thread pool.
@@ -63,25 +74,32 @@ public class CostManagerViewModel implements ViewModel {
     }
 
     /**
-     * First we check if the user exists, if it does exist, we catch the exception
-     * that tells that the user already exists, else we add a new user to the database,
-     * and display a feedback message to the user.
+     *Adding the user to the database, but first ensuring that he doesn't already exist.
      *
-     * @param user - to add to the database.
+     * @param fullName - user's full name.
+     * @param password - user's password.
      */
     @Override
-    public void addNewUser(User user) {
+    public void addNewUser(String fullName, String password) {
         service.submit(() -> {
 
             try {
-                model.checkIfTheUserExists(user);
+                //we create a user with the params that came from the view.
+                User userToAdd = new User(fullName, password);
 
-                model.addNewUserToDBAndUpdateTheListOfUsers(user);
+                // we check if the user exists if so,an exception will be thrown from the model, and will be caught here.
+                model.checkIfTheUserExists(userToAdd);
 
-                this.user = user;
+                //the user will get added to the db
+                model.addNewUserToDBAndUpdateTheListOfUsers(userToAdd);
 
+                //save the user here in the view model.
+                this.user = userToAdd;
+
+                // let the user know that the new user sign up successfully.
                 SwingUtilities.invokeLater(() ->
-                        view.displayMessageForLoginSection(new Message(HandlingMessage.SIGNED_UP_SUCCESSFULLY.toString())));
+                        view.displayMessageForLoginSection(new Message
+                                (HandlingMessage.SIGNED_UP_SUCCESSFULLY.toString())));
 
 
             } catch (CostManagerException ex) {
@@ -91,14 +109,20 @@ public class CostManagerViewModel implements ViewModel {
         });
     }
 
+
+    /**
+     * getting a list of categories that belong to the loggedIn user.
+     */
     @Override
     public void getCategoriesBySpecificUser() {
         service.submit(new Runnable() {
             @Override
             public void run() {
                 try {
+                    //first get all the categories of the user from the db.
                     categoriesOfTheUser = model.getCategoriesNamesBySpecificUser(user.getUserID());
 
+                    //send all the categories to the view.
                     SwingUtilities.invokeLater(() -> view.setCategories(categoriesOfTheUser));
 
                 } catch (CostManagerException ex) {
@@ -109,18 +133,23 @@ public class CostManagerViewModel implements ViewModel {
         });
     }
 
+    /**
+     * getting back all costs by given category.
+     *
+     * @param categoryType - the costs will be filtered according to the category.
+     */
     @Override
     public void getExpensesBySpecificCategory(String categoryType) {
         service.submit(new Runnable() {
             @Override
             public void run() {
                 try {
-
+                    //first get all the expenses from the db according to the category.
                     expensesListByCategory = model.getExpensesByCategory(user.getUserID(), categoryType);
 
+                    //if everything went alright we send the expenses back to the view, to construct the expenses table.
                     SwingUtilities.invokeLater(() ->
                             view.setExpensesTableByCategoryInAppView(expensesListByCategory));
-
 
                 } catch (CostManagerException ex) {
                     //lambda expression because Runnable is a functional interface
@@ -156,6 +185,8 @@ public class CostManagerViewModel implements ViewModel {
                             //Add the category to the list of categories.
                             categoriesOfTheUser.add(category);
 
+                            // if everything is alright, we let the user know that the category was added ,
+                            // and we update the combo boxes accordingly.
                             SwingUtilities.invokeLater(() -> {
                                 view.displayMessageForAppSection(new Message
                                         (HandlingMessage.NEW_CATEGORY_ADDED_SUCCESSFULLY.toString()));
@@ -188,8 +219,9 @@ public class CostManagerViewModel implements ViewModel {
     /**
      * This method is responsible for getting back to the view all the costs that we're purchased between the given
      * dates.
+     *
      * @param startDate - start date.
-     * @param endDate - end date.
+     * @param endDate   - end date.
      */
     @Override
     public void getCostsBetweenGivenDates(Date startDate, Date endDate) {
@@ -203,13 +235,15 @@ public class CostManagerViewModel implements ViewModel {
                         costsBetweenChosenDates = model.getReportByDates(user.getUserID(),
                                 new java.sql.Date(startDate.getTime()), new java.sql.Date(endDate.getTime()));
 
+                        // calling this method construct the hash table
                         setCostsByCategory();
 
+                        //if everything is alright we first set the pie chart in the view, and then we set the
+                        // costs' table in the view.
                         SwingUtilities.invokeLater(() -> {
                             view.setPieChart(costsByCategoryHashTable);
                             view.setCostsTableInReportPanel(costsBetweenChosenDates);
                         });
-
 
                     } catch (CostManagerException ex) {
                         //lambda expression because Runnable is a functional interface
@@ -218,9 +252,9 @@ public class CostManagerViewModel implements ViewModel {
                         });
                     }
                 } else {
-                        SwingUtilities.invokeLater(() -> {
-                            view.displayMessageForAppSection(new Message(HandlingMessage.EMPTY_FIELDS.toString()));
-                        });
+                    SwingUtilities.invokeLater(() -> {
+                        view.displayMessageForAppSection(new Message(HandlingMessage.EMPTY_FIELDS.toString()));
+                    });
                 }
             }
         });
@@ -228,20 +262,26 @@ public class CostManagerViewModel implements ViewModel {
 
     /**
      * Setting the hash table with a category ,and it's total sum of costs.
+     * it's an auxiliary method that constructs and hashtable for a pie chart usage.
      */
     private void setCostsByCategory() {
+       //if the hashtable is not empty, we clear it.
         if (!costsByCategoryHashTable.isEmpty()) {
             costsByCategoryHashTable.clear();
         }
 
+        // construct the hashtable.
         for (Expense expense : costsBetweenChosenDates) {
             String category = expense.getCategory();
             Float costSum = expense.getCostSum();
 
-            if(costsByCategoryHashTable.containsKey(category)){
-                float updatedSum  = costsByCategoryHashTable.get(category) + costSum;
+            // if the hashtable contains the key we just add the sum to value.
+            if (costsByCategoryHashTable.containsKey(category)) {
+                float updatedSum = costsByCategoryHashTable.get(category) + costSum;
                 costsByCategoryHashTable.put(category, updatedSum);
-            }else{
+            }
+            //else we create the key and then add the sum to this key.
+            else {
                 costsByCategoryHashTable.put(category, costSum);
             }
         }
@@ -249,29 +289,47 @@ public class CostManagerViewModel implements ViewModel {
 
 
     /**
-     * @param categorySelected
-     * @param sumCost
-     * @param currency
-     * @param description
-     * @param date
+     * Validating the inputs of the user, and adding a new cost.
+     *
+     * @param categorySelected - the category the user chose.
+     * @param sumCost - the amount of money the user spent on that cost.
+     * @param currency - the currency he used.
+     * @param description - an explanation of the cost.
+     * @param date - when it took place.
      */
     @Override
     public void validateAndAddNewCost(String categorySelected, String sumCost,
                                       String currency, String description, Date date) {
+
+        /*
+         * first we validate if the one of the fields are empty or null, if so we
+         * let the user know that he has empty fields.
+         * then we validate if the input corresponds with what it supposes to be.
+         *
+         */
+
         service.submit(new Runnable() {
             @Override
             public void run() {
                 try {
-                    if (validateIfEmptyOrNull(sumCost, currency, description, date)) {
+
+                    if (validateIfEmptyOrNull(categorySelected, sumCost, currency, description, date)) {
+
                         if (validateIfCorrectInputOrNot(sumCost, currency)) {
 
+                            //there is no need for try & catch block since we already validated it before.
                             int cost = Integer.parseInt(sumCost);
 
+                            // if every thing is okay we send the cost to the model to get added to the db
                             model.addNewCost(new Expense(categorySelected, cost, currency, description,
                                     new java.sql.Date(date.getTime()), user.getUserID()));
 
+                            //if everything was alright we want to the add the id that was generated in the db to the
+                            // combo boxes ,so we call getCostsID that supposed to get all the id's once again
+                            //and send them back to the view.
                             getCostsID();
 
+                            // let the user know that everything was okay.
                             SwingUtilities.invokeLater(() -> {
                                 view.displayMessageForAppSection(new Message(
                                         HandlingMessage.NEW_COST_ADDED_SUCCESSFULLY.toString()));
@@ -295,7 +353,7 @@ public class CostManagerViewModel implements ViewModel {
     }
 
     /**
-     *
+     * Getting all the cost id's of the loggedIn user.
      */
     @Override
     public void getCostsID() {
@@ -303,25 +361,22 @@ public class CostManagerViewModel implements ViewModel {
             @Override
             public void run() {
                 try {
-
+                    // if the list is empty we clear it.
                     if (allCosts.size() != 0) {
                         allCosts.clear();
                     }
 
+                    //getting back all the costs from the db
                     allCosts = model.getExpensesByCategory(user.getUserID(), "all");
 
+                    // constructing a list of Integers and adding to it all the cost id's that returned from the db.
                     List<Integer> costsID = new ArrayList<>();
-
                     for (Expense cost : allCosts) {
                         costsID.add(cost.getExpenseID());
                     }
 
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            view.setCostsID(costsID);
-                        }
-                    });
+                    //return the cost id's to the view.
+                    SwingUtilities.invokeLater(() -> view.setCostsID(costsID));
 
                 } catch (CostManagerException ex) {
                     //lambda expression because Runnable is a functional interface
@@ -344,8 +399,9 @@ public class CostManagerViewModel implements ViewModel {
      * @param date        - date it took place.
      * @return if any of these parameters are empty.
      */
-    private boolean validateIfEmptyOrNull(String sumCost, String currency, String description, Date date) {
-        return !sumCost.equals("") &&
+    private boolean validateIfEmptyOrNull(String category, String sumCost, String currency, String description, Date date) {
+        return !category.equals("") &&
+                !sumCost.equals("") &&
                 !currency.equals("") &&
                 !description.equals("") &&
                 date != null;
@@ -356,28 +412,30 @@ public class CostManagerViewModel implements ViewModel {
      *
      * @param sumCost  - the cost of the cost
      * @param currency - type of currency
+     *
      * @return boolean that indicates if the params are valid according to the test.
      */
     private boolean validateIfCorrectInputOrNot(String sumCost, String currency) {
-
+        /*
+         * sending a predicate to the validateInput and testing it there,
+         * ensuring that the sumCost is built only out of Digits.
+         */
         if (!validateInput(sumCost, sc -> sc.chars().allMatch(Character::isDigit))) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    view.displayMessageForAppSection(new Message(HandlingMessage.INVALID_SUM_COST.toString()));
-                }
-            });
+            SwingUtilities.invokeLater(() -> view.displayMessageForAppSection(
+                    new Message(HandlingMessage.INVALID_SUM_COST.toString())));
 
             return false;
         }
 
+        /*
+         * sending a predicate to the validateInput and testing it there,
+         * ensuring that the currency is built only out of letters.
+         */
+
         if (!validateInput(currency, c -> c.chars().allMatch(Character::isLetter))) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    view.displayMessageForAppSection(new Message(HandlingMessage.INVALID_CURRENCY.toString()));
-                }
-            });
+            SwingUtilities.invokeLater(() -> view.displayMessageForAppSection(
+                    new Message(HandlingMessage.INVALID_CURRENCY.toString())));
+
             return false;
         }
 
@@ -385,7 +443,9 @@ public class CostManagerViewModel implements ViewModel {
     }
 
     /**
-     * @param costID
+     * removing a cost.
+     *
+     * @param costID - the id of the cost that supposed to be removed.
      */
     @Override
     public void removeCost(int costID) {
@@ -393,10 +453,13 @@ public class CostManagerViewModel implements ViewModel {
             @Override
             public void run() {
                 try {
+                    // sending the id of the cost that supposed to be removed to the db
                     model.removeExistingCost(costID);
 
+                    // let the user know that the cost removal went successfully.
                     SwingUtilities.invokeLater(() -> {
-                        view.displayMessageForAppSection(new Message(HandlingMessage.COST_REMOVED_SUCCESSFULLY.toString()));
+                        view.displayMessageForAppSection(
+                                new Message(HandlingMessage.COST_REMOVED_SUCCESSFULLY.toString()));
                     });
                 } catch (CostManagerException ex) {
                     //lambda expression because Runnable is a functional interface
@@ -409,7 +472,9 @@ public class CostManagerViewModel implements ViewModel {
     }
 
     /**
-     * @param categoryToRemove
+     * removing a specific category.
+     *
+     * @param categoryToRemove - the category that the db supposed to remove.
      */
     @Override
     public void removeSpecificCategory(String categoryToRemove) {
@@ -417,16 +482,18 @@ public class CostManagerViewModel implements ViewModel {
             @Override
             public void run() {
                 try {
+
+                    //first we ensure that the category indeed exists
                     if (categoriesOfTheUser.contains(categoryToRemove)) {
 
-//                        List<Expense> costsThatRelateToTheChosenCategory = allCosts.stream()
-//                                .filter(ex -> ex.getCategory().equals(categoryToRemove)).collect(Collectors.toList());
-
+                        //if it does exist we send it to the model to get removed from the db.
                         model.removeExistingCategory(new Category(categoryToRemove, user.getUserID()));
 
+                        //Also, we remove it from the list of categories we have here.
                         categoriesOfTheUser.remove(categoryToRemove);
 
-
+                        // if everything went smooth we let the user know that the category was successfully removed,
+                        // and we update the combo boxes accordingly
                         SwingUtilities.invokeLater(() -> {
                             view.updateCategoriesComboBoxes(categoryToRemove);
 
@@ -452,7 +519,9 @@ public class CostManagerViewModel implements ViewModel {
     }
 
     /**
-     * @param category
+     * removing costs that refer to the given category.
+     *
+     * @param category - the costs are going to be removed by the given category.
      */
     @Override
     public void removeCostsThatReferToSpecificCategory(String category) {
@@ -461,10 +530,14 @@ public class CostManagerViewModel implements ViewModel {
             public void run() {
                 try {
 
+                    // first we retrieve the cost id's that supposed to be removed.
                     List<Integer> costToDelete = getCostsThatSupposeToDeleted(category);
 
+                    // we send the db the category that it's costs supposed to be removed.
                     model.removeCostsBySpecificCategory(new Category(category, user.getUserID()));
 
+
+                    // if everything went smooth we update the combo boxes.
                     SwingUtilities.invokeLater(() -> {
                         view.removeCostsFromCostIDComboBox(costToDelete);
                     });
@@ -481,14 +554,11 @@ public class CostManagerViewModel implements ViewModel {
     }
 
     /**
-     * This method responsible for create and return list of costs ID's that related to a receiving category.
-     *
+     * This method responsible for creating and returning list of costs ID's that relate to the given category.
      * At first this method constructs a list that suppose to have the costsID's that should be
      * deleted from the combo box.
-     *
      * Secondly, there is a need to update the list of all costs in this class  "CostManagerViewModel", that's why
      * another data structure was allocated in order to hold the needed expenses that suppose to be deleted.
-     *
      * At the end, the expenses that suppose to be deleted get deleted from allCosts list.
      *
      * @param category - the costs that are going to be deleted according to this category.
@@ -505,6 +575,7 @@ public class CostManagerViewModel implements ViewModel {
             }
         }
 
+        // removing the needed costs from all costs
         toRemove.forEach(ex -> allCosts.remove(ex));
 
         return costsID;
@@ -545,6 +616,8 @@ public class CostManagerViewModel implements ViewModel {
 
     /**
      * This method suppose to validate the credentials of the user.
+     * The code in this method is invoked from the method validateUserCredentialsForLoginPanel
+     * which is invoked within awt event thread.
      *
      * @param fullName - of the user.
      * @param password - of the user.
@@ -567,6 +640,8 @@ public class CostManagerViewModel implements ViewModel {
      * Here we validate users credentials when he signs up. The reason for the validations to appear here, at the
      * view model class is because of a reuse, if in the future we'll change the GUI to another type of GUI
      * this kind of logic would still be in need, that's why it is important to implement it here.
+     * The code in this method is invoked from the method validateUserCredentialsForSignUpPanel
+     * which is invoked within awt event thread.
      *
      * @param fullName          - fullName of the user.
      * @param password          - password of the user.
@@ -589,7 +664,8 @@ public class CostManagerViewModel implements ViewModel {
     }
 
     /**
-     * This method use the functional interface as BiPredicate inorder to test if the 2 passwords are equal.
+     * This method uses the functional interface as BiPredicate inorder to test if the 2 passwords are equal.
+     *
      * @param firstPassword      - first password.
      * @param secondPassword     - second password.
      * @param passwordsMatchTest - functional interface which gets the lambda function and uses the test abstract function.
@@ -597,11 +673,13 @@ public class CostManagerViewModel implements ViewModel {
      */
     private boolean confirmPasswords(String firstPassword, String secondPassword,
                                      BiPredicate<String, String> passwordsMatchTest) {
+
         return passwordsMatchTest.test(firstPassword, secondPassword);
     }
 
     /**
-     * This method ...
+     * A validation on the fullName, that it consists only letters and only and nothing else,
+     * if it does consist something else we return false.
      * @param fullName - users input for full name.
      * @return checks if the full name consists of letters and spaces.
      */
@@ -623,7 +701,8 @@ public class CostManagerViewModel implements ViewModel {
     }
 
     /**
-     * This method gets as input a predicate.
+     * This method gets as input a predicate,
+     * and tests the input.
      */
     private boolean validateInput(String input, Predicate<String> stringPredicate) {
         return stringPredicate.test(input);
@@ -632,7 +711,7 @@ public class CostManagerViewModel implements ViewModel {
     /**
      * Here we set the view data member.
      *
-     * @param view - ..
+     * @param view - part of the project.
      */
     @Override
     public void setView(View view) {

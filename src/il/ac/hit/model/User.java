@@ -11,6 +11,8 @@ public class User {
 
     /**
      * Ctor that receives the user attributes including the userID.
+     * this ctor call another ctor and delivers it the name and password of the user.
+     *
      * @param userID - the id of the user.
      * @param fullName - the name of the user.
      * @param usersPassword - the password of the user.
@@ -21,6 +23,7 @@ public class User {
     }
 
     /** Ctor that receives the user attributes excluding the userID.
+     *
      * @param fullName - the name of the user.
      * @param usersPassword - the password of the user.
      */
@@ -57,6 +60,7 @@ public class User {
 
     /**
      * This method returns the presentation of an object of this class via String.
+     *
      * @return string of an object of the class.
      */
     @Override
