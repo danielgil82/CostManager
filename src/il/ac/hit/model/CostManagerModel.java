@@ -19,12 +19,12 @@ public class CostManagerModel implements Model {
     /**
      * This String represents the user's name of the db.
      */
-    private final String user = "sigalit";
+    private final String user = "******";
 
     /**
      * This String represents the password of the db.
      */
-    private final String password = "leybman";
+    private final String password = "******";
 
     /**
      * This string represents the connection to the database.
